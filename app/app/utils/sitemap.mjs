@@ -1,5 +1,5 @@
-import { getProductsUrl, getCategoriesUrl, getTagsUrl } from '../config/api';
-import apiCache from './cache';
+import { getProductsUrl, getCategoriesUrl, getTagsUrl } from '../config/api.js';
+import apiCache from './cache.js';
 
 // Base URL for the website
 const BASE_URL = 'https://www.serlesbake.in';

@@ -11,7 +11,7 @@
  * - node scripts/generate-sitemap.js
  */
 
-import { generateXMLSitemap, generateSitemapData } from '../app/utils/sitemap.js';
+import { generateXMLSitemap, generateSitemapData } from '../app/utils/sitemap.mjs';
 import fs from 'fs';
 import path from 'path';
 

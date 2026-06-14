@@ -2,10 +2,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Head from "next/head";
 import { notFound } from "next/navigation";
 import { getProductsUrl, getCategoriesUrl, getProductDetailUrl } from "../../../config/api";
 import Breadcrumb from "../../../components/Breadcrumb";
 import ProductCard from "../../../components/ProductCard";
+import ProductFAQ from "../../../components/ProductFAQ";
 import apiCache from "../../../utils/cache";
 
 export default function ProductDetailPageClient({ params }) {
@@ -175,6 +177,20 @@ Please contact me for more details. Thank you!`;
 
   return (
     <>
+      <Head>
+        <title>{product.name ? `${product.name} | Serle's Bake` : "Serle's Bake"}</title>
+        <meta name="description" content={product.short_description || (product.description || '').slice(0, 160)} />
+        <link rel="canonical" href={`https://www.serlesbake.in/cakes/${categorySlug}/${product.slug}`} />
+        <meta property="og:title" content={product.name} />
+        <meta property="og:description" content={product.short_description || (product.description || '').slice(0, 160)} />
+        <meta property="og:image" content={product.featured_image?.url || 'https://www.serlesbake.in/img/logo.png'} />
+        <meta property="og:url" content={`https://www.serlesbake.in/cakes/${categorySlug}/${product.slug}`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={product.name} />
+        <meta name="twitter:description" content={product.short_description || (product.description || '').slice(0, 160)} />
+        <meta name="twitter:image" content={product.featured_image?.url || 'https://www.serlesbake.in/img/logo.png'} />
+      </Head>
+
       <style jsx>{`
         @keyframes glitter {
           0%, 100% {
@@ -707,6 +723,15 @@ Please contact me for more details. Thank you!`;
         </div>
       </section>
       {/* Shop Details Section End */}
+
+      {/* Product FAQ (SEO-friendly JSON-LD + visible FAQ) */}
+      <section className="container">
+        <div className="row">
+          <div className="col-lg-12">
+            <ProductFAQ product={product} phone="916383070725" whatsappNumber="916383070725" />
+          </div>
+        </div>
+      </section>
 
       {/* Spacer to prevent overlap */}
       <div style={{ height: '50px', clear: 'both' }}></div>
