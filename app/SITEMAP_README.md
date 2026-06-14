@@ -197,7 +197,7 @@ ls -la public/sitemap.xml
 ls -la public/sitemap-data.json
 
 # Check API connectivity
-curl https://serlesbackend.vercel.app/api/products/?format=json
+curl https://shop.serlesbake.in/api/products/?format=json
 ```
 
 ## Performance Considerations
