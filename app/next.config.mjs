@@ -7,7 +7,8 @@ const nextConfig = {
       '127.0.0.1',
       'serlesbake.in',
       'www.serlesbake.in',
-      'serlesbackend.vercel.app'
+      'serlesbackend.vercel.app',
+      'shop.serlesbake.in'
     ],
     unoptimized: false,
     formats: ['image/webp', 'image/avif'],
@@ -20,6 +21,12 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'serlesbackend.vercel.app',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'shop.serlesbake.in',
         port: '',
         pathname: '/**',
       },

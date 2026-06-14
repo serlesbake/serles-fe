@@ -7,7 +7,7 @@ const staticBanners = [
     "id": 1,
     "title": "Independence Theme Cake",
     "description": "Soft sponge layers in saffron, white, and green with creamy frosting — perfect for Independence Day celebrations.",
-    "image": "https://serlesbackend.vercel.app/api/media/banners/Independencedaycompressed.png",
+    "image": "https://shop.serlesbake.in/api/media/banners/Independencedaycompressed.png",
     "is_active": true,
     "order": 0
   },
@@ -15,7 +15,7 @@ const staticBanners = [
     "id": 2,
     "title": "Free Customization",
     "description": "Get your dream cake with free customization! Design your perfect cake with our expert bakers.",
-    "image": "https://serlesbackend.vercel.app/api/media/banners/freecustomization.png",
+    "image": "https://shop.serlesbake.in/api/media/banners/freecustomization.png",
     "is_active": true,
     "order": 1
   },

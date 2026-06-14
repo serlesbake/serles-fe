@@ -88,7 +88,7 @@ API endpoints are configured in `app/config/api.js`:
 
 ```javascript
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://serlesbackend.vercel.app',
+  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://shop.serlesbake.in',
   PRODUCTS_ENDPOINT: '/api/products/?format=json',
   CATEGORIES_ENDPOINT: '/api/categories/?format=json',
   TAGS_ENDPOINT: '/api/tags/?format=json',
