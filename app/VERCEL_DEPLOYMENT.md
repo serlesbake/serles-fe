@@ -18,7 +18,7 @@ In your Vercel project settings, add these environment variables:
 
 ```bash
 # API Configuration
-NEXT_PUBLIC_API_BASE_URL=https://shop.serlesbake.in
+NEXT_PUBLIC_API_BASE_URL=https://serlesbackend.vercel.app
 NEXT_PUBLIC_PRODUCTS_ENDPOINT=/api/products/?format=json
 NEXT_PUBLIC_CATEGORIES_ENDPOINT=/api/categories/?format=json
 NEXT_PUBLIC_TAGS_ENDPOINT=/api/tags/?format=json

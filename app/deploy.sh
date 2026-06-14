@@ -36,7 +36,7 @@ if [ $? -eq 0 ]; then
     echo "4. Deploy!"
     echo ""
     echo "📋 Environment variables to set in Vercel:"
-    echo "NEXT_PUBLIC_API_BASE_URL=https://shop.serlesbake.in"
+    echo "NEXT_PUBLIC_API_BASE_URL=https://serlesbackend.vercel.app"
     echo "NEXT_PUBLIC_SITE_URL=https://www.serlesbake.in"
     echo "NEXT_PUBLIC_PHONE=+916383070725"
     echo "NEXT_PUBLIC_EMAIL=serlesbake@gmail.com"

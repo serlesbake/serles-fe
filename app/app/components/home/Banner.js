@@ -1,13 +1,15 @@
 'use client';
 import { useState, useEffect } from "react";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://serlesbackend.vercel.app';
+
 // Static banner data
 const staticBanners = [
   {
     "id": 1,
     "title": "Independence Theme Cake",
     "description": "Soft sponge layers in saffron, white, and green with creamy frosting — perfect for Independence Day celebrations.",
-    "image": "https://shop.serlesbake.in/api/media/banners/Independencedaycompressed.png",
+    "image": `${API_BASE_URL}/api/media/banners/Independencedaycompressed.png`,
     "is_active": true,
     "order": 0
   },
@@ -15,7 +17,7 @@ const staticBanners = [
     "id": 2,
     "title": "Free Customization",
     "description": "Get your dream cake with free customization! Design your perfect cake with our expert bakers.",
-    "image": "https://shop.serlesbake.in/api/media/banners/freecustomization.png",
+    "image": `${API_BASE_URL}/api/media/banners/freecustomization.png`,
     "is_active": true,
     "order": 1
   },

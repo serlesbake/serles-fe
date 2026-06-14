@@ -7,7 +7,7 @@ const nextConfig = {
       '127.0.0.1',
       'serlesbake.in',
       'www.serlesbake.in',
-      'shop.serlesbake.in',
+      'serlesbackend.vercel.app',
       'shop.serlesbake.in',
       'cdn.serlesbake.in'
     ],
@@ -21,7 +21,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'shop.serlesbake.in',
+        hostname: 'serlesbackend.vercel.app',
         port: '',
         pathname: '/**',
       },
