@@ -32,6 +32,7 @@ export default function Header() {
               <li><Link href="/about" onClick={() => setIsMenuOpen(false)}>About</Link></li>
               <li><Link href="/cakes" onClick={() => setIsMenuOpen(false)}>Shop</Link></li>
               <li><Link href="/menu" onClick={() => setIsMenuOpen(false)}>Menu & Pricing</Link></li>
+              <li><Link href="/blog" onClick={() => setIsMenuOpen(false)}>Blog</Link></li>
               <li><Link href="/testimonial" onClick={() => setIsMenuOpen(false)}>Testimonials</Link></li>
               <li><Link href="/contact" onClick={() => setIsMenuOpen(false)}>Contact</Link></li>
             </ul>
@@ -105,6 +106,7 @@ export default function Header() {
                     </ul> */}
                   </li>
                   <li><Link href="/menu">Menu&Pricing</Link></li>
+                  <li><Link href="/blog">Blog</Link></li>
                   <li><Link href="/testimonial">Testimonials</Link></li>
 
                   <li><Link href="/contact">Contact</Link></li>

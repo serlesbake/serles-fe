@@ -12,6 +12,7 @@ Disallow: /admin/
 
 # Allow important pages
 Allow: /cakes/
+Allow: /blog/
 Allow: /contact
 Allow: /about
 Allow: /privacy-policy

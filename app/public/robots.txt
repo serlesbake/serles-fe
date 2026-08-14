@@ -44,6 +44,7 @@ Disallow: /test-css/
 
 # Explicitly allow all important pages and sections
 Allow: /cakes/
+Allow: /blog/
 Allow: /contact
 Allow: /about
 Allow: /menu

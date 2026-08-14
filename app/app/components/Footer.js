@@ -376,6 +376,7 @@ export default function Footer() {
               <div className="col-lg-5">
                 <div className="copyright__widget">
                   <ul style={{ display: "flex", gap: 16, listStyle: "none", padding: 0, margin: 0 }}>
+                    <li><Link href="/blog" style={{ color: "#ffb6c1" }}>Blog</Link></li>
                     <li><Link href="/privacy-policy" style={{ color: "#ffb6c1" }}>Privacy Policy</Link></li>
                     <li><Link href="/terms-conditions" style={{ color: "#ffb6c1" }}>Terms &amp; Conditions</Link></li>
                     <li><Link href="/site-map" style={{ color: "#ffb6c1" }}>Site Map</Link></li>

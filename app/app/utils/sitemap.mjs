@@ -1,5 +1,6 @@
 import { getProductsUrl, getCategoriesUrl, getTagsUrl } from '../config/api.js';
 import apiCache from './cache.js';
+import { getPostsForSitemap, getCategories as getBlogCategories, getTags as getBlogTags } from './blogData.js';
 
 // Base URL for the website
 const BASE_URL = 'https://www.serlesbake.in';
@@ -11,6 +12,7 @@ const STATIC_PAGES = [
   { path: '/contact', priority: '0.8', changefreq: 'monthly' },
   { path: '/menu', priority: '0.9', changefreq: 'weekly' },
   { path: '/testimonial', priority: '0.7', changefreq: 'monthly' },
+  { path: '/blog', priority: '0.8', changefreq: 'weekly' },
   { path: '/privacy-policy', priority: '0.3', changefreq: 'yearly' },
   { path: '/terms-conditions', priority: '0.3', changefreq: 'yearly' },
   { path: '/site-map', priority: '0.4', changefreq: 'monthly' },
@@ -108,6 +110,50 @@ export async function generateXMLSitemap() {
     <lastmod>${currentDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
+  </url>`;
+    }
+  });
+
+  // Blog: posts carry a real `lastmod` from the API, so they get accurate dates
+  // rather than the build timestamp used above.
+  const [blogPosts, blogCategories, blogTags] = await Promise.all([
+    getPostsForSitemap(),
+    getBlogCategories(),
+    getBlogTags(),
+  ]);
+
+  blogPosts.forEach(post => {
+    if (post.slug) {
+      sitemap += `
+  <url>
+    <loc>${BASE_URL}/blog/${post.slug}</loc>
+    <lastmod>${post.lastmod || currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+    }
+  });
+
+  blogCategories.forEach(category => {
+    if (category.slug) {
+      sitemap += `
+  <url>
+    <loc>${BASE_URL}/blog/categories/${category.slug}</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>`;
+    }
+  });
+
+  blogTags.forEach(tag => {
+    if (tag.slug) {
+      sitemap += `
+  <url>
+    <loc>${BASE_URL}/blog/tags/${tag.slug}</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
   </url>`;
     }
   });
