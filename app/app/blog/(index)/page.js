@@ -57,7 +57,6 @@ export default async function BlogIndexPage({ searchParams }) {
     getSidebarData(),
   ]);
 
-  const [leadPost, ...restPosts] = posts;
   const isFiltered = Boolean(search || category);
   const activeCategory = sidebar.categories.find((item) => item.slug === category);
 
@@ -145,15 +144,11 @@ export default async function BlogIndexPage({ searchParams }) {
                   </Link>
                 </div>
               ) : (
+                // One column on mobile, two from the md breakpoint up.
                 <div className="row g-4">
-                  {leadPost && (
-                    <div className="col-12 mb-2">
-                      <BlogCard post={leadPost} featured priority />
-                    </div>
-                  )}
-                  {restPosts.map((post) => (
-                    <div className="col-md-6" key={post.id ?? post.slug}>
-                      <BlogCard post={post} />
+                  {posts.map((post, index) => (
+                    <div className="col-12 col-md-6" key={post.id ?? post.slug}>
+                      <BlogCard post={post} priority={index < 2} />
                     </div>
                   ))}
                 </div>

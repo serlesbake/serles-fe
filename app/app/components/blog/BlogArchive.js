@@ -79,7 +79,7 @@ export default function BlogArchive({
               ) : (
                 <div className="row g-4">
                   {posts.map((post, index) => (
-                    <div className="col-md-6" key={post.id ?? post.slug}>
+                    <div className="col-12 col-md-6" key={post.id ?? post.slug}>
                       <BlogCard post={post} priority={index === 0} />
                     </div>
                   ))}
