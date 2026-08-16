@@ -34,11 +34,14 @@ export const getTagsUrl = () => {
 // All blog endpoints are public + read-only. See BLOG_API_GUIDE.md at the repo
 // root for the full contract.
 //
-// The blog module is not necessarily served from the same host as the shop
-// endpoints, so its origin can be overridden independently. Leave
-// NEXT_PUBLIC_BLOG_API_BASE_URL unset to use the main API host.
+// The blog module is served from a different host than the shop endpoints: it
+// only exists on shop.serlesbake.in, while serlesbackend.vercel.app returns 500
+// for every /api/blog/ path. The default below is therefore the blog's own host
+// rather than API_CONFIG.BASE_URL — otherwise production silently renders an
+// empty blog. Point NEXT_PUBLIC_BLOG_API_BASE_URL elsewhere once the blog ships
+// to the primary backend.
 export const BLOG_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_BLOG_API_BASE_URL || API_CONFIG.BASE_URL,
+  BASE_URL: process.env.NEXT_PUBLIC_BLOG_API_BASE_URL || 'https://shop.serlesbake.in',
   BASE_PATH: process.env.NEXT_PUBLIC_BLOG_BASE_PATH || '/api/blog',
 };
 
