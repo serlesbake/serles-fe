@@ -92,8 +92,20 @@ const bakery = {
   ...(GEO
     ? { geo: { '@type': 'GeoCoordinates', latitude: GEO.lat, longitude: GEO.lng } }
     : {}),
+  // The towns the owner confirmed delivery to. Naming them individually is worth
+  // more than "Tenkasi District" alone for local search, and each has a matching
+  // page on the site so the claim is backed by something.
+  //
+  // Alangulam was explicitly excluded and must not be added back without asking —
+  // declaring a service area the shop does not serve is a promise it cannot keep.
   areaServed: [
     { '@type': 'City', name: 'Tenkasi' },
+    { '@type': 'City', name: 'Shencottai' },
+    { '@type': 'City', name: 'Courtallam' },
+    { '@type': 'City', name: 'Kadayanallur' },
+    { '@type': 'City', name: 'Puliyangudi' },
+    { '@type': 'City', name: 'Sankarankovil' },
+    { '@type': 'City', name: 'Tirunelveli' },
     { '@type': 'AdministrativeArea', name: 'Tenkasi District' },
   ],
   servesCuisine: 'Bakery',
