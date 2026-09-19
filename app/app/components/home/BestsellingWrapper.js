@@ -16,9 +16,19 @@ async function fetchBestselling() {
     }
     
     const data = await res.json();
-    // Filter products where is_best_seller is true
-    const bestselling = data.results?.filter(product => product.is_best_seller) || [];
-    return bestselling;
+
+    // The catalog API returns a BARE ARRAY for /api/products/, not a paginated
+    // { results: [...] } envelope. This read `data.results?.filter(...) || []`,
+    // which was always undefined and so always fell through to [] - the homepage
+    // has been rendering "No bestselling products available at the moment."
+    // while five products were flagged is_best_seller. Accept either shape.
+    const products = Array.isArray(data?.results)
+      ? data.results
+      : Array.isArray(data)
+        ? data
+        : [];
+
+    return products.filter((product) => product.is_best_seller);
   } catch (error) {
     console.error('Error fetching bestselling products:', error);
     return [];

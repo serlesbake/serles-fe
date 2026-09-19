@@ -124,10 +124,24 @@ build: `/cakes` 14 product links, `/cakes/premium-cake` 3, `/cakes/tags` its tag
 `/cakes/tags/brownie` its products, product pages their name/prices/weights — and exactly
 one `<h1>` on all of them.
 
-- **The homepage's "Bestselling" strip is still client-rendered.** `BestsellingWrapper`
-  fetches in the browser, so the homepage ships its 6 category links (`components/home/
-  category.js` is an async server component) but no product links. The smallest remaining
-  instance of this pattern, and the highest-value one left, since it is the homepage.
+- ~~The homepage's "Bestselling" strip is client-rendered~~ — it turned out not to be a
+  rendering problem at all. `BestsellingWrapper` was already a server component; it read
+  `data.results?.filter(...) || []` against `/api/products/`, **which returns a bare
+  array, not a paginated `{ results: [...] }` envelope**. So the expression was always
+  `undefined` and always fell through to `[]`: the homepage rendered "No bestselling
+  products available at the moment." in production while five products were flagged
+  `is_best_seller`. Both the wrapper and the duplicate copy of the same fetch inside
+  `Bestselling.js` had the bug; the duplicate (and its `useEffect`) is gone, and
+  `Bestselling` is now presentational. The homepage ships 4 bestsellers —
+  `slice(0, 4)` is deliberate, one row.
+
+### Watch the response shape
+
+`/api/products/` and `/api/categories/` return **bare arrays**. Other endpoints paginate.
+Always normalise both shapes — `Array.isArray(d?.results) ? d.results : Array.isArray(d) ? d : []`
+— and never `d.results?.x || []`, which fails silently and looks like "no data" rather
+than a bug. The `.results || data` form used in the tag clients is safe; the `?.` form is
+not.
 - **Product pages are ~145 words.** They need real copy.
 - Blog JSON-LD is **valid** (`BlogPosting` + `FAQPage`, correctly escaped in `JsonLd.js`).
   All 9 posts and their category/tag pages are live and in the sitemap (62 URLs total).

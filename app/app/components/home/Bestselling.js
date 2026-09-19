@@ -1,99 +1,26 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './productgrid.scss';
-import { getProductsUrl } from '../../config/api';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Bestselling.module.css';
 import { logImageError, getFallbackImage } from '../../utils/imageUtils';
 
-async function fetchBestselling() {
-  try {
-    const res = await fetch(getProductsUrl(), {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-      headers: {
-        'Cache-Control': 'public, max-age=3600, s-maxage=3600',
-      }
-    });
-    
-    if (!res.ok) {
-      console.error('Failed to fetch bestselling products:', res.status, res.statusText);
-      return [];
-    }
-    
-    const data = await res.json();
-    // Filter products where is_best_seller is true
-    const bestselling = data.results?.filter(product => product.is_best_seller) || [];
-    return bestselling;
-  } catch (error) {
-    console.error('Error fetching bestselling products:', error);
-    return [];
-  }
-}
-
+/**
+ * Presentational only. BestsellingWrapper is a server component that fetches and
+ * passes `initialProducts` in, so the products are in the server HTML.
+ *
+ * This used to keep its own copy of the fetch behind a useEffect - carrying the
+ * same `data.results` bug as the wrapper against an API that returns a bare array,
+ * so the fallback path could never have produced products either. It stays a
+ * client component only for the image onError handler.
+ */
 export default function Bestselling({ initialProducts = [] }) {
-  const [products, setProducts] = useState(initialProducts);
-  const [loading, setLoading] = useState(initialProducts.length === 0);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    // Only fetch if we don't have initial products
-    if (initialProducts.length === 0) {
-      const loadProducts = async () => {
-        try {
-          setLoading(true);
-          const data = await fetchBestselling();
-          setProducts(data);
-        } catch (err) {
-          setError(err.message);
-          console.error('Error loading bestselling products:', err);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      loadProducts();
-    }
-  }, [initialProducts.length]);
+  const products = initialProducts;
   
-  // If loading, show loading message
-  if (loading) {
-    return (
-      <section className="product spad">
-        <div className="container">
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h2 className="h1 text-left">Bestselling Cakes</h2>
-            <Link href={`/cakes`} className="btn bg-primary-light">View All</Link>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              <p className={styles.loadingMessage}>Loading bestselling products...</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
-  // If error, show error message
-  if (error) {
-    return (
-      <section className="product spad">
-        <div className="container">
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h2 className="h1 text-left">Bestselling Cakes</h2>
-            <Link href={`/cakes`} className="btn bg-primary-light">View All</Link>
-          </div>
-          <div className="row">
-            <div className="col-12">
-              <p className={styles.loadingMessage}>Unable to load products. Please try again later.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   // If no products, show a message
   if (!products || products.length === 0) {
