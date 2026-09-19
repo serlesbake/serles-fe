@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
@@ -9,6 +10,10 @@ import ProductCard from "../../components/ProductCard";
 import ProductTags from "../../components/ProductTags";
 import useProductFilters from "../../hooks/useProductFilters";
 import apiCache from "../../utils/cache";
+
+/** "black-forest" -> "Black Forest", for headings shown before the fetch resolves. */
+const titleFromSlug = (slug = "") =>
+  slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
 export default function CategoryPageClient({ params }) {
   const categorySlug = params.categorySlug ?? params["category-slug"];
@@ -87,12 +92,20 @@ export default function CategoryPageClient({ params }) {
   }, [categorySlug, dataFetched, setSelectedCategory]);
 
   if (loading) {
+    // The breadcrumb carries the page's <h1>; without it the server HTML has no
+    // heading at all, since this component fetches client-side.
     return (
-      <div className="text-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
+      <>
+        <Breadcrumb
+          title={titleFromSlug(categorySlug)}
+          items={[{ label: "Cakes", href: "/cakes" }, { label: titleFromSlug(categorySlug) }]}
+        />
+        <div className="text-center py-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 

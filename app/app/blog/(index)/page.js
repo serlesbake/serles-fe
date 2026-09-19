@@ -84,7 +84,7 @@ export default async function BlogIndexPage({ searchParams }) {
     <>
       {!isFiltered && <JsonLd data={[blogSchema, buildBreadcrumbSchema()]} />}
 
-      <Breadcrumb title="Blog" items={[{ label: 'Blog' }]} />
+      <Breadcrumb title="Blog" items={[{ label: 'Blog' }]} headingLevel="h2" />
 
       <section className="blog spad pt-5">
         <div className="container">

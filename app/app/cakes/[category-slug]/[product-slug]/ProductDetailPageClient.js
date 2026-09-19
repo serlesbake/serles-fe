@@ -1,14 +1,18 @@
 "use client";
+
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Head from "next/head";
 import { notFound } from "next/navigation";
 import { getProductsUrl, getCategoriesUrl, getProductDetailUrl } from "../../../config/api";
 import Breadcrumb from "../../../components/Breadcrumb";
 import ProductCard from "../../../components/ProductCard";
 import ProductFAQ from "../../../components/ProductFAQ";
 import apiCache from "../../../utils/cache";
+
+/** "black-forest" -> "Black Forest", for headings shown before the fetch resolves. */
+const titleFromSlug = (slug = "") =>
+  slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
 export default function ProductDetailPageClient({ params }) {
   const categorySlug = params.categorySlug ?? params["category-slug"];
@@ -165,7 +169,21 @@ Please contact me for more details. Thank you!`;
   };
 
   if (loading) {
-    return <div className="text-center py-5">Loading...</div>;
+    // The breadcrumb carries the page's <h1>; without it the server HTML has no
+    // heading at all, since this component fetches client-side.
+    return (
+      <>
+        <Breadcrumb
+          title={titleFromSlug(productSlug)}
+          items={[
+            { label: "Cakes", href: "/cakes" },
+            { label: titleFromSlug(categorySlug), href: `/cakes/${categorySlug}` },
+            { label: titleFromSlug(productSlug) },
+          ]}
+        />
+        <div className="text-center py-5">Loading...</div>
+      </>
+    );
   }
 
   if (!product) {
@@ -177,19 +195,6 @@ Please contact me for more details. Thank you!`;
 
   return (
     <>
-      <Head>
-        <title>{product.name ? `${product.name} | Serle's Bake` : "Serle's Bake"}</title>
-        <meta name="description" content={product.short_description || (product.description || '').slice(0, 160)} />
-        <link rel="canonical" href={`https://www.serlesbake.in/cakes/${categorySlug}/${product.slug}`} />
-        <meta property="og:title" content={product.name} />
-        <meta property="og:description" content={product.short_description || (product.description || '').slice(0, 160)} />
-        <meta property="og:image" content={product.featured_image?.url || 'https://www.serlesbake.in/img/logo.png'} />
-        <meta property="og:url" content={`https://www.serlesbake.in/cakes/${categorySlug}/${product.slug}`} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={product.name} />
-        <meta name="twitter:description" content={product.short_description || (product.description || '').slice(0, 160)} />
-        <meta name="twitter:image" content={product.featured_image?.url || 'https://www.serlesbake.in/img/logo.png'} />
-      </Head>
 
       <style jsx>{`
         @keyframes glitter {

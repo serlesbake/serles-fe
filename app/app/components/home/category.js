@@ -16,7 +16,13 @@ export default async function Category() {
   const categoriesData = await fetchCategories();
   return (
     <section className="container text-center pt-5">
-      <h2 className='h2'>Home Made Cakes</h2>
+      {/* The homepage's <h1>. It used to be the logo in the shared header, which
+          made every page on the site claim "Serles Bake" as its main heading; with
+          that unwrapped, this — the first heading on the page — becomes the real
+          one. Wording matches the page title's primary keyword rather than the
+          generic "Home Made Cakes". The `h2` class is kept, so nothing moves
+          visually. This component is homepage-only. */}
+      <h1 className='h2'>Homemade Cakes in Tenkasi</h1>
       <p className='p'>From Our Oven to Your Heart</p>
       <div className="product_grid">
         {categoriesData.map((category) => (

@@ -92,6 +92,7 @@ export default async function BlogPostPage({ params }) {
       <JsonLd data={[post.meta_data?.schema_json, buildBreadcrumbSchema(breadcrumbTrail)]} />
 
       <Breadcrumb
+        headingLevel="h2"
         title={post.category?.name || 'Blog'}
         items={[
           { label: 'Blog', href: '/blog' },

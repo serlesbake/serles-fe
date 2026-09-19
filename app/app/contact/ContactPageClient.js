@@ -108,7 +108,7 @@ function ContactCard({ icon, title, children, link, gradient, iconBg }) {
 export default function ContactPageClient() {
   return (
     <>
-      <Breadcrumb title="Contact Us" />
+      <Breadcrumb title="Contact Us" headingLevel="h2" />
       
       {/* Hero Section */}
       <section style={{ 

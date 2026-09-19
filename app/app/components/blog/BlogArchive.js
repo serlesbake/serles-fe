@@ -46,6 +46,7 @@ export default function BlogArchive({
       <JsonLd data={[collectionSchema, buildBreadcrumbSchema(breadcrumb)]} />
 
       <Breadcrumb
+        headingLevel="h2"
         title={title}
         items={[
           { label: 'Blog', href: '/blog' },

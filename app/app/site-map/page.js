@@ -82,7 +82,7 @@ export default function SiteMapPage() {
 
   return (
     <>
-      <Breadcrumb title="Site Map" />
+      <Breadcrumb title="Site Map" headingLevel="h2" />
       
       <section style={{ 
         background: "linear-gradient(135deg, #fef7f8 0%, #fff5f6 100%)", 

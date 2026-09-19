@@ -4,7 +4,32 @@
 // deliberately fail-soft: if the blog module is not deployed on the backend yet,
 // list pages render an empty state and detail pages 404 instead of throwing.
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.serlesbake.in';
+/**
+ * The site's canonical host is **www**: `sitemap.xml`, the root layout's
+ * `metadataBase` and every non-blog page use `https://www.serlesbake.in`. Blog
+ * canonicals were emitting the bare apex host, which splits ranking signals
+ * between two hostnames Google treats as different sites.
+ *
+ * The cause is environmental (`NEXT_PUBLIC_SITE_URL` set without the `www` in
+ * Vercel) rather than a literal in the code, so forcing the host here fixes it
+ * regardless of how the env var is spelled, and keeps it fixed if someone sets it
+ * again. Only `serlesbake.in` is rewritten — a preview or staging host set
+ * deliberately still works.
+ */
+function canonicalSiteUrl(raw) {
+  const fallback = 'https://www.serlesbake.in';
+  if (!raw) return fallback;
+  try {
+    const parsed = new URL(raw);
+    if (parsed.hostname === 'serlesbake.in') parsed.hostname = 'www.serlesbake.in';
+    parsed.protocol = 'https:';
+    return parsed.origin;
+  } catch {
+    return fallback;
+  }
+}
+
+export const SITE_URL = canonicalSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
 export const SITE_NAME = "Serle's Bake";
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/img/logo.png`;
 

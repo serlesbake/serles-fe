@@ -70,7 +70,12 @@ export default function Header() {
                   </Link>
                   <Link href="/" className='text-decoration-none d-flex align-items-center gap-3 justify-content-center col-lg-6 logo-new'>
                       <Image src="/img/serlesbakelogo.webp" alt="Logo" width={70} height={70} />
-                      <h1 className='h1 text-white fw -bold '>Serles Bake</h1>
+                      {/* This was an <h1>. It sits in the shared header, so every one
+                          of the site's ~62 URLs had "Serles Bake" as its strongest
+                          on-page heading, and pages with a real heading of their own
+                          (blog posts, contact) shipped two H1s. The `h1` class is kept,
+                          so this is a semantic change only — nothing moves visually. */}
+                      <span className='h1 text-white fw -bold mb-0 d-block'>Serles Bake</span>
                     </Link>
                   <Link href="tel:+916383070725" className="text-primary-light text-decoration-none d-none d-lg-block">
                     <i className="bi bi-telephone text-primary-light d-inline-flex align-items-center justify-content-center gap-3 h-100 ">

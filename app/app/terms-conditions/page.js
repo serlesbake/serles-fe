@@ -1,7 +1,7 @@
 import Breadcrumb from "../components/Breadcrumb";
 
 export const metadata = {
-  title: "Terms & Conditions | Best Homemade Cakes Near Me – Serle’s Bake Tenkasi",
+  title: "Terms & Conditions | Serle’s Bake, Tenkasi",
   description: "Read our terms and conditions for ordering cakes with Serle’s Bake – Tenkasi’s trusted cake shop for birthday cakes, brownies & custom creations with same-day delivery.",
   keywords: "cake shop terms tenkasi, serles bake terms, order terms, best cake shop tenkasi",
 };
@@ -9,7 +9,7 @@ export const metadata = {
 export default function TermsConditionsPage() {
   return (
     <>
-      <Breadcrumb title="Terms & Conditions" />
+      <Breadcrumb title="Terms & Conditions" headingLevel="h2" />
       
       <section style={{ 
         background: "linear-gradient(135deg, #fef7f8 0%, #fff5f6 100%)", 
