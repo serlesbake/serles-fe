@@ -11,6 +11,18 @@ const SITE = "https://www.serlesbake.in";
 // price or description edits. 60s matches the public API's own CDN cache window.
 export const revalidate = 60;
 
+/**
+ * Product titles ran 61-75 chars because of the
+ * "- Serle's Bake | From Our Oven to Your Heart" suffix, past the ~60 Google
+ * shows — so the tagline was the part being truncated away. "in Tenkasi" is
+ * shorter and carries the geo keyword instead. Long product names fall back to a
+ * bare "<name> | Serle's Bake" so the title still fits.
+ */
+function productTitle(name) {
+  const withGeo = `${name} in Tenkasi | Serle's Bake`;
+  return withGeo.length <= 60 ? withGeo : `${name} | Serle's Bake`;
+}
+
 const asList = (payload) =>
   Array.isArray(payload?.results) ? payload.results : Array.isArray(payload) ? payload : [];
 
@@ -38,11 +50,11 @@ export async function generateMetadata({ params }) {
 
     if (!foundProductFromList) {
       return {
-        title: `${productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} - Serle's Bake | From Our Oven to Your Heart`,
+        title: productTitle(productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cake'),
         description: `Discover our delicious ${productSlug?.replace(/-/g, ' ')} cake at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
         keywords: `homemade cakes, ${productSlug?.replace(/-/g, ' ')}, Serle's Bake, Tenkasi cakes, birthday cakes, wedding cakes, custom cakes, Tamil Nadu bakery, fresh cakes delivery`,
         openGraph: {
-          title: `${productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} - Serle's Bake | From Our Oven to Your Heart`,
+          title: productTitle(productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cake'),
           description: `Discover our delicious ${productSlug?.replace(/-/g, ' ')} cake at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
           type: 'website',
           url: `https://www.serlesbake.in/cakes/${categorySlug}/${productSlug}`,
@@ -50,7 +62,7 @@ export async function generateMetadata({ params }) {
         },
         twitter: {
           card: 'summary_large_image',
-          title: `${productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} - Serle's Bake | From Our Oven to Your Heart`,
+          title: productTitle(productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cake'),
           description: `Discover our delicious ${productSlug?.replace(/-/g, ' ')} cake at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
           images: ['https://www.serlesbake.in/img/logo.png'],
         },
@@ -64,11 +76,11 @@ export async function generateMetadata({ params }) {
     const individualProductData = await apiCache.fetchWithCache(getProductDetailUrl(foundProductFromList.id));
 
     return {
-      title: `${individualProductData.name} - Serle's Bake | From Our Oven to Your Heart`,
+      title: productTitle(individualProductData.name),
       description: individualProductData.description || individualProductData.short_description || `Discover our delicious ${individualProductData.name} at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
       keywords: `homemade cakes, ${individualProductData.name.toLowerCase()}, Serle's Bake, Tenkasi cakes, ${individualProductData.category?.name?.toLowerCase() || 'cake'}, birthday cakes, wedding cakes, custom cakes, Tamil Nadu bakery, fresh cakes delivery${individualProductData.tags ? `, ${individualProductData.tags.map(tag => tag.name).join(', ')}` : ''}`,
       openGraph: {
-        title: `${individualProductData.name} - Serle's Bake | From Our Oven to Your Heart`,
+        title: productTitle(individualProductData.name),
         description: individualProductData.description || individualProductData.short_description || `Discover our delicious ${individualProductData.name} at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
         type: 'website',
         url: `https://www.serlesbake.in/cakes/${categorySlug}/${productSlug}`,
@@ -76,7 +88,7 @@ export async function generateMetadata({ params }) {
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${individualProductData.name} - Serle's Bake | From Our Oven to Your Heart`,
+        title: productTitle(individualProductData.name),
         description: individualProductData.description || individualProductData.short_description || `Discover our delicious ${individualProductData.name} at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
         images: [individualProductData.featured_image?.url || individualProductData.images?.[0]?.url || 'https://www.serlesbake.in/img/logo.png'],
       },
@@ -87,11 +99,11 @@ export async function generateMetadata({ params }) {
   } catch (error) {
     console.error("Error generating metadata:", error);
     return {
-      title: `${productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} - Serle's Bake | From Our Oven to Your Heart`,
+      title: productTitle(productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cake'),
       description: `Discover our delicious ${productSlug?.replace(/-/g, ' ')} cake at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
       keywords: `homemade cakes, ${productSlug?.replace(/-/g, ' ')}, Serle's Bake, Tenkasi cakes, birthday cakes, wedding cakes, custom cakes, Tamil Nadu bakery, fresh cakes delivery`,
       openGraph: {
-        title: `${productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} - Serle's Bake | From Our Oven to Your Heart`,
+        title: productTitle(productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cake'),
         description: `Discover our delicious ${productSlug?.replace(/-/g, ' ')} cake at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
         type: 'website',
         url: `https://www.serlesbake.in/cakes/${categorySlug}/${productSlug}`,
@@ -99,7 +111,7 @@ export async function generateMetadata({ params }) {
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} - Serle's Bake | From Our Oven to Your Heart`,
+        title: productTitle(productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cake'),
         description: `Discover our delicious ${productSlug?.replace(/-/g, ' ')} cake at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
         images: ['https://www.serlesbake.in/img/logo.png'],
       },

@@ -4,6 +4,20 @@ import { getProductsUrl, getCategoriesUrl, getTagsUrl } from "../../config/api";
 import CategoryPageClient from "./CategoryPageClient";
 import JsonLd from "../../components/blog/JsonLd";
 import apiCache from "../../utils/cache";
+import { copyForCategory } from "../categoryCopy";
+
+/**
+ * Category titles ran 62-66 chars because of the
+ * "- Serle's Bake | From Our Oven to Your Heart" suffix, past the ~60 Google
+ * shows. This trades the tagline for "in Tenkasi", which is shorter *and* carries
+ * the geo keyword the page needs to rank. "Cakes" is only appended when the
+ * category name doesn't already end in it — otherwise "Flavoured Cakes" became
+ * "Flavoured Cakes Cakes".
+ */
+function categoryTitle(name) {
+  const subject = /cakes?$/i.test(name) ? name : `${name} Cakes`;
+  return `${subject} in Tenkasi | Serle's Bake`;
+}
 
 // Server-rendered, so without this it would be prerendered once and never pick up
 // new products. 60s matches the public API's own CDN cache window.
@@ -32,11 +46,11 @@ export async function generateMetadata({ params }) {
     
     if (!currentCategory) {
       return {
-        title: `${categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Cakes - Serle's Bake | From Our Oven to Your Heart`,
+        title: categoryTitle(categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cakes'),
         description: `Discover our collection of ${categorySlug?.replace(/-/g, ' ')} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
         keywords: `homemade cakes, ${categorySlug?.replace(/-/g, ' ')} cakes, Serle's Bake, Tenkasi cakes, birthday cakes, wedding cakes, custom cakes, Tamil Nadu bakery, fresh cakes delivery`,
         openGraph: {
-          title: `${categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Cakes - Serle's Bake | From Our Oven to Your Heart`,
+          title: categoryTitle(categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cakes'),
           description: `Discover our collection of ${categorySlug?.replace(/-/g, ' ')} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
           type: 'website',
           url: `https://www.serlesbake.in/cakes/${categorySlug}`,
@@ -44,7 +58,7 @@ export async function generateMetadata({ params }) {
         },
         twitter: {
           card: 'summary_large_image',
-          title: `${categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Cakes - Serle's Bake | From Our Oven to Your Heart`,
+          title: categoryTitle(categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cakes'),
           description: `Discover our collection of ${categorySlug?.replace(/-/g, ' ')} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
           images: ['https://www.serlesbake.in/img/logo.png'],
         },
@@ -55,11 +69,11 @@ export async function generateMetadata({ params }) {
     }
 
     return {
-      title: `${currentCategory.name} Cakes - Serle's Bake | From Our Oven to Your Heart`,
+      title: categoryTitle(currentCategory.name),
       description: currentCategory.description || `Discover our collection of ${currentCategory.name} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect ${currentCategory.name.toLowerCase()} cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
       keywords: `homemade cakes, ${currentCategory.name.toLowerCase()} cakes, Serle's Bake, Tenkasi cakes, ${currentCategory.name.toLowerCase()}, birthday cakes, wedding cakes, custom cakes, Tamil Nadu bakery, fresh cakes delivery${currentCategory.tags ? `, ${currentCategory.tags.join(', ')}` : ''}`,
       openGraph: {
-        title: `${currentCategory.name} Cakes - Serle's Bake | From Our Oven to Your Heart`,
+        title: categoryTitle(currentCategory.name),
         description: currentCategory.description || `Discover our collection of ${currentCategory.name} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect ${currentCategory.name.toLowerCase()} cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
         type: 'website',
         url: `https://www.serlesbake.in/cakes/${categorySlug}`,
@@ -67,7 +81,7 @@ export async function generateMetadata({ params }) {
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${currentCategory.name} Cakes - Serle's Bake | From Our Oven to Your Heart`,
+        title: categoryTitle(currentCategory.name),
         description: currentCategory.description || `Discover our collection of ${currentCategory.name} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect ${currentCategory.name.toLowerCase()} cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
         images: [currentCategory.image?.url || 'https://www.serlesbake.in/img/logo.png'],
       },
@@ -78,11 +92,11 @@ export async function generateMetadata({ params }) {
   } catch (error) {
     console.error("Error generating metadata:", error);
     return {
-      title: `${categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Cakes - Serle's Bake | From Our Oven to Your Heart`,
+      title: categoryTitle(categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cakes'),
       description: `Discover our collection of ${categorySlug?.replace(/-/g, ' ')} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
       keywords: `homemade cakes, ${categorySlug?.replace(/-/g, ' ')} cakes, Serle's Bake, Tenkasi cakes, birthday cakes, wedding cakes, custom cakes, Tamil Nadu bakery, fresh cakes delivery`,
       openGraph: {
-        title: `${categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Cakes - Serle's Bake | From Our Oven to Your Heart`,
+        title: categoryTitle(categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cakes'),
         description: `Discover our collection of ${categorySlug?.replace(/-/g, ' ')} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
         type: 'website',
         url: `https://www.serlesbake.in/cakes/${categorySlug}`,
@@ -90,7 +104,7 @@ export async function generateMetadata({ params }) {
       },
       twitter: {
         card: 'summary_large_image',
-        title: `${categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Cakes - Serle's Bake | From Our Oven to Your Heart`,
+        title: categoryTitle(categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cakes'),
         description: `Discover our collection of ${categorySlug?.replace(/-/g, ' ')} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
         images: ['https://www.serlesbake.in/img/logo.png'],
       },
@@ -193,6 +207,32 @@ export default async function CategoryPage({ params }) {
           initialCategory={category ?? null}
         />
       </Suspense>
+
+      {/* Category pages were ~200 words. This copy is written per category in
+          categoryCopy.js rather than templated, because the same paragraphs with
+          the name swapped would be duplicate content across six URLs. Rendered on
+          the server, below the grid, so it adds substance without pushing the
+          products down. */}
+      {category ? <CategoryCopy slug={categorySlug} name={category.name} /> : null}
     </>
+  );
+}
+
+function CategoryCopy({ slug, name }) {
+  const { heading, paragraphs } = copyForCategory(slug, name);
+
+  return (
+    <section className="spad pt-0">
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-10">
+            <h2>{heading}</h2>
+            {paragraphs.map((text, i) => (
+              <p key={i}>{text}</p>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
