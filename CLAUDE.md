@@ -168,6 +168,15 @@ not.
 
 Bigger than any of the above for a local bakery: an active **Google Business Profile**.
 
+## The backend has a stale hostname — avoid it
+
+Both catalog and blog now come from **`https://shop.serlesbake.in`**.
+`serlesbackend.vercel.app` serves an **old deployment**: stale data on the same
+request, and 500 on every `/api/blog/` path (`X-Vercel-Cache: MISS`, so it is the
+origin, not caching). The note that once lived here — that the blog module "only
+exists on shop.serlesbake.in" — had the cause backwards. Nothing shipped to one host
+and not the other; one host is behind, and blog was merely where that was fatal.
+
 ## API integration
 
 `sitemap.xml` and blog/product pages fetch from the Django API at `shop.serlesbake.in`,
