@@ -27,20 +27,35 @@ const PHONE = '+916383070725';
 const EMAIL = 'serlesbake@gmail.com';
 
 /**
- * Opening hours. Fill from the Google Business Profile, e.g.:
- *
- *   const OPENING_HOURS = [
- *     { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
- *       opens: '09:00', closes: '21:00' },
- *     { days: ['Sunday'], opens: '10:00', closes: '20:00' },
- *   ];
+ * Opening hours, as published on the Google Business Profile: open every day,
+ * 9am–10pm. These must stay in step with the profile — where the two disagree
+ * Google trusts the profile, and the mismatch counts against the site.
  *
  * Times are 24-hour. A day the shop is closed is simply left out of the list.
  */
-const OPENING_HOURS = [];
+const OPENING_HOURS = [
+  {
+    days: [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ],
+    opens: '09:00',
+    closes: '22:00',
+  },
+];
 
-/** Coordinates from the Business Profile, e.g. { lat: 8.9612, lng: 77.3152 }. */
-const GEO = null;
+/**
+ * Coordinates, decoded from the shop's Google plus code `X77J+CH Ilanji`
+ * (full code `6JWVX77J+CH`), which resolves to a ~14 m cell on the
+ * Tenkasi–Sengottai road, about 3 km west of Tenkasi centre.
+ */
+const PLUS_CODE = '6JWVX77J+CH';
+const GEO = { lat: 8.963562, lng: 77.281437 };
 
 const bakery = {
   '@type': 'Bakery',
@@ -81,7 +96,9 @@ const bakery = {
     { '@type': 'AdministrativeArea', name: 'Tenkasi District' },
   ],
   servesCuisine: 'Bakery',
-  hasMap: 'https://maps.google.com/?q=Tenkasi+Sengottai+Main+Road+Ilanji+Tenkasi+Tamil+Nadu',
+  // The plus code resolves to the exact shop rather than a fuzzy text search over
+  // the road name, which is what the previous ?q= URL did.
+  hasMap: `https://plus.codes/${PLUS_CODE}`,
   sameAs: [
     'https://www.facebook.com/serlesbake',
     'https://www.instagram.com/serles_bake',
