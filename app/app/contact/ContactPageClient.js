@@ -176,12 +176,12 @@ export default function ContactPageClient() {
             <ContactCard
               icon={<FaMapMarkerAlt size={28} />}
               title="Visit Us"
-              link="https://maps.google.com/?q=Tenkasi+Sengottai+Main+Road+Ilanji+Tenkasi+Tamil+Nadu"
+              link="https://maps.google.com/?q=Tenkasi+Shencottai+Main+Road+Ilanji+Tenkasi+Tamil+Nadu"
               gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
               iconBg="rgba(255,255,255,0.25)"
             >
               <div style={{ fontSize: "0.95rem", lineHeight: "1.5" }}>
-                Tenkasi - Sengottai Main Road,<br />
+                Tenkasi - Shencottai Main Road,<br />
                 Ilanji, Tenkasi, Tamil Nadu
               </div>
             </ContactCard>

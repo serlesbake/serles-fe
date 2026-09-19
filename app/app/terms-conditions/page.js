@@ -116,7 +116,7 @@ export default function TermsConditionsPage() {
                   }}>
                     <p style={{ margin: "0" }}>
                       <strong>Serles Bake</strong><br />
-                      Tenkasi - Sengottai Main Road, Ilanji, Tenkasi, Tamil Nadu<br />
+                      Tenkasi - Shencottai Main Road, Ilanji, Tenkasi, Tamil Nadu<br />
                       Phone: +91 63830 70725<br />
                       Email: serlesbake@gmail.com
                     </p>

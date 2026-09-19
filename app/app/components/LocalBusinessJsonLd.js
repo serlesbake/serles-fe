@@ -9,18 +9,19 @@ import { SITE_URL, SITE_NAME } from '../utils/blog';
  * near me in Tenkasi" — and the site had no structured data at all outside the
  * blog.
  *
- * Every value here is taken from what the site already publishes (Footer and the
- * contact page), plus the postcode supplied by the owner.
+ * Every value is taken from the Google Business Profile or from what the site
+ * already publishes (Footer, contact page). The node is complete: address with
+ * postcode, opening hours, and coordinates.
  *
- * `geo` and `openingHoursSpecification` are still deliberately absent. They are the
- * two fields local search leans on hardest, so they are worth adding — but wrong
- * hours or coordinates are worse than none: they send customers to a closed shop
- * and can get the whole markup distrusted. Copy them from the Google Business
- * Profile and fill in OPENING_HOURS / GEO below; both are wired up already, so
- * uncommenting the values is the only change needed.
+ * **Keep this in step with the Business Profile.** Where the two disagree Google
+ * treats the profile as authoritative and the mismatch counts against the site.
+ * The street name is the live example: the site said "Sengottai" while the profile
+ * said "Shencottai", so the site was moved to match the profile.
  *
- * Whatever goes here must match the Google Business Profile exactly. If the two
- * disagree, Google trusts the profile and the mismatch counts against the site.
+ * Deliberately absent: `aggregateRating` / `review`. The shop has excellent Google
+ * reviews, but marking up ratings collected on a third-party profile as your own
+ * structured data is against Google's review-snippet guidelines and risks a manual
+ * action. Reviews belong on the profile, where they already work.
  */
 
 const PHONE = '+916383070725';
@@ -52,7 +53,7 @@ const OPENING_HOURS = [
 /**
  * Coordinates, decoded from the shop's Google plus code `X77J+CH Ilanji`
  * (full code `6JWVX77J+CH`), which resolves to a ~14 m cell on the
- * Tenkasi–Sengottai road, about 3 km west of Tenkasi centre.
+ * Tenkasi–Shencottai road, about 3 km west of Tenkasi centre.
  */
 const PLUS_CODE = '6JWVX77J+CH';
 const GEO = { lat: 8.963562, lng: 77.281437 };
@@ -70,7 +71,7 @@ const bakery = {
   email: EMAIL,
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'Tenkasi - Sengottai Main Road, Ilanji',
+    streetAddress: 'Tenkasi - Shencottai Main Road, Ilanji',
     addressLocality: 'Tenkasi',
     addressRegion: 'Tamil Nadu',
     postalCode: '627805',
