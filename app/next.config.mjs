@@ -221,6 +221,31 @@ const nextConfig = {
         destination: '/cakes/:category/chocolate',
         permanent: true,
       },
+      // Tag tidy-up. All three urls were in the sitemap, so they have been offered
+      // to Google and may be linked or bookmarked; sending them somewhere useful
+      // is better than letting them 404.
+      //
+      // 'choclatenew' was the chocolate tag, misspelled and suffixed with "new".
+      // Renamed, so the old slug points at the new one.
+      {
+        source: '/cakes/tags/choclatenew',
+        destination: '/cakes/tags/chocolate',
+        permanent: true,
+      },
+      // These two carried no products at all — empty pages the sitemap was
+      // actively submitting. Deactivated rather than deleted, so their pages are
+      // gone; the brand tag belongs on the full catalogue, and the themed-cake tag
+      // duplicated the category of the same name, which has the actual content.
+      {
+        source: '/cakes/tags/serlesbake',
+        destination: '/cakes',
+        permanent: true,
+      },
+      {
+        source: '/cakes/tags/themed-cake',
+        destination: '/cakes/themed-cake',
+        permanent: true,
+      },
     ];
   },
 };

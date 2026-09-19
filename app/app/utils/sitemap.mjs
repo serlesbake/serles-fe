@@ -18,24 +18,43 @@ const STATIC_PAGES = [
   { path: '/site-map', priority: '0.4', changefreq: 'monthly' },
 ];
 
-// Fetch all data from APIs
+/**
+ * Catalog data for the sitemap.
+ *
+ * Uses `fetchWithRetry` rather than `fetchWithCache`: a single slow response — a
+ * cold serverless function, say — used to be enough to drop every product and
+ * category out of the sitemap. Observed in a real build, which produced 10 urls
+ * instead of 62.
+ *
+ * It then **throws** when the catalog comes back empty instead of returning empty
+ * arrays. That is the important part. `fetchWithCache` answers a failed
+ * `/products` call with `{ results: [] }`, so the old code could not tell "the
+ * shop has no products" from "the request failed", and `generateXMLSitemap` would
+ * happily succeed with a near-empty sitemap. The route's error fallback never
+ * fired, because nothing had errored. A sitemap that silently loses 52 urls and is
+ * then cached for an hour is worse than one that fails loudly.
+ */
 export async function fetchSitemapData() {
-  try {
-    const [productsData, categoriesData, tagsData] = await Promise.all([
-      apiCache.fetchWithCache(getProductsUrl()),
-      apiCache.fetchWithCache(getCategoriesUrl()),
-      apiCache.fetchWithCache(getTagsUrl())
-    ]);
+  const [productsData, categoriesData, tagsData] = await Promise.all([
+    apiCache.fetchWithRetry(getProductsUrl()),
+    apiCache.fetchWithRetry(getCategoriesUrl()),
+    apiCache.fetchWithRetry(getTagsUrl()),
+  ]);
 
-    const products = Array.isArray(productsData?.results) ? productsData.results : Array.isArray(productsData) ? productsData : [];
-    const categories = Array.isArray(categoriesData?.results) ? categoriesData.results : Array.isArray(categoriesData) ? categoriesData : [];
-    const tags = Array.isArray(tagsData?.results) ? tagsData.results : Array.isArray(tagsData) ? tagsData : [];
+  const asList = (payload) =>
+    Array.isArray(payload?.results) ? payload.results : Array.isArray(payload) ? payload : [];
 
-    return { products, categories, tags };
-  } catch (error) {
-    console.error('Error fetching sitemap data:', error);
-    return { products: [], categories: [], tags: [] };
+  const products = asList(productsData);
+  const categories = asList(categoriesData);
+  const tags = asList(tagsData);
+
+  // Tags can legitimately be empty; products and categories cannot. If both are
+  // empty the catalog did not load, whatever the individual responses said.
+  if (products.length === 0 && categories.length === 0) {
+    throw new Error('Sitemap: catalog fetch returned no products and no categories');
   }
+
+  return { products, categories, tags };
 }
 
 // Generate XML sitemap
