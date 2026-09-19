@@ -101,13 +101,22 @@ output: correct title and canonical, one H1, **14 products present in the server
 
 ### Still open
 
-- **Category, product and tag pages still fetch their content client-side.**
-  `CategoryPageClient`, `ProductDetailPageClient`, `TagsPageClient` and `TagPageClient` get
-  their metadata, canonical, `<h1>` and (on product pages) JSON-LD from the server, but the
-  product grid and product detail still load in `useEffect`, so the raw HTML has no product
-  content. Their loading branches now render the breadcrumb so the heading is at least
-  present. Same fix as `/cakes`: fetch on the server, pass the data in as props. **This is
-  the highest-value work remaining in this repo.**
+- ~~Category and product pages fetch their content client-side~~ **fixed.** Both
+  `page.js` files now fetch on the server (`revalidate = 60`) and pass the data into
+  `CategoryPageClient` / `ProductDetailPageClient` as `initial*` props; the clients seed
+  their state from those props and skip the `useEffect` entirely. The product page also
+  makes the individual detail call server-side, because that is what carries
+  `weight_options`. Verified in the server HTML: a category page ships its product links
+  and `CollectionPage` + `ItemList`; a product page ships its `<h1>`, name, prices, weight
+  options, CTAs and `Product` schema. 404s still 404, and a *failed* catalog fetch no
+  longer 404s a live page.
+  Both clients keep their `useEffect` as a fallback for any caller that renders them
+  without the props, and both use a `visibleProducts` fallback because
+  `useProductFilters` seeds `filteredProducts` to `[]` and only fills it after a 300 ms
+  debounce — without it the server would render "No products found".
+- **The tag routes (`/cakes/tags`, `/cakes/tags/[tag-slug]`) still fetch client-side.**
+  Metadata, canonical and `<h1>` are server-side; the grid is not. Same fix as above.
+  This is the highest-value work remaining in this repo.
 - **Product pages are ~145 words.** They need real copy.
 - Blog JSON-LD is **valid** (`BlogPosting` + `FAQPage`, correctly escaped in `JsonLd.js`).
   All 9 posts and their category/tag pages are live and in the sitemap (62 URLs total).

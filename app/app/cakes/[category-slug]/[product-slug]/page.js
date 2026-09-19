@@ -1,10 +1,18 @@
 import { Suspense } from "react";
+import { notFound } from "next/navigation";
 import { getProductsUrl, getCategoriesUrl, getProductDetailUrl } from "../../../config/api";
 import ProductDetailPageClient from "./ProductDetailPageClient";
 import JsonLd from "../../../components/blog/JsonLd";
 import apiCache from "../../../utils/cache";
 
 const SITE = "https://www.serlesbake.in";
+
+// Server-rendered, so without this it would be prerendered once and never pick up
+// price or description edits. 60s matches the public API's own CDN cache window.
+export const revalidate = 60;
+
+const asList = (payload) =>
+  Array.isArray(payload?.results) ? payload.results : Array.isArray(payload) ? payload : [];
 
 // Generate metadata for the product detail page
 export async function generateMetadata({ params }) {
@@ -115,20 +123,10 @@ export async function generateMetadata({ params }) {
  * Falls back to a minimal Product built from the list payload when an editor has
  * not created a MetaData row for the product.
  */
-async function buildProductSchema(categorySlug, productSlug) {
+function buildProductSchema(product, categorySlug, productSlug) {
   const pageUrl = `${SITE}/cakes/${categorySlug}/${productSlug}`;
 
   try {
-    const productsData = await apiCache.fetchWithCache(getProductsUrl());
-    const allProducts = Array.isArray(productsData?.results)
-      ? productsData.results
-      : Array.isArray(productsData)
-        ? productsData
-        : [];
-
-    const product = allProducts.find(
-      (p) => p.slug === productSlug && p.category?.slug === categorySlug
-    );
     if (!product) return null;
 
     const apiSchema = product.meta_data?.schema_json;
@@ -177,20 +175,78 @@ async function buildProductSchema(categorySlug, productSlug) {
   }
 }
 
+/**
+ * Everything the page needs, fetched once on the server.
+ *
+ * ProductDetailPageClient used to fetch all of this in a useEffect, so the server
+ * response was a bare "Loading..." — crawlers saw no product name, description,
+ * price or image. The individual detail call is what carries `weight_options`,
+ * which the list payload omits, so it is made here too.
+ */
+async function getProductData(categorySlug, productSlug) {
+  const empty = { product: null, categories: [], related: [], listProduct: null };
+
+  try {
+    const [productsData, categoriesData] = await Promise.all([
+      apiCache.fetchWithCache(getProductsUrl()),
+      apiCache.fetchWithCache(getCategoriesUrl()),
+    ]);
+
+    const allProducts = asList(productsData);
+    const categories = asList(categoriesData);
+
+    const listProduct = allProducts.find(
+      (p) => p.slug === productSlug && p.category?.slug === categorySlug
+    );
+    if (!listProduct) return { ...empty, categories, catalogLoaded: allProducts.length > 0 };
+
+    const detail = await apiCache.fetchWithCache(getProductDetailUrl(listProduct.id));
+
+    const related = allProducts
+      .filter((p) => p.category?.slug === categorySlug && p.id !== listProduct.id)
+      .slice(0, 4);
+
+    return {
+      product: detail ?? listProduct,
+      listProduct,
+      categories,
+      related,
+      catalogLoaded: true,
+    };
+  } catch (error) {
+    console.error('Error loading product page:', error);
+    return empty;
+  }
+}
+
 export default async function ProductDetailPage({ params }) {
   // Await params in Next.js 15
   const resolvedParams = await params;
+  const categorySlug = resolvedParams['category-slug'];
+  const productSlug = resolvedParams['product-slug'];
 
-  const schema = await buildProductSchema(
-    resolvedParams['category-slug'],
-    resolvedParams['product-slug']
-  );
+  const { product, listProduct, categories, related, catalogLoaded } =
+    await getProductData(categorySlug, productSlug);
+
+  // Only 404 when the catalog actually loaded and has no such product — a failed
+  // fetch would otherwise turn a live product into a 404.
+  if (catalogLoaded && !listProduct) {
+    notFound();
+  }
+
+  // The schema reads meta_data.schema_json, which the list payload carries.
+  const schema = buildProductSchema(listProduct ?? product, categorySlug, productSlug);
 
   return (
     <>
       <JsonLd data={schema} />
       <Suspense fallback={<div className="text-center py-5">Loading...</div>}>
-        <ProductDetailPageClient params={resolvedParams} />
+        <ProductDetailPageClient
+          params={resolvedParams}
+          initialProduct={product}
+          initialCategories={categories}
+          initialRelatedProducts={related}
+        />
       </Suspense>
     </>
   );

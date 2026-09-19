@@ -14,16 +14,27 @@ import apiCache from "../../../utils/cache";
 const titleFromSlug = (slug = "") =>
   slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
-export default function ProductDetailPageClient({ params }) {
+export default function ProductDetailPageClient({
+  params,
+  initialProduct,
+  initialCategories,
+  initialRelatedProducts,
+}) {
   const categorySlug = params.categorySlug ?? params["category-slug"];
   const productSlug = params.productSlug ?? params["product-slug"];
   const router = useRouter();
-  
-  const [product, setProduct] = useState(null);
-  const [categories, setCategories] = useState([]);
-  const [relatedProducts, setRelatedProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [dataFetched, setDataFetched] = useState(false);
+
+  // page.js fetches this on the server and passes it in, so the product name,
+  // description, price and images are in the HTML crawlers receive. When the props
+  // are present we never fetch; the useEffect below stays as a fallback for any
+  // caller that renders this component without them.
+  const hasServerData = Boolean(initialProduct);
+
+  const [product, setProduct] = useState(initialProduct ?? null);
+  const [categories, setCategories] = useState(initialCategories ?? []);
+  const [relatedProducts, setRelatedProducts] = useState(initialRelatedProducts ?? []);
+  const [loading, setLoading] = useState(!hasServerData);
+  const [dataFetched, setDataFetched] = useState(hasServerData);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedWeight, setSelectedWeight] = useState(null);

@@ -15,16 +15,29 @@ import apiCache from "../../utils/cache";
 const titleFromSlug = (slug = "") =>
   slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
-export default function CategoryPageClient({ params }) {
+export default function CategoryPageClient({
+  params,
+  initialProducts,
+  initialCategories,
+  initialTags,
+  initialCategory,
+}) {
   const categorySlug = params.categorySlug ?? params["category-slug"];
   const router = useRouter();
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [tags, setTags] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [dataFetched, setDataFetched] = useState(false);
+
+  // page.js fetches this on the server and passes it in, so the product grid is
+  // in the HTML crawlers receive. When the props are present we never fetch; the
+  // useEffect below is kept only as a fallback for any caller that renders this
+  // component without them.
+  const hasServerData = Array.isArray(initialProducts);
+
+  const [products, setProducts] = useState(initialProducts ?? []);
+  const [categories, setCategories] = useState(initialCategories ?? []);
+  const [tags, setTags] = useState(initialTags ?? []);
+  const [loading, setLoading] = useState(!hasServerData);
+  const [dataFetched, setDataFetched] = useState(hasServerData);
   const [error, setError] = useState(null);
-  const [currentCategory, setCurrentCategory] = useState(null);
+  const [currentCategory, setCurrentCategory] = useState(initialCategory ?? null);
 
   // Memoized callback for category change
   const handleCategoryChange = useCallback((newCategory) => {
@@ -125,6 +138,11 @@ export default function CategoryPageClient({ params }) {
     );
   }
 
+  // Filters are a no-op until the user types or sorts, so the server-rendered list
+  // is what appears on first paint instead of an empty grid.
+  const visibleProducts =
+    filteredProducts.length > 0 ? filteredProducts : searchTerm ? [] : products;
+
   return (
     <>
       {/* Breadcrumb Begin */}
@@ -171,8 +189,8 @@ export default function CategoryPageClient({ params }) {
 
               {/* Products Grid */}
               <div className="row">
-                {filteredProducts.length > 0 ? (
-                  filteredProducts.map((product) => (
+                {visibleProducts.length > 0 ? (
+                  visibleProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))
                 ) : (
