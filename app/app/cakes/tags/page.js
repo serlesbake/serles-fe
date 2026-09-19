@@ -15,15 +15,20 @@ export const revalidate = 60;
 // next/head, which the App Router ignores — so it emitted no title of its own and
 // inherited `canonical: '/'` from the root layout, reporting itself to Google as a
 // duplicate of the homepage. Metadata now lives here, on the server.
+// Do not list cake types here that are not actual tags. An earlier version of
+// this description advertised "eggless" among the browsable types; no eggless
+// tag exists, and the shop's own blog only offers to confirm what can be baked
+// eggless on request. Promising a filter that does not exist sends people to a
+// page that cannot answer them.
 const TITLE = "Browse Cakes by Type | Serle's Bake, Tenkasi";
 const DESCRIPTION =
-  "Browse Serle's Bake cakes by type — eggless, photo, custom, tiered, chocolate and more. Homemade cakes baked to order with delivery across Tenkasi.";
+  "Browse Serle's Bake cakes by type — chocolate, brownies and more. Homemade cakes baked to order in Tenkasi, with delivery across the district.";
 
 export const metadata = {
   title: TITLE,
   description: DESCRIPTION,
   keywords:
-    "cake types, eggless cakes Tenkasi, photo cakes, custom cakes, chocolate cakes, Serle's Bake, cakes near me",
+    "cake types, cake tags, chocolate cakes Tenkasi, brownies, Serle's Bake, cakes near me",
   alternates: { canonical: PAGE_URL },
   openGraph: {
     title: TITLE,
