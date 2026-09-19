@@ -10,8 +10,27 @@ export const runtime = 'edge';
 // the live deployment and returns byte-identical catalog payloads (14 products, 6
 // categories, 5 bestsellers, same keys), so both halves of the API now come from
 // one current host and backend fixes actually reach the storefront.
+// Known-stale host. Changing the default above is not enough on its own: the env
+// var is set to this hostname in Vercel and env wins over the default, so the
+// deployed site kept reading the old backend and product pages 404'd after a
+// product was renamed. Rewriting it here fixes production without dashboard
+// access, and keeps it fixed if the variable is ever set back.
+//
+// Delete the alias in Vercel and this can go.
+const STALE_API_HOST = 'serlesbackend.vercel.app';
+
+function liveApiBase(raw) {
+  const fallback = 'https://shop.serlesbake.in';
+  if (!raw) return fallback;
+  try {
+    return new URL(raw).hostname === STALE_API_HOST ? fallback : raw.replace(/\/+$/, '');
+  } catch {
+    return fallback;
+  }
+}
+
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://shop.serlesbake.in',
+  BASE_URL: liveApiBase(process.env.NEXT_PUBLIC_API_BASE_URL),
   PRODUCTS_ENDPOINT: process.env.NEXT_PUBLIC_PRODUCTS_ENDPOINT || '/api/products/?format=json',
   CATEGORIES_ENDPOINT: process.env.NEXT_PUBLIC_CATEGORIES_ENDPOINT || '/api/categories/?format=json',
   PRODUCT_DETAIL_ENDPOINT: '/api/products/{id}/?format=json',
@@ -48,7 +67,9 @@ export const getTagsUrl = () => {
 // stays a separate setting only so the blog can be pointed elsewhere without
 // moving the catalog with it; the default is the same live backend.
 export const BLOG_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_BLOG_API_BASE_URL || 'https://shop.serlesbake.in',
+  // Same guard as the catalog: the stale host 500s on every /api/blog/ path, so
+  // pointing the blog at it renders an empty blog rather than merely a stale one.
+  BASE_URL: liveApiBase(process.env.NEXT_PUBLIC_BLOG_API_BASE_URL),
   BASE_PATH: process.env.NEXT_PUBLIC_BLOG_BASE_PATH || '/api/blog',
 };
 
