@@ -135,6 +135,26 @@ one `<h1>` on all of them.
   `Bestselling` is now presentational. The homepage ships 4 bestsellers —
   `slice(0, 4)` is deliberate, one row.
 
+### Product pages emit FAQPage too
+
+`components/ProductFAQ.js` builds 7-8 **product-specific** Q&As from `weight_options`
+(actual weights and prices), delivery, WhatsApp/phone ordering, payment and
+customisation — and it was putting the resulting `FAQPage` JSON-LD inside a `<Head>`
+block, so product pages were losing FAQ rich-result eligibility entirely. It now renders
+inline.
+
+The same block also emitted its own `Product` and `BreadcrumbList`. Both are now produced
+server-side in `page.js` from the API's `meta_data.schema_json`, which is richer
+(availability, seller, the backend's generated fields), so the component's weaker copies
+were deleted rather than left to fight with them. **A product page should carry exactly
+one `Product` and one `BreadcrumbList` node** — worth re-checking if anyone adds schema
+here again.
+
+The FAQ answers are only product-specific because `page.js` makes the individual detail
+call server-side; `weight_options` is absent from the list payload, and without it the
+FAQ falls back to generic copy. Google also requires FAQ answers to be visible on the
+page — they are, in the accordion.
+
 ### Watch the response shape
 
 `/api/products/` and `/api/categories/` return **bare arrays**. Other endpoints paginate.

@@ -1,6 +1,5 @@
 "use client";
 import { useState, useMemo } from "react";
-import Head from "next/head";
 
 function formatPrice(value) {
   if (value == null) return '';
@@ -104,72 +103,15 @@ export default function ProductFAQ({ product = {}, phone = "916383070725", whats
     }))
   }), [faqs]);
 
-  const productJsonLd = useMemo(() => {
-    if (!product || !product.name) return null;
-    const images = [];
-    if (product.featured_image?.url) images.push(product.featured_image.url);
-    if (product.images && Array.isArray(product.images)) {
-      product.images.forEach(img => img.url && images.push(img.url));
-    }
-
-    const prices = (product.weight_options || []).map(w => parseFloat(w.price || 0)).filter(p => !Number.isNaN(p));
-    const price = prices.length ? Math.min(...prices) : (product.price || null);
-
-    const offers = price ? {
-      "@type": "Offer",
-      price: String(price),
-      priceCurrency: "INR",
-      url: `https://www.serlesbake.in/cakes/${product.category?.slug || ''}/${product.slug || ''}`
-    } : undefined;
-
-    return {
-      "@context": "https://schema.org",
-      "@type": "Product",
-      name: product.name,
-      image: images,
-      description: product.short_description || product.description || '',
-      sku: product.sku || undefined,
-      brand: product.brand?.name || "Serle's Bake",
-      offers
-    };
-  }, [product]);
-
-  const breadcrumbJsonLd = useMemo(() => {
-    const base = 'https://www.serlesbake.in';
-    const items = [];
-    items.push({ position: 1, name: 'Home', item: base });
-    items.push({ position: 2, name: 'Cakes', item: `${base}/cakes` });
-    if (product?.category?.name && product?.category?.slug) {
-      items.push({ position: 3, name: product.category.name, item: `${base}/cakes/${product.category.slug}` });
-    }
-    if (product?.name && product?.slug && product?.category?.slug) {
-      items.push({ position: items.length + 1, name: product.name, item: `${base}/cakes/${product.category.slug}/${product.slug}` });
-    }
-
-    return {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      itemListElement: items.map(i => ({
-        "@type": "ListItem",
-        position: i.position,
-        name: i.name,
-        item: i.item
-      }))
-    };
-  }, [product]);
-
-  const combinedJsonLd = [jsonLd];
-  if (productJsonLd) combinedJsonLd.push(productJsonLd);
-  if (breadcrumbJsonLd) combinedJsonLd.push(breadcrumbJsonLd);
 
   return (
     <div className="product-faq mt-5">
-      <Head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(combinedJsonLd) }}
-        />
-      </Head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, '\u003c'),
+        }}
+      />
 
       <h4 style={{ color: '#333', fontWeight: 700, marginBottom: 16 }}>Frequently Asked Questions</h4>
 
