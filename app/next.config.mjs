@@ -15,7 +15,11 @@ const nextConfig = {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    // Optimised images were re-generated after only 60s, so repeat visitors kept
+    // re-fetching them. A week keeps them cached without stranding updates for
+    // long: CMS images get timestamped filenames (a new URL), and static files
+    // under /img only change on deploy.
+    minimumCacheTTL: 604800,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
@@ -79,27 +83,12 @@ const nextConfig = {
   reactStrictMode: true,
   trailingSlash: false,
   
-  // Webpack configuration for better error handling
-  webpack: (config, { dev, isServer }) => {
-    // Add better error handling for image loading
-    config.module.rules.push({
-      test: /\.(png|jpe?g|gif|svg|webp)$/i,
-      use: [
-        {
-          loader: 'url-loader',
-          options: {
-            limit: 8192,
-            fallback: 'file-loader',
-            publicPath: '/_next/static/images/',
-            outputPath: 'static/images/',
-          },
-        },
-      ],
-    });
+  // NOTE: a webpack rule used to live here routing png/jpg/gif/svg/webp imports
+  // through url-loader with a file-loader fallback. Neither package is installed,
+  // so the rule would have failed the build the moment any module imported an
+  // image - and it also bypassed Next's own image pipeline. Next 15 handles
+  // static image imports natively, so the rule is simply removed.
 
-    return config;
-  },
-  
   // Security headers - less restrictive for development
   async headers() {
     const isDev = process.env.NODE_ENV === 'development';
@@ -213,6 +202,23 @@ const nextConfig = {
       {
         source: '/home',
         destination: '/',
+        permanent: true,
+      },
+      // The product "Choclate" was misspelled, so its slug was too. Renaming it in
+      // the admin changes the url, which would otherwise 404 for anyone holding the
+      // old link and discard whatever ranking that url had earned. A 308 passes
+      // that on to the corrected url.
+      //
+      // Both category paths are covered: the product lives under flavoured-cakes,
+      // but the wildcard catches it if it is ever recategorised.
+      {
+        source: '/cakes/flavoured-cakes/choclate',
+        destination: '/cakes/flavoured-cakes/chocolate',
+        permanent: true,
+      },
+      {
+        source: '/cakes/:category/choclate',
+        destination: '/cakes/:category/chocolate',
         permanent: true,
       },
     ];
