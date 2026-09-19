@@ -1,7 +1,17 @@
 // API Configuration
 export const runtime = 'edge';
+// The catalog endpoints used to default to https://serlesbackend.vercel.app. That
+// hostname serves an OLD DEPLOYMENT of the backend: the same request returns stale
+// data ("@type": "Collection" and /category/<slug>/ urls long after both were
+// fixed) and every /api/blog/ path 500s there, which is why the blog config below
+// had to point somewhere else.
+//
+// It was never a blog-module gap - the whole host is behind. shop.serlesbake.in is
+// the live deployment and returns byte-identical catalog payloads (14 products, 6
+// categories, 5 bestsellers, same keys), so both halves of the API now come from
+// one current host and backend fixes actually reach the storefront.
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://serlesbackend.vercel.app',
+  BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://shop.serlesbake.in',
   PRODUCTS_ENDPOINT: process.env.NEXT_PUBLIC_PRODUCTS_ENDPOINT || '/api/products/?format=json',
   CATEGORIES_ENDPOINT: process.env.NEXT_PUBLIC_CATEGORIES_ENDPOINT || '/api/categories/?format=json',
   PRODUCT_DETAIL_ENDPOINT: '/api/products/{id}/?format=json',
@@ -34,12 +44,9 @@ export const getTagsUrl = () => {
 // All blog endpoints are public + read-only. See BLOG_API_GUIDE.md at the repo
 // root for the full contract.
 //
-// The blog module is served from a different host than the shop endpoints: it
-// only exists on shop.serlesbake.in, while serlesbackend.vercel.app returns 500
-// for every /api/blog/ path. The default below is therefore the blog's own host
-// rather than API_CONFIG.BASE_URL — otherwise production silently renders an
-// empty blog. Point NEXT_PUBLIC_BLOG_API_BASE_URL elsewhere once the blog ships
-// to the primary backend.
+// Blog and catalog now share a host (see the note on API_CONFIG above). This
+// stays a separate setting only so the blog can be pointed elsewhere without
+// moving the catalog with it; the default is the same live backend.
 export const BLOG_CONFIG = {
   BASE_URL: process.env.NEXT_PUBLIC_BLOG_API_BASE_URL || 'https://shop.serlesbake.in',
   BASE_PATH: process.env.NEXT_PUBLIC_BLOG_BASE_PATH || '/api/blog',
