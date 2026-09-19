@@ -6,11 +6,17 @@ import Breadcrumb from "../../components/Breadcrumb";
 import apiCache from "../../utils/cache";
 import { getProductsUrl, getTagsUrl } from "../../config/api";
 
-export default function TagsPageClient() {
+export default function TagsPageClient({ initialTags, initialProducts }) {
   const router = useRouter();
-  const [tags, setTags] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  // page.js fetches this on the server and passes it in, so the tag list is in the
+  // HTML crawlers receive. When the props are present we never fetch; the effect
+  // below stays as a fallback for any caller that renders this without them.
+  const hasServerData = Array.isArray(initialTags);
+
+  const [tags, setTags] = useState(initialTags ?? []);
+  const [products, setProducts] = useState(initialProducts ?? []);
+  const [loading, setLoading] = useState(!hasServerData);
   const [error, setError] = useState(null);
 
 
@@ -55,8 +61,9 @@ export default function TagsPageClient() {
   }, [calculateTagCounts]);
 
   useEffect(() => {
+    if (hasServerData) return;
     fetchData();
-  }, [fetchData]);
+  }, [fetchData, hasServerData]);
 
   // Breadcrumb items
   const breadcrumbItems = [

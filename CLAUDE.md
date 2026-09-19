@@ -114,9 +114,20 @@ output: correct title and canonical, one H1, **14 products present in the server
   without the props, and both use a `visibleProducts` fallback because
   `useProductFilters` seeds `filteredProducts` to `[]` and only fills it after a 300 ms
   debounce — without it the server would render "No products found".
-- **The tag routes (`/cakes/tags`, `/cakes/tags/[tag-slug]`) still fetch client-side.**
-  Metadata, canonical and `<h1>` are server-side; the grid is not. Same fix as above.
-  This is the highest-value work remaining in this repo.
+- ~~The tag routes fetch client-side~~ **fixed**, same pattern. `/cakes/tags` computes
+  the per-tag product counts on the server (only tags with products are listed, as
+  before); `/cakes/tags/[tag-slug]` filters products by tag on the server. Both emit
+  `CollectionPage` + `ItemList` and 404 correctly on an unknown slug.
+
+**Every `/cakes` route now server-renders its content.** Verified against a production
+build: `/cakes` 14 product links, `/cakes/premium-cake` 3, `/cakes/tags` its tag list,
+`/cakes/tags/brownie` its products, product pages their name/prices/weights — and exactly
+one `<h1>` on all of them.
+
+- **The homepage's "Bestselling" strip is still client-rendered.** `BestsellingWrapper`
+  fetches in the browser, so the homepage ships its 6 category links (`components/home/
+  category.js` is an async server component) but no product links. The smallest remaining
+  instance of this pattern, and the highest-value one left, since it is the homepage.
 - **Product pages are ~145 words.** They need real copy.
 - Blog JSON-LD is **valid** (`BlogPosting` + `FAQPage`, correctly escaped in `JsonLd.js`).
   All 9 posts and their category/tag pages are live and in the sitemap (62 URLs total).

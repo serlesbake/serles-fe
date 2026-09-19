@@ -21,16 +21,26 @@ const tagHeading = (slug = "") => {
   return /cakes?$/i.test(name) ? name : `${name} Cakes`;
 };
 
-export default function TagPageClient({ params }) {
+export default function TagPageClient({
+  params,
+  initialProducts,
+  initialCategories,
+  initialTags,
+}) {
   const router = useRouter();
   const tagSlug = params["tag-slug"];
-  
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [tags, setTags] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  // page.js fetches this on the server and passes it in (already filtered to the
+  // tag), so the product grid is in the HTML crawlers receive. The effect below
+  // stays as a fallback for any caller that renders this without the props.
+  const hasServerData = Array.isArray(initialProducts);
+
+  const [products, setProducts] = useState(initialProducts ?? []);
+  const [categories, setCategories] = useState(initialCategories ?? []);
+  const [tags, setTags] = useState(initialTags ?? []);
+  const [loading, setLoading] = useState(!hasServerData);
   const [error, setError] = useState(null);
-  const [dataFetched, setDataFetched] = useState(false);
+  const [dataFetched, setDataFetched] = useState(hasServerData);
 
   // Filter products by tag
   const filterProductsByTag = useCallback((products, tagSlug) => {
@@ -97,6 +107,12 @@ export default function TagPageClient({ params }) {
 
   // Get current tag name
   const currentTag = tags.find(tag => tag.slug === tagSlug);
+
+  // useProductFilters seeds filteredProducts to [] and only fills it after a 300ms
+  // debounce, so without this the server would render "No products found" over a
+  // list it had just fetched.
+  const visibleProducts =
+    filteredProducts.length > 0 ? filteredProducts : searchTerm ? [] : products;
 
   // Breadcrumb items
   const breadcrumbItems = [
@@ -187,8 +203,8 @@ export default function TagPageClient({ params }) {
           <div className="col-lg-12">
             <div className="shop__product__option">
               <div className="row">
-                {filteredProducts.length > 0 ? (
-                  filteredProducts.map((product) => (
+                {visibleProducts.length > 0 ? (
+                  visibleProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))
                 ) : (
