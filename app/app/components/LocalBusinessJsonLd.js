@@ -10,16 +10,37 @@ import { SITE_URL, SITE_NAME } from '../utils/blog';
  * blog.
  *
  * Every value here is taken from what the site already publishes (Footer and the
- * contact page). Fields we cannot verify from the repo are deliberately absent
- * rather than guessed: `postalCode`, `geo` and `openingHoursSpecification` are
- * worth adding, but wrong hours or coordinates in structured data are worse than
- * none — they mislead customers and can get the markup distrusted. Fill them in
- * from the Google Business Profile, which is itself the highest-impact thing
- * outstanding for this business.
+ * contact page), plus the postcode supplied by the owner.
+ *
+ * `geo` and `openingHoursSpecification` are still deliberately absent. They are the
+ * two fields local search leans on hardest, so they are worth adding — but wrong
+ * hours or coordinates are worse than none: they send customers to a closed shop
+ * and can get the whole markup distrusted. Copy them from the Google Business
+ * Profile and fill in OPENING_HOURS / GEO below; both are wired up already, so
+ * uncommenting the values is the only change needed.
+ *
+ * Whatever goes here must match the Google Business Profile exactly. If the two
+ * disagree, Google trusts the profile and the mismatch counts against the site.
  */
 
 const PHONE = '+916383070725';
 const EMAIL = 'serlesbake@gmail.com';
+
+/**
+ * Opening hours. Fill from the Google Business Profile, e.g.:
+ *
+ *   const OPENING_HOURS = [
+ *     { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+ *       opens: '09:00', closes: '21:00' },
+ *     { days: ['Sunday'], opens: '10:00', closes: '20:00' },
+ *   ];
+ *
+ * Times are 24-hour. A day the shop is closed is simply left out of the list.
+ */
+const OPENING_HOURS = [];
+
+/** Coordinates from the Business Profile, e.g. { lat: 8.9612, lng: 77.3152 }. */
+const GEO = null;
 
 const bakery = {
   '@type': 'Bakery',
@@ -37,8 +58,24 @@ const bakery = {
     streetAddress: 'Tenkasi - Sengottai Main Road, Ilanji',
     addressLocality: 'Tenkasi',
     addressRegion: 'Tamil Nadu',
+    postalCode: '627805',
     addressCountry: 'IN',
   },
+  // Only emitted once real values are set above — an empty or invented opening-hours
+  // block is worse than none.
+  ...(OPENING_HOURS.length > 0
+    ? {
+        openingHoursSpecification: OPENING_HOURS.map(({ days, opens, closes }) => ({
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: days,
+          opens,
+          closes,
+        })),
+      }
+    : {}),
+  ...(GEO
+    ? { geo: { '@type': 'GeoCoordinates', latitude: GEO.lat, longitude: GEO.lng } }
+    : {}),
   areaServed: [
     { '@type': 'City', name: 'Tenkasi' },
     { '@type': 'AdministrativeArea', name: 'Tenkasi District' },
