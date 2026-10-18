@@ -113,7 +113,7 @@ export default function ProductFAQ({ product = {}, phone = "916383070725", whats
         }}
       />
 
-      <h4 style={{ color: '#333', fontWeight: 700, marginBottom: 16 }}>Frequently Asked Questions</h4>
+      <h2 style={{ color: '#333', fontWeight: 700, marginBottom: 16, fontSize: '1.5rem' }}>Frequently Asked Questions</h2>
 
       <style jsx>{`
         .accordion-item {

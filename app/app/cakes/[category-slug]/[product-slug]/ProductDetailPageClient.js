@@ -413,7 +413,14 @@ Please contact me for more details. Thank you!`;
           color: #555;
         }
 
-        .accordion-body h6 {
+        .field-label {
+          color: #333;
+          font-weight: 700;
+          margin-bottom: 10px;
+          font-size: 16px;
+        }
+
+        .accordion-body h3 {
           color: #333;
           font-weight: 700;
           margin-bottom: 15px;
@@ -532,7 +539,7 @@ Please contact me for more details. Thank you!`;
             </div>
             <div className="col-lg-6">
               <div className="product__details__text">
-                <h3>{product.name}</h3>
+                <h2>{product.name}</h2>
                 
                 
                 {/* Price Display */}
@@ -550,7 +557,7 @@ Please contact me for more details. Thank you!`;
                 {/* Weight Options */}
                 {product.weight_options && product.weight_options.length > 0 && (
                   <div className="product__details__widget">
-                    <h6>Select Weight:</h6>
+                    <p className="field-label" id="weight-label">Select Weight:</p>
                     <div className="d-flex flex-wrap gap-2 mb-3">
                       {product.weight_options.map((weightOption, index) => (
                         <button
@@ -604,7 +611,7 @@ Please contact me for more details. Thank you!`;
 
                 {/* Custom Message */}
                 <div className="product__details__widget mb-3">
-                  <h6>Custom Message:</h6>
+                  <p className="field-label" id="message-label">Custom Message:</p>
                   <textarea
                     value={customMessage}
                     onChange={(e) => setCustomMessage(e.target.value)}
@@ -645,7 +652,7 @@ Please contact me for more details. Thank you!`;
 
                 {/* Product Details Accordion */}
                 <div className="product__details__accordion mt-5">
-                  <h4 style={{ 
+                  <h2 style={{ 
                     color: '#333', 
                     fontWeight: '700', 
                     marginBottom: '20px',
@@ -653,7 +660,7 @@ Please contact me for more details. Thank you!`;
                     paddingBottom: '10px'
                   }}>
                     Product Details
-                  </h4>
+                  </h2>
                   {/* Description Accordion */}
                   <div className="accordion-item">
                     <button 
@@ -665,7 +672,7 @@ Please contact me for more details. Thank you!`;
                     </button>
                     <div className={`accordion-content ${activeAccordion === 'description' ? 'active' : ''}`}>
                       <div className="accordion-body">
-                        <h6>Product Information</h6>
+                        <h3>Product Information</h3>
                         <p>{product.description || product.short_description || 'No description available.'}</p>
                       </div>
                     </div>
@@ -682,7 +689,7 @@ Please contact me for more details. Thank you!`;
                     </button>
                     <div className={`accordion-content ${activeAccordion === 'additional' ? 'active' : ''}`}>
                       <div className="accordion-body">
-                        <h6>Additional Information</h6>
+                        <h3>Additional Information</h3>
                         <p>This cake is made with the finest ingredients and baked fresh to order. Perfect for birthdays, anniversaries, and special celebrations.</p>
                         <ul>
                           <li>Fresh ingredients</li>
@@ -705,7 +712,7 @@ Please contact me for more details. Thank you!`;
                     </button>
                     <div className={`accordion-content ${activeAccordion === 'reviews' ? 'active' : ''}`}>
                       <div className="accordion-body">
-                        <h6>Customer Reviews</h6>
+                        <h3>Customer Reviews</h3>
                         <div className="row">
                           <div className="col-lg-12">
                             <iframe

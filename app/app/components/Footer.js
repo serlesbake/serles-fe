@@ -5,8 +5,8 @@ import { FaFacebook, FaInstagram, FaWhatsapp, FaGoogle } from 'react-icons/fa';
 const contactInfo = [
   {
     icon: "fa-map-marker",
-    text: "Tenkasi, Tamil Nadu, India",
-    href: null,
+    text: "Tenkasi - Shencottai Main Road, Ilanji, Tenkasi, Tamil Nadu 627805",
+    href: "https://plus.codes/6JWVX77J+CH",
   },
   {
     icon: "fa-envelope",
@@ -52,7 +52,7 @@ const quickLinks = [
   { label: "Menu & Pricing", href: "/menu" },
   // { label: "Cake Categories", href: "/cakes/category" },
   { label: "WhatsApp Enquiry", href: "https://wa.me/916383070725?text=Hi!%20I'm%20interested%20in%20ordering%20the%20cakes", external: true, icon: <FaWhatsapp style={{ marginRight: 6, color: "#25d366" }} /> },
-  { label: "Google Reviews", href: "https://www.google.com/search?q=Serles+Bake+Tenkasi", external: true, icon: <FaGoogle style={{ marginRight: 6, color: "#ea4335" }} /> },
+  { label: "Google Reviews", href: "https://plus.codes/6JWVX77J+CH", external: true, icon: <FaGoogle style={{ marginRight: 6, color: "#ea4335" }} /> },
 ];
 
 function ContactList({ info }) {
@@ -370,7 +370,7 @@ export default function Footer() {
             <div className="row" style={{ display: "flex", alignItems: "center" }}>
               <div className="col-lg-7" style={{ color: "#fff", fontSize: "1rem" }}>
                 <p className="copyright__text text-white" style={{ margin: 0 }}>
-                  &copy; {typeof window !== 'undefined' ? new Date().getFullYear() : '2025'} Serle&apos;s Bake
+                  &copy; {new Date().getFullYear()} Serle&apos;s Bake
                 </p>
               </div>
               <div className="col-lg-5">
