@@ -10,21 +10,19 @@ import Team from './components/home/Team';
 import Social from './components/home/Social';
 import FeaturedCakeCTA from './components/home/cta';
 export const metadata = {
-  // Led with "Cake Shop" on the strength of the Business Profile data (Mar-Oct
-  // 2026): the top discovery term is "cake shop near me" (71), then "bakery near
-  // me" (48) and "bakery" (35). Not one branded search appears in the top five, so
-  // front-loading the category people actually type beats leading with the brand
-  // name nobody is searching for yet.
+  // Title covers BOTH proven search clusters, because they are the same customers.
   //
-  // Caveat worth remembering: those are Business Profile impressions, won in the
-  // local pack by proximity and prominence, which a page title does not influence.
-  // This aligns the site's vocabulary with real demand for classic organic results
-  // and for relevance; it is not what wins "near me".
+  // Business Profile data (Mar-Oct 2026): "cake shop near me" 71, "bakery near me"
+  // 48, "bakery" 35, plus two more bakery variants. The owner confirms that locally
+  // "bakery" IS the word for where you buy a cake - there are no separate cake
+  // shops here - so the bakery cluster is cake-buying intent, not mismatched
+  // traffic. An earlier version of this title dropped "bakery" on the assumption
+  // that it brought bread-and-buns searchers. That assumption was wrong.
   //
-  // 52 chars, inside the ~60 Google shows.
-  title: "Cake Shop in Tenkasi | Homemade Cakes – Serle’s Bake",
-  description: "Looking for a cake shop near me? Serle’s Bake delivers fresh homemade cakes, brownies, and custom designs across Tenkasi with free personalization.",
-  keywords: "cake shop near me, bakery near me, cake shop tenkasi, bakery tenkasi, custom cakes, birthday cakes, homemade cakes, eggless cakes tenkasi",
+  // 44 chars.
+  title: "Cake Shop & Bakery in Tenkasi | Serle’s Bake",
+  description: "Looking for a bakery or cake shop near me? Serle’s Bake bakes fresh homemade cakes to order in Tenkasi - birthdays, custom designs, eggless on request.",
+  keywords: "bakery near me, cake shop near me, bakery Tenkasi, cake shop Tenkasi, bakery shop near me, homemade cakes, birthday cakes, eggless cakes Tenkasi",
 };
   export default function Home() {
   return (
