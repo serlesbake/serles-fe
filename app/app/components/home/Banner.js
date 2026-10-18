@@ -23,7 +23,7 @@ const staticBanners = [
     "id": 1,
     "variant": "delivery",
     "title": "Home Delivery ₹50",
-    "description": "Home delivery available for ₹50 within 5 km of Tenkasi. Further out, ask us on WhatsApp.",
+    "description": "Home delivery ₹50 for the first 5 km, then ₹10 per extra kilometre.",
     "is_active": true,
     "order": 0
   },
@@ -69,10 +69,10 @@ export default function Banner() {
                   <p className="delivery-head">Home Delivery</p>
                   <p className="delivery-price">
                     &#8377;50
-                    <span className="delivery-within">within 5 km</span>
+                    <span className="delivery-within">first 5 km</span>
                   </p>
+                  <p className="delivery-extra">then &#8377;10 per extra km</p>
                   <span className="delivery-cta">Order on WhatsApp</span>
-                  <p className="delivery-note">Going further? Message us and we will confirm.</p>
                 </div>
               )}
             </a>
@@ -169,6 +169,13 @@ export default function Banner() {
 
         .delivery-within {
           font-size: clamp(0.8rem, 3vw, 1rem);
+          font-weight: 600;
+          opacity: 0.95;
+        }
+
+        .delivery-extra {
+          margin: 2px 0 0;
+          font-size: clamp(0.75rem, 3vw, 0.95rem);
           font-weight: 600;
           opacity: 0.95;
         }
