@@ -1,15 +1,29 @@
 'use client';
 import { useState, useEffect } from "react";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://serlesbackend.vercel.app';
+import { API_CONFIG } from '../../config/api';
 
-// Static banner data
+// Goes through config/api.js rather than reading the env var directly. Reading it
+// here bypassed liveApiBase(), so the live homepage was still loading banner
+// images from serlesbackend.vercel.app - the stale deployment.
+const API_BASE_URL = API_CONFIG.BASE_URL;
+
+// Banner slides.
+//
+// A slide is either `image` (artwork with the text baked in) or `variant`
+// (rendered in markup here). The delivery slide is markup so the offer can be
+// changed in code without commissioning new artwork - useful for anything with a
+// price or a date in it.
+//
+// The slide this replaced was an Independence Day promotion dated Aug 14-15. It
+// was still the first thing visitors saw in mid-October. Anything date-bound
+// needs an owner to retire it, or it quietly goes stale.
 const staticBanners = [
   {
     "id": 1,
-    "title": "Independence Theme Cake",
-    "description": "Soft sponge layers in saffron, white, and green with creamy frosting — perfect for Independence Day celebrations.",
-    "image": `${API_BASE_URL}/api/media/banners/Independencedaycompressed.png`,
+    "variant": "delivery",
+    "title": "Home Delivery ₹50",
+    "description": "Home delivery available for ₹50 within 5 km of Tenkasi. Further out, ask us on WhatsApp.",
     "is_active": true,
     "order": 0
   },
@@ -45,13 +59,22 @@ export default function Banner() {
           {staticBanners.map((banner, index) => (
             <a href="https://wa.me/916383070725" target="_blank" rel="noopener noreferrer"
               key={banner.id}
-              className={`banner-slide ${index === currentSlide ? 'active' : ''}`}
-              style={{
-                backgroundImage: `url(${banner.image})`,
-              }}
+              className={`banner-slide ${banner.variant ? `banner-${banner.variant}` : ''} ${index === currentSlide ? 'active' : ''}`}
+              style={banner.image ? { backgroundImage: `url(${banner.image})` } : undefined}
+              aria-label={banner.description}
             >
-              
-           
+              {banner.variant === 'delivery' && (
+                <div className="delivery-inner">
+                  <p className="delivery-kicker">Now Available</p>
+                  <p className="delivery-head">Home Delivery</p>
+                  <p className="delivery-price">
+                    &#8377;50
+                    <span className="delivery-within">within 5 km</span>
+                  </p>
+                  <span className="delivery-cta">Order on WhatsApp</span>
+                  <p className="delivery-note">Going further? Message us and we will confirm.</p>
+                </div>
+              )}
             </a>
           ))}
         </div>
@@ -98,6 +121,72 @@ export default function Banner() {
           align-items: center;
           justify-content: center;
           text-decoration: none;
+        }
+
+
+        /* Delivery slide: rendered rather than an image, so the price and radius
+           can be edited in code. Sized to sit beside the artwork banner. */
+        .banner-delivery {
+          background: linear-gradient(135deg, #b61123 0%, #e4718a 55%, #f3a6b6 100%);
+          color: #fff;
+          text-align: center;
+          padding: 16px;
+        }
+
+        .delivery-inner {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 2px;
+          line-height: 1.1;
+        }
+
+        .delivery-kicker {
+          margin: 0;
+          font-size: 0.7rem;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          opacity: 0.9;
+        }
+
+        .delivery-head {
+          margin: 0;
+          font-size: clamp(1.5rem, 6vw, 2.4rem);
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.02em;
+        }
+
+        .delivery-price {
+          margin: 4px 0 0;
+          font-size: clamp(2.2rem, 10vw, 3.4rem);
+          font-weight: 800;
+          display: flex;
+          align-items: baseline;
+          gap: 8px;
+        }
+
+        .delivery-within {
+          font-size: clamp(0.8rem, 3vw, 1rem);
+          font-weight: 600;
+          opacity: 0.95;
+        }
+
+        .delivery-cta {
+          margin-top: 10px;
+          background: #fff;
+          color: #b61123;
+          font-weight: 700;
+          font-size: 0.85rem;
+          padding: 8px 18px;
+          border-radius: 999px;
+        }
+
+        .delivery-note {
+          margin: 8px 0 0;
+          font-size: 0.7rem;
+          opacity: 0.9;
         }
 
         .banner-slide.active {
