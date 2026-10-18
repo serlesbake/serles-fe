@@ -1,0 +1,24 @@
+{
+  "name": "Serle's Bake — Cake Shop & Bakery in Tenkasi",
+  "short_name": "Serle's Bake",
+  "description": "Homemade cakes baked to order in Tenkasi. Birthday, custom, photo and tier cakes, eggless on request, with delivery across the district.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#b61123",
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/img/serlesbakelogo.webp",
+      "sizes": "any",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
+      "src": "/serlesfavicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
