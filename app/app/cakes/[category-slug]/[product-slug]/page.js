@@ -246,8 +246,17 @@ export default async function ProductDetailPage({ params }) {
     notFound();
   }
 
-  // The schema reads meta_data.schema_json, which the list payload carries.
-  const schema = buildProductSchema(listProduct ?? product, categorySlug, productSlug);
+  // Build from the DETAIL payload, not the list one.
+  //
+  // The list endpoint returns `meta_data: {}` - building the full meta block for
+  // every product in a list would cost a query per row, and this API is latency
+  // bound. Only the detail endpoint populates it. Reading the list payload here
+  // meant meta_data.schema_json was always undefined, so every product page fell
+  // through to the minimal fallback and shipped a Product node with `offers:
+  // null` - no price, no availability, so not eligible for a product rich result.
+  //
+  // Verified live before the fix: offers was null on /cakes/premium-cake/black-forest.
+  const schema = buildProductSchema(product ?? listProduct, categorySlug, productSlug);
 
   return (
     <>
