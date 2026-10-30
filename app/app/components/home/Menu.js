@@ -5,6 +5,7 @@ import apiCache from '../../utils/cache';
 import Link from "next/link";
 import { FaWhatsapp } from "react-icons/fa";
 import styles from './Menu.module.css';
+import { trackStoreEvent } from '../../utils/analytics';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -120,6 +121,12 @@ export default function Menu({ initialProducts = [], initialCategories = [] }) {
 
   // Handle WhatsApp enquiry
   const handleWhatsAppEnquiry = (productName, weightOption = null) => {
+    trackStoreEvent('whatsapp_enquiry', {
+      item_name: productName,
+      weight: weightOption?.display_name || 'Standard',
+      value: Number(weightOption?.price) || undefined,
+      currency: 'INR',
+    });
     const message = `Hi! I'm interested in ordering the ${productName} cake.${weightOption ? `\n\nWeight: ${weightOption.display_name}\nPrice: ₹${weightOption.price}` : ''}\n\nPlease contact me for more details. Thank you!`;
     const whatsappUrl = `https://wa.me/916383070725?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -231,6 +238,8 @@ export default function Menu({ initialProducts = [], initialCategories = [] }) {
                       <img
                         src={product.featured_image.url}
                         alt={product.featured_image.alt_text || product.name}
+                        loading={idx === 0 ? "eager" : "lazy"}
+                        fetchPriority={idx === 0 ? "high" : "auto"}
                         style={{
                           width: "100%",
                           height: "100%",

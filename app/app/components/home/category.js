@@ -25,10 +25,18 @@ export default async function Category() {
       <h1 className='h2'>Homemade Cakes in Tenkasi</h1>
       <p className='p'>From Our Oven to Your Heart</p>
       <div className="product_grid">
-        {categoriesData.map((category) => (
+        {categoriesData.map((category, index) => (
           <div className="product_grid_item" key={category.id}>
             <Link href={`/cakes/${category.slug}`} className='text-decoration-none'>
-              <Image src={category.image || '/img/shop/product-1.jpg'} alt={category.name} width={100} height={100} />
+              <Image
+                src={category.image || '/img/shop/product-1.jpg'}
+                alt={category.name}
+                width={100}
+                height={100}
+                priority={index === 0}
+                fetchPriority={index === 0 ? 'high' : 'auto'}
+                loading={index === 0 ? 'eager' : 'lazy'}
+              />
               <h6 className='h6'>{category.name}</h6>
             </Link>
           </div>

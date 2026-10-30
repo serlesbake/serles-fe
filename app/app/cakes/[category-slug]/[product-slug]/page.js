@@ -246,6 +246,9 @@ export default async function ProductDetailPage({ params }) {
   const { product, listProduct, categories, related, catalogLoaded } =
     await getProductData(categorySlug, productSlug);
 
+  // Keep related cakes useful on single-item categories; same-category matches
+  // are preferred and the server fetch already supplies the wider catalog.
+
   // Only 404 when the catalog actually loaded and has no such product — a failed
   // fetch would otherwise turn a live product into a 404.
   if (catalogLoaded && !listProduct) {

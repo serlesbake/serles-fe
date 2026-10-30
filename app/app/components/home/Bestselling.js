@@ -63,7 +63,8 @@ export default function Bestselling({ initialProducts = [] }) {
                 height={300}
                 className={styles.productImage}
                 onError={handleImageError}
-                priority={true}
+                priority={false}
+                loading="lazy"
               />
               <div className={`product__label ${styles.productLabel}`}>
                 <span>{product.category?.name || 'Cake'}</span>

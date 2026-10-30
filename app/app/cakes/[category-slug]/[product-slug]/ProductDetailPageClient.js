@@ -9,6 +9,7 @@ import Breadcrumb from "../../../components/Breadcrumb";
 import ProductCard from "../../../components/ProductCard";
 import ProductFAQ from "../../../components/ProductFAQ";
 import apiCache from "../../../utils/cache";
+import { trackStoreEvent } from "../../../utils/analytics";
 
 /** "black-forest" -> "Black Forest", for headings shown before the fetch resolves. */
 const titleFromSlug = (slug = "") =>
@@ -44,6 +45,16 @@ export default function ProductDetailPageClient({
   const [customMessage, setCustomMessage] = useState("Happy Birthday ❤️");
   const [photoFile, setPhotoFile] = useState(null);
   const isPhotoCake = /photo.?cake/i.test(initialProduct?.name || product?.name || productSlug);
+
+  useEffect(() => {
+    if (product?.id) {
+      trackStoreEvent('view_product', {
+        item_id: String(product.id),
+        item_name: product.name,
+        item_category: product.category?.name,
+      });
+    }
+  }, [product?.id, product?.name, product?.category?.name]);
 
   // Fetch data only once with caching
   useEffect(() => {
@@ -109,6 +120,12 @@ export default function ProductDetailPageClient({
   // Handle weight selection
   const handleWeightChange = (weightOption) => {
     setSelectedWeight(weightOption);
+    trackStoreEvent('select_product_weight', {
+      item_id: String(product?.id || ''),
+      item_name: product?.name,
+      weight: weightOption.display_name,
+      price: Number(weightOption.price) || undefined,
+    });
   };
 
   // Handle accordion changes
@@ -118,6 +135,14 @@ export default function ProductDetailPageClient({
 
   // Handle WhatsApp enquiry
   const handleWhatsAppEnquiry = () => {
+    trackStoreEvent('whatsapp_enquiry', {
+      item_id: String(product?.id || ''),
+      item_name: product?.name,
+      weight: selectedWeight?.display_name || 'Standard',
+      quantity,
+      value: getUnitPrice() * quantity || undefined,
+      currency: 'INR',
+    });
     const message = `Hi! I'm interested in ordering the ${product.name} cake.
 
 Product Details:
@@ -486,6 +511,10 @@ Please contact me for more details. Thank you!`;
           z-index: 1;
         }
 
+        .mobile-sticky-whatsapp {
+          display: none;
+        }
+
         @media (max-width: 991px) {
           .sticky-image-container {
             position: static;
@@ -496,6 +525,30 @@ Please contact me for more details. Thank you!`;
           
           .related-products-section {
             margin-top: 50px;
+          }
+        }
+
+        @media (max-width: 767px) {
+          .mobile-sticky-whatsapp {
+            display: block;
+            position: fixed;
+            z-index: 1000;
+            left: 16px;
+            right: 16px;
+            bottom: max(12px, env(safe-area-inset-bottom));
+            width: calc(100% - 32px);
+            border: 0;
+            border-radius: 999px;
+            padding: 14px 20px;
+            color: #fff;
+            background: #128c52;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, .24);
+            font-size: 16px;
+            font-weight: 700;
+          }
+
+          .product-details-container {
+            padding-bottom: 72px;
           }
         }
       `}</style>
@@ -523,6 +576,8 @@ Please contact me for more details. Thank you!`;
                     alt={productImages[selectedImage]?.alt || product.name}
                     width={500}
                     height={500}
+                    priority
+                    fetchPriority="high"
                     style={{ objectFit: "cover" }}
                     className="big_img"
                   />
@@ -543,6 +598,7 @@ Please contact me for more details. Thank you!`;
                         alt={image.alt || `${product.name} - Photo ${index + 1}`}
                         width={100}
                         height={100}
+                        loading="lazy"
                         style={{ objectFit: "cover" }}
                       />
                     </button>
@@ -664,6 +720,14 @@ Please contact me for more details. Thank you!`;
                 >
                   <i className="fab fa-whatsapp me-2"></i>
                   WhatsApp Enquiry
+                </button>
+                <button
+                  type="button"
+                  className="mobile-sticky-whatsapp"
+                  onClick={handleWhatsAppEnquiry}
+                >
+                  <i className="fab fa-whatsapp me-2" aria-hidden="true"></i>
+                  Enquire about this cake
                 </button>
 
                 <ul className="mt-3">
