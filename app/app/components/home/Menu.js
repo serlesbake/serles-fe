@@ -33,15 +33,17 @@ function getCategoryKeyFromProduct(product) {
   return "";
 }
 
-export default function Menu() {
+export default function Menu({ initialProducts = [], initialCategories = [] }) {
   const [activeCategory, setActiveCategory] = useState("all");
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState(initialProducts);
+  const [categories, setCategories] = useState(initialCategories);
+  const hasInitialData = initialProducts.length > 0 || initialCategories.length > 0;
+  const [loading, setLoading] = useState(!hasInitialData);
   const [apiError, setApiError] = useState(null);
   const [displayLimit, setDisplayLimit] = useState(6); // Show only 6 products initially
 
   useEffect(() => {
+    if (hasInitialData) return;
     const fetchData = async () => {
       setLoading(true);
       setApiError(null);
@@ -83,7 +85,7 @@ export default function Menu() {
     };
 
     fetchData();
-  }, []);
+  }, [hasInitialData]);
 
   // Generate category tabs from API data
   const generateCategoryTabs = () => {
@@ -190,7 +192,7 @@ export default function Menu() {
               Error: {apiError}
             </div>
           </div>
-        ) : products.length === 0 ? (
+        ) : !loading && !apiError && products.length === 0 ? (
           <div className="text-center py-5">
             <div style={{
               background: "linear-gradient(135deg, #fff5f7 0%, #ffeef2 100%)",

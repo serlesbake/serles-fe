@@ -214,9 +214,15 @@ async function getProductData(categorySlug, productSlug) {
 
     const detail = await apiCache.fetchWithCache(getProductDetailUrl(listProduct.id));
 
-    const related = allProducts
-      .filter((p) => p.category?.slug === categorySlug && p.id !== listProduct.id)
-      .slice(0, 4);
+    const sameCategory = allProducts.filter(
+      (p) => p.category?.slug === categorySlug && p.id !== listProduct.id
+    );
+    const related = [
+      ...sameCategory,
+      ...allProducts.filter(
+        (p) => p.category?.slug !== categorySlug && p.id !== listProduct.id
+      ),
+    ].slice(0, 4);
 
     return {
       product: detail ?? listProduct,

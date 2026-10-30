@@ -57,6 +57,12 @@ Consequences when editing:
 
 ## SEO: what was wrong, and what is fixed
 
+*Re-tested against the 30 Oct 2026 live SEO checklist; see the latest entry in the
+root SEO actions log. Homepage/menu catalogs and the human sitemap now receive
+server-rendered data; menu counters avoid false zeroes while loading. Product pages
+select their first available weight on initial render, and photo-cake ordering now
+explains how to attach a sharp image in WhatsApp.*
+
 The six problems audited on the live site have been addressed. The **root cause of most
 of them was the same**, and it is the thing to watch for when adding a page:
 

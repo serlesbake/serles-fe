@@ -37,9 +37,13 @@ export default function ProductDetailPageClient({
   const [dataFetched, setDataFetched] = useState(hasServerData);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedWeight, setSelectedWeight] = useState(null);
+  const [selectedWeight, setSelectedWeight] = useState(
+    initialProduct?.weight_options?.[0] ?? null
+  );
   const [activeAccordion, setActiveAccordion] = useState('description');
   const [customMessage, setCustomMessage] = useState("Happy Birthday ❤️");
+  const [photoFile, setPhotoFile] = useState(null);
+  const isPhotoCake = /photo.?cake/i.test(initialProduct?.name || product?.name || productSlug);
 
   // Fetch data only once with caching
   useEffect(() => {
@@ -124,6 +128,8 @@ Product Details:
 
 Custom Message: ${customMessage}
 
+${isPhotoCake ? `I will send the photo in this WhatsApp chat. Photo: ${photoFile?.name || 'to follow'}` : ''}
+
 Please contact me for more details. Thank you!`;
 
     const whatsappUrl = `https://wa.me/916383070725?text=${encodeURIComponent(message)}`;
@@ -133,24 +139,28 @@ Please contact me for more details. Thank you!`;
   // Get product images
   const getProductImages = () => {
     const images = [];
+    const imageUrl = (image) => {
+      if (typeof image === 'string') return image;
+      return image?.url || image?.image || image?.image_url || image?.src || null;
+    };
+    const addImage = (image) => {
+      const url = imageUrl(image);
+      if (url && !images.some((entry) => entry.url === url)) {
+        images.push({ url, alt: image?.alt_text || image?.alt || null });
+      }
+    };
     
     // Add featured image first
-    if (product?.featured_image?.url) {
-      images.push(product.featured_image.url);
-    }
+    addImage(product?.featured_image);
     
     // Add other images
     if (product?.images && Array.isArray(product.images)) {
-      product.images.forEach(img => {
-        if (img.url && !images.includes(img.url)) {
-          images.push(img.url);
-        }
-      });
+      product.images.forEach(addImage);
     }
     
     // Fallback to placeholder
     if (images.length === 0) {
-      images.push("/img/placeholder-product.jpg");
+      images.push({ url: "/img/placeholder-product.jpg", alt: product?.name || "Cake" });
     }
     
     return images;
@@ -176,7 +186,7 @@ Please contact me for more details. Thank you!`;
   const getTotalPrice = () => {
     const unitPrice = getUnitPrice();
     const total = unitPrice * quantity;
-    return `₹${total.toFixed(2)}`;
+    return selectedWeight ? `₹${total.toFixed(2)}` : "Select a weight to see total";
   };
 
   if (loading) {
@@ -509,30 +519,33 @@ Please contact me for more details. Thank you!`;
               <div className="product__details__img sticky-image-container">
                 <div className="product__details__big__img">
                   <Image
-                    src={productImages[selectedImage] || "/img/placeholder.jpg"}
-                    alt={product.name}
+                    src={productImages[selectedImage]?.url || "/img/placeholder.jpg"}
+                    alt={productImages[selectedImage]?.alt || product.name}
                     width={500}
                     height={500}
                     style={{ objectFit: "cover" }}
                     className="big_img"
                   />
                 </div>
-                <div className="product__details__thumb">
+                <div className="product__details__thumb" role="group" aria-label={`${product.name} photo gallery`}>
                   {productImages.map((image, index) => (
-                    <div 
+                    <button
                       key={index} 
+                      type="button"
                       className={`pt__item ${selectedImage === index ? 'active' : ''}`}
                       onClick={() => setSelectedImage(index)}
-                      style={{ cursor: 'pointer' }}
+                      aria-label={`Show ${product.name}, photo ${index + 1}`}
+                      aria-pressed={selectedImage === index}
+                      style={{ cursor: 'pointer', border: 0, padding: 0, background: 'transparent' }}
                     >
                       <Image
-                        src={image}
-                        alt={`${product.name} - Image ${index + 1}`}
+                        src={image.url}
+                        alt={image.alt || `${product.name} - Photo ${index + 1}`}
                         width={100}
                         height={100}
                         style={{ objectFit: "cover" }}
                       />
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -579,6 +592,15 @@ Please contact me for more details. Thank you!`;
                         </button>
                       ))}
                     </div>
+                  </div>
+                )}
+
+                {isPhotoCake && (
+                  <div className="form-group mt-3" style={{ border: '1px solid #f2c5ce', borderRadius: 8, padding: 14, background: '#fff8fa' }}>
+                    <p className="field-label mb-1">Sending your photo</p>
+                    <small className="form-text text-muted">
+                      After you tap WhatsApp Enquiry, attach a clear JPG, PNG or WebP photo in the chat. An original image at least 1200 px on its shortest side is recommended for a sharp print.
+                    </small>
                   </div>
                 )}
 

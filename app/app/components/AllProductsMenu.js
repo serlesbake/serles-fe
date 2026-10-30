@@ -10,11 +10,12 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function AllProductsMenu() {
+export default function AllProductsMenu({ initialProducts = [], initialCategories = [] }) {
   const [activeCategory, setActiveCategory] = useState("all");
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState(initialProducts);
+  const [categories, setCategories] = useState(initialCategories);
+  const hasInitialData = initialProducts.length > 0 || initialCategories.length > 0;
+  const [loading, setLoading] = useState(!hasInitialData);
   const [apiError, setApiError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true);
@@ -80,6 +81,7 @@ export default function AllProductsMenu() {
 
   // Initial data fetch
   useEffect(() => {
+    if (hasInitialData) return;
     const fetchInitialData = async () => {
       setLoading(true);
       setApiError(null);
@@ -98,7 +100,7 @@ export default function AllProductsMenu() {
     };
 
     fetchInitialData();
-  }, []);
+  }, [hasInitialData]);
 
   // Generate category tabs from API data
   const generateCategoryTabs = () => {
@@ -199,7 +201,7 @@ export default function AllProductsMenu() {
               textAlign: "center"
             }}>
               <div style={{ fontSize: "1.5rem", fontWeight: "800", color: "#e4718a" }}>
-                {totalProducts || Object.keys(grouped).length}
+                {loading ? "—" : totalProducts || Object.keys(grouped).length}
               </div>
               <div style={{ fontSize: "0.9rem", color: "#666", fontWeight: "600" }}>
                 Total Products
@@ -213,7 +215,7 @@ export default function AllProductsMenu() {
               textAlign: "center"
             }}>
               <div style={{ fontSize: "1.5rem", fontWeight: "800", color: "#e4718a" }}>
-                {categories.length}
+                {loading ? "—" : categories.length}
               </div>
               <div style={{ fontSize: "0.9rem", color: "#666", fontWeight: "600" }}>
                 Categories
@@ -273,7 +275,7 @@ export default function AllProductsMenu() {
         {/* Products Count */}
         <div className="text-center mb-4">
           <p style={{ color: "#666", fontSize: "1rem" }}>
-            Showing {Object.keys(grouped).length} of {totalProducts} products
+            {loading ? "Loading products…" : `Showing ${Object.keys(grouped).length} of ${totalProducts || Object.keys(grouped).length} products`}
             {activeCategory !== "all" && ` in ${categories.find(c => c.slug === activeCategory)?.name || activeCategory}`}
           </p>
         </div>
@@ -291,7 +293,7 @@ export default function AllProductsMenu() {
               Error: {apiError}
             </div>
           </div>
-        ) : products.length === 0 ? (
+        ) : !loading && !apiError && products.length === 0 ? (
           <div className="text-center py-5">
             <div style={{
               background: "linear-gradient(135deg, #fff5f7 0%, #ffeef2 100%)",

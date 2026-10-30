@@ -22,7 +22,8 @@ export default function Bestselling({ initialProducts = [] }) {
   
 
 
-  // If no products, show a message
+  // Empty results from a failed/slow catalog fetch are not proof that inventory
+  // is empty. Keep the section calm until products can be confirmed.
   if (!products || products.length === 0) {
     return (
       <section className="product spad">
@@ -33,7 +34,7 @@ export default function Bestselling({ initialProducts = [] }) {
           </div>
           <div className="row">
             <div className="col-12">
-              <p className={styles.loadingMessage}>No bestselling products available at the moment.</p>
+              <p className={styles.loadingMessage}>Explore our cake collection while we refresh today&apos;s bestsellers.</p>
             </div>
           </div>
         </div>

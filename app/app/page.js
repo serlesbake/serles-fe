@@ -9,6 +9,32 @@ import Menu from './components/home/Menu';
 import Team from './components/home/Team';
 import Social from './components/home/Social';
 import FeaturedCakeCTA from './components/home/cta';
+import { getProductsUrl, getCategoriesUrl, getProductDetailUrl } from './config/api';
+import apiCache from './utils/cache';
+
+export const revalidate = 60;
+
+const asList = (payload) =>
+  Array.isArray(payload?.results) ? payload.results : Array.isArray(payload) ? payload : [];
+
+async function getHomeMenuData() {
+  try {
+    const [productsPayload, categoriesPayload] = await Promise.all([
+      apiCache.fetchWithCache(getProductsUrl()),
+      apiCache.fetchWithCache(getCategoriesUrl()),
+    ]);
+    const products = asList(productsPayload);
+    const categories = asList(categoriesPayload);
+    const detailed = await Promise.all(products.map(async (product) => {
+      try { return await apiCache.fetchWithCache(getProductDetailUrl(product.id)); }
+      catch { return product; }
+    }));
+    return { products: detailed, categories };
+  } catch (error) {
+    console.error('Unable to server-render homepage menu:', error);
+    return { products: [], categories: [] };
+  }
+}
 export const metadata = {
   // Title covers BOTH proven search clusters, because they are the same customers.
   //
@@ -24,7 +50,8 @@ export const metadata = {
   description: "Looking for a bakery or cake shop near me? Serle’s Bake bakes fresh homemade cakes to order in Tenkasi - birthdays, custom designs, eggless on request.",
   keywords: "bakery near me, cake shop near me, bakery Tenkasi, cake shop Tenkasi, bakery shop near me, homemade cakes, birthday cakes, eggless cakes Tenkasi",
 };
-  export default function Home() {
+  export default async function Home() {
+  const { products, categories } = await getHomeMenuData();
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -32,7 +59,7 @@ export const metadata = {
         <Banner />
         <About />
         <MilestoneBar />
-        <Menu />
+        <Menu initialProducts={products} initialCategories={categories} />
         <BestsellingWrapper /> 
         <Team />
         <FeaturedCakeCTA />
