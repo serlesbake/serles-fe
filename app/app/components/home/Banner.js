@@ -23,7 +23,7 @@ const staticBanners = [
     "id": 1,
     "variant": "delivery",
     "title": "Home Delivery ₹50",
-    "description": "Home delivery ₹50 for the first 5 km, then ₹10 per extra kilometre.",
+    "description": "Delivery is ₹50 within 5 km of our bakery in Ilanji, Tenkasi; add ₹10 per extra kilometre beyond 5 km.",
     "is_active": true,
     "order": 0
   },
@@ -69,7 +69,7 @@ export default function Banner() {
                   <p className="delivery-head">Home Delivery</p>
                   <p className="delivery-price">
                     &#8377;50
-                    <span className="delivery-within">first 5 km</span>
+                    <span className="delivery-within">within 5 km of our bakery</span>
                   </p>
                   <p className="delivery-extra">then &#8377;10 per extra km</p>
                   <span className="delivery-cta">Order on WhatsApp</span>

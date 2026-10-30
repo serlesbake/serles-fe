@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getProductsUrl, getCategoriesUrl, getProductDetailUrl } from "../../../config/api";
 import ProductDetailPageClient from "./ProductDetailPageClient";
@@ -270,14 +269,12 @@ export default async function ProductDetailPage({ params }) {
   return (
     <>
       <JsonLd data={schema} />
-      <Suspense fallback={<div className="text-center py-5">Loading...</div>}>
-        <ProductDetailPageClient
-          params={resolvedParams}
-          initialProduct={product}
-          initialCategories={categories}
-          initialRelatedProducts={related}
-        />
-      </Suspense>
+      <ProductDetailPageClient
+        params={resolvedParams}
+        initialProduct={product}
+        initialCategories={categories}
+        initialRelatedProducts={related}
+      />
     </>
   );
 }

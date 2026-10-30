@@ -54,7 +54,7 @@ export default function ProductFAQ({ product = {}, phone = "916383070725", whats
     // Delivery
     items.push({
       question: 'What are the delivery options and charges?',
-      answer: 'Delivery is ₹50 for the first 5 km and ₹10 for each additional kilometre. Share your delivery locality with us on WhatsApp before confirming your order so we can confirm the exact charge and availability.'
+      answer: 'Delivery is ₹50 within 5 km of our bakery in Ilanji, Tenkasi. Beyond 5 km, add ₹10 per additional kilometre. Share your delivery locality with us on WhatsApp before confirming so we can check coverage and confirm the exact charge.'
     });
 
     // WhatsApp

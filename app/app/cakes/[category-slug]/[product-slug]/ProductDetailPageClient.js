@@ -35,6 +35,7 @@ export default function ProductDetailPageClient({
   const [categories, setCategories] = useState(initialCategories ?? []);
   const [relatedProducts, setRelatedProducts] = useState(initialRelatedProducts ?? []);
   const [loading, setLoading] = useState(!hasServerData);
+  const [loadError, setLoadError] = useState(false);
   const [dataFetched, setDataFetched] = useState(hasServerData);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -102,6 +103,7 @@ export default function ProductDetailPageClient({
         setDataFetched(true);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setLoadError(true);
       } finally {
         setLoading(false);
       }
@@ -227,7 +229,21 @@ Please contact me for more details. Thank you!`;
             { label: titleFromSlug(productSlug) },
           ]}
         />
-        <div className="text-center py-5">Loading...</div>
+        <section className="container text-center py-5" aria-live="polite">
+          <p>
+            {loadError
+              ? "Product details are temporarily unavailable. Contact us to confirm the current price and availability."
+              : "Checking product details and availability…"}
+          </p>
+          <a
+            className="primary-btn"
+            href={`https://wa.me/916383070725?text=${encodeURIComponent(`Hi! Please share details and availability for the ${titleFromSlug(productSlug)}.`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Ask us on WhatsApp
+          </a>
+        </section>
       </>
     );
   }

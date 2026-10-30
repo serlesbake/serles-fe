@@ -139,6 +139,9 @@ export default function RootLayout({ children }) {
               anonymize_ip: true,
               send_page_view: true
             });
+            (window.__serlesAnalyticsQueue || []).splice(0).forEach(([name, params]) => {
+              gtag('event', name, params);
+            });
           `}
         </Script>
 

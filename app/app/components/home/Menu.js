@@ -562,7 +562,7 @@ export default function Menu({ initialProducts = [], initialCategories = [], ini
                     fontWeight: "700",
                     boxShadow: "0 5px 20px rgba(40, 167, 69, 0.3)"
                   }}>
-                    ₹50 for the first 5 km; ₹10 per extra km
+                    ₹50 within 5 km of our bakery in Ilanji; ₹10 per extra km beyond 5 km
                   </div>
                   
                   <p style={{
