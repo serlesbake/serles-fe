@@ -27,28 +27,8 @@ import { SITE_URL, SITE_NAME } from '../utils/blog';
 const PHONE = '+916383070725';
 const EMAIL = 'serlesbake@gmail.com';
 
-/**
- * Opening hours, as published on the Google Business Profile: open every day,
- * 9am–10pm. These must stay in step with the profile — where the two disagree
- * Google trusts the profile, and the mismatch counts against the site.
- *
- * Times are 24-hour. A day the shop is closed is simply left out of the list.
- */
-const OPENING_HOURS = [
-  {
-    days: [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ],
-    opens: '09:00',
-    closes: '22:00',
-  },
-];
+// Business hours are omitted from JSON-LD until the site footer and current
+// business profile agree on one schedule.
 
 /**
  * Coordinates, decoded from the shop's Google plus code `X77J+CH Ilanji`
@@ -77,18 +57,7 @@ const bakery = {
     postalCode: '627805',
     addressCountry: 'IN',
   },
-  // Only emitted once real values are set above — an empty or invented opening-hours
-  // block is worse than none.
-  ...(OPENING_HOURS.length > 0
-    ? {
-        openingHoursSpecification: OPENING_HOURS.map(({ days, opens, closes }) => ({
-          '@type': 'OpeningHoursSpecification',
-          dayOfWeek: days,
-          opens,
-          closes,
-        })),
-      }
-    : {}),
+  // Opening hours stay omitted until the profile and footer agree.
   ...(GEO
     ? { geo: { '@type': 'GeoCoordinates', latitude: GEO.lat, longitude: GEO.lng } }
     : {}),

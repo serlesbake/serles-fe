@@ -5,7 +5,7 @@ import apiCache from '../../utils/cache';
 import Link from "next/link";
 import { FaWhatsapp } from "react-icons/fa";
 import styles from './Menu.module.css';
-import { trackStoreEvent } from '../../utils/analytics';
+import { getAnalyticsReference, trackStoreEvent } from '../../utils/analytics';
 import { fetchCatalogJson, catalogList } from '../../utils/catalog';
 
 function classNames(...classes) {
@@ -121,13 +121,13 @@ export default function Menu({ initialProducts = [], initialCategories = [], ini
 
   // Handle WhatsApp enquiry
   const handleWhatsAppEnquiry = (productName, weightOption = null) => {
-    trackStoreEvent('whatsapp_enquiry', {
+    trackStoreEvent('whatsapp_enquiry_click', {
       item_name: productName,
       weight: weightOption?.display_name || 'Standard',
       value: Number(weightOption?.price) || undefined,
       currency: 'INR',
     });
-    const message = `Hi! I'm interested in ordering the ${productName} cake.${weightOption ? `\n\nWeight: ${weightOption.display_name}\nPrice: ₹${weightOption.price}` : ''}\n\nPlease contact me for more details. Thank you!`;
+    const message = `Hi! I'm interested in ordering the ${productName} cake.${weightOption ? `\n\nWeight: ${weightOption.display_name}\nPrice: ₹${weightOption.price}` : ''}\n\nPlease contact me for more details. Thank you!${getAnalyticsReference()}`;
     const whatsappUrl = `https://wa.me/916383070725?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };

@@ -1,6 +1,7 @@
 import Breadcrumb from "../components/Breadcrumb";
 
 export const metadata = {
+  alternates: { canonical: 'https://www.serlesbake.in/terms-conditions' },
   title: "Terms & Conditions | Serle’s Bake, Tenkasi",
   description: "Read our terms and conditions for ordering cakes with Serle’s Bake – Tenkasi’s trusted cake shop for birthday cakes, brownies & custom creations with same-day delivery.",
   keywords: "cake shop terms tenkasi, serles bake terms, order terms, best cake shop tenkasi",
@@ -129,4 +130,4 @@ export default function TermsConditionsPage() {
       </section>
     </>
   );
-} 
+}

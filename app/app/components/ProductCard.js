@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, priority = false }) {
   return (
     <div className="col-lg-3 col-md-6 col-sm-6">
       <Link 
@@ -16,6 +16,9 @@ export default function ProductCard({ product }) {
               alt={product.featured_image?.alt_text || product.name}
               width={300}
               height={300}
+              priority={priority}
+              fetchPriority={priority ? 'high' : 'auto'}
+              sizes="(min-width: 992px) 25vw, (min-width: 576px) 50vw, 100vw"
               style={{ objectFit: "cover", borderRadius: "20px", width: "100%", height: "100%" }}
             />
             {product.category && (
@@ -31,12 +34,12 @@ export default function ProductCard({ product }) {
             <div className="product__item__price">
               {product.price_range?.replace(/\$/g, '₹') || "Price not available"}
             </div>
-            <div className="cart_add">
-              <Link href={`/cakes/${product.category?.slug}/${product.slug}`}>View Details</Link>
+            <div className="cart_add" aria-hidden="true">
+              <span>View Details</span>
             </div>
           </div>
         </div>
       </Link>
     </div>
   );
-} 
+}

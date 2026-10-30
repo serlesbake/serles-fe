@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -9,7 +9,7 @@ import Breadcrumb from "../../../components/Breadcrumb";
 import ProductCard from "../../../components/ProductCard";
 import ProductFAQ from "../../../components/ProductFAQ";
 import apiCache from "../../../utils/cache";
-import { trackStoreEvent } from "../../../utils/analytics";
+import { getAnalyticsReference, trackStoreEvent } from "../../../utils/analytics";
 
 /** "black-forest" -> "Black Forest", for headings shown before the fetch resolves. */
 const titleFromSlug = (slug = "") =>
@@ -46,16 +46,28 @@ export default function ProductDetailPageClient({
   const [customMessage, setCustomMessage] = useState("Happy Birthday ❤️");
   const [photoFile, setPhotoFile] = useState(null);
   const isPhotoCake = /photo.?cake/i.test(initialProduct?.name || product?.name || productSlug);
+  const viewItemSentFor = useRef(null);
 
   useEffect(() => {
-    if (product?.id) {
-      trackStoreEvent('view_product', {
+    if (product?.id && viewItemSentFor.current !== String(product.id)) {
+      viewItemSentFor.current = String(product.id);
+      const itemPrice = Number(selectedWeight?.price || product.min_price || product.base_price) || undefined;
+      trackStoreEvent('view_item', {
         item_id: String(product.id),
         item_name: product.name,
         item_category: product.category?.name,
+        items: [{
+          item_id: String(product.id),
+          item_name: product.name,
+          item_category: product.category?.name,
+          price: itemPrice,
+          quantity: 1,
+        }],
+        currency: 'INR',
+        value: itemPrice,
       });
     }
-  }, [product?.id, product?.name, product?.category?.name]);
+  }, [product?.id, product?.name, product?.category?.name, selectedWeight?.price]);
 
   // Fetch data only once with caching
   useEffect(() => {
@@ -137,13 +149,21 @@ export default function ProductDetailPageClient({
 
   // Handle WhatsApp enquiry
   const handleWhatsAppEnquiry = () => {
-    trackStoreEvent('whatsapp_enquiry', {
+    const total = getTotalAmount();
+    trackStoreEvent('whatsapp_enquiry_click', {
       item_id: String(product?.id || ''),
       item_name: product?.name,
       weight: selectedWeight?.display_name || 'Standard',
       quantity,
-      value: getUnitPrice() * quantity || undefined,
+      value: total || undefined,
       currency: 'INR',
+      items: [{
+        item_id: String(product?.id || ''),
+        item_name: product?.name,
+        item_variant: selectedWeight?.display_name || 'Standard',
+        price: getUnitPrice() || undefined,
+        quantity,
+      }],
     });
     const message = `Hi! I'm interested in ordering the ${product.name} cake.
 
@@ -151,13 +171,13 @@ Product Details:
 - Name: ${product.name}
 - Weight: ${selectedWeight?.display_name || 'Standard'}
 - Quantity: ${quantity}
-- Price: ${getTotalPrice()}
+- Total: ${getTotalPrice()}
 
 Custom Message: ${customMessage}
 
 ${isPhotoCake ? `I will send the photo in this WhatsApp chat. Photo: ${photoFile?.name || 'to follow'}` : ''}
 
-Please contact me for more details. Thank you!`;
+Please contact me for more details. Thank you!${getAnalyticsReference()}`;
 
     const whatsappUrl = `https://wa.me/916383070725?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -211,10 +231,10 @@ Please contact me for more details. Thank you!`;
 
   // Get total price based on quantity and selected weight
   const getTotalPrice = () => {
-    const unitPrice = getUnitPrice();
-    const total = unitPrice * quantity;
-    return selectedWeight ? `₹${total.toFixed(2)}` : "Select a weight to see total";
+    return selectedWeight ? `₹${getTotalAmount().toFixed(2)}` : "Select a weight to see total";
   };
+
+  const getTotalAmount = () => getUnitPrice() * quantity;
 
   if (loading) {
     // The breadcrumb carries the page's <h1>; without it the server HTML has no
@@ -531,6 +551,10 @@ Please contact me for more details. Thank you!`;
           display: none;
         }
 
+        .mobile-sticky-cta-spacer {
+          display: none;
+        }
+
         @media (max-width: 991px) {
           .sticky-image-container {
             position: static;
@@ -551,7 +575,7 @@ Please contact me for more details. Thank you!`;
             z-index: 1000;
             left: 16px;
             right: 16px;
-            bottom: max(12px, env(safe-area-inset-bottom));
+            bottom: max(72px, calc(60px + env(safe-area-inset-bottom)));
             width: calc(100% - 32px);
             border: 0;
             border-radius: 999px;
@@ -564,7 +588,12 @@ Please contact me for more details. Thank you!`;
           }
 
           .product-details-container {
-            padding-bottom: 72px;
+            padding-bottom: 132px;
+          }
+
+          .mobile-sticky-cta-spacer {
+            display: block;
+            height: 132px;
           }
         }
       `}</style>
@@ -908,6 +937,7 @@ Please contact me for more details. Thank you!`;
         </div>
       </section>
       {/* Related Products Section End */}
+      <div className="mobile-sticky-cta-spacer" aria-hidden="true" />
     </>
   );
 } 

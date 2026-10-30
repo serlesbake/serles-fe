@@ -190,8 +190,8 @@ export default function CategoryPageClient({
               {/* Products Grid */}
               <div className="row">
                 {visibleProducts.length > 0 ? (
-                  visibleProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                  visibleProducts.map((product, index) => (
+                    <ProductCard key={product.id} product={product} priority={index === 0} />
                   ))
                 ) : (
                   <div className="col-12 text-center py-5">
@@ -212,4 +212,4 @@ export default function CategoryPageClient({
       {/* Shop Section End */}
     </>
   );
-} 
+}

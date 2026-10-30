@@ -137,7 +137,18 @@ export default function RootLayout({ children }) {
             gtag('config', 'G-PXF11QPRMS', {
               page_path: window.location.pathname,
               anonymize_ip: true,
-              send_page_view: true
+              send_page_view: true,
+              debug_mode: ${process.env.NEXT_PUBLIC_GA_DEBUG === 'true'}
+            });
+            gtag('get', 'G-PXF11QPRMS', 'client_id', function(clientId) {
+              if (clientId) {
+                try { window.localStorage.setItem('serles_ga4_client_id', clientId); } catch (e) {}
+              }
+            });
+            gtag('get', 'G-PXF11QPRMS', 'session_id', function(sessionId) {
+              if (sessionId) {
+                try { window.localStorage.setItem('serles_ga4_session_id', String(sessionId)); } catch (e) {}
+              }
             });
             (window.__serlesAnalyticsQueue || []).splice(0).forEach(([name, params]) => {
               gtag('event', name, params);

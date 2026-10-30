@@ -60,15 +60,25 @@ export async function fetchSitemapData() {
 export async function generateXMLSitemap() {
   const { products, categories, tags } = await fetchSitemapData();
   const currentDate = new Date().toISOString();
+  const activeProducts = products.filter((product) => product?.slug && product?.category?.slug);
+  const populatedCategories = categories.filter((category) =>
+    activeProducts.some((product) => product.category.slug === category.slug)
+  );
+  const populatedTags = tags.filter((tag) => activeProducts.some((product) =>
+    Array.isArray(product.tags) && product.tags.some((productTag) =>
+      (typeof productTag === 'string' ? productTag : productTag?.slug) === tag.slug
+    )
+  ));
 
   let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
 
   // Add static pages
   STATIC_PAGES.forEach(page => {
+    const canonicalPath = page.path === '/' ? BASE_URL : `${BASE_URL}${page.path}`;
     sitemap += `
   <url>
-    <loc>${BASE_URL}${page.path}</loc>
+    <loc>${canonicalPath}</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
@@ -85,7 +95,7 @@ export async function generateXMLSitemap() {
   </url>`;
 
   // Add category pages
-  categories.forEach(category => {
+  populatedCategories.forEach(category => {
     if (category.slug) {
       sitemap += `
   <url>
@@ -98,7 +108,7 @@ export async function generateXMLSitemap() {
   });
 
   // Add product detail pages
-  products.forEach(product => {
+  activeProducts.forEach(product => {
     if (product.slug && product.category?.slug) {
       sitemap += `
   <url>
@@ -120,7 +130,7 @@ export async function generateXMLSitemap() {
   </url>`;
 
   // Add individual tag pages
-  tags.forEach(tag => {
+  populatedTags.forEach(tag => {
     if (tag.slug) {
       sitemap += `
   <url>
@@ -141,7 +151,12 @@ export async function generateXMLSitemap() {
   ]);
 
   blogPosts.forEach(post => {
-    if (post.slug) {
+    const canonicalPath = `/blog/${post.slug}`;
+    const declaredCanonical = post.canonical_url;
+    const canonicalMatchesPage = !declaredCanonical ||
+      declaredCanonical === canonicalPath ||
+      declaredCanonical === `${BASE_URL}${canonicalPath}`;
+    if (post.slug && canonicalMatchesPage) {
       sitemap += `
   <url>
     <loc>${BASE_URL}/blog/${post.slug}</loc>
@@ -178,6 +193,15 @@ export async function generateXMLSitemap() {
 
   sitemap += `
 </urlset>`;
+
+  // Duplicate catalog/tag records must not produce duplicate sitemap locs.
+  const seen = new Set();
+  sitemap = sitemap.replace(/  <url>[\s\S]*?<\/url>/g, (entry) => {
+    const location = entry.match(/<loc>(.*?)<\/loc>/)?.[1];
+    if (!location || seen.has(location)) return '';
+    seen.add(location);
+    return entry;
+  });
 
   return sitemap;
 }

@@ -141,6 +141,33 @@ function buildProductSchema(product, categorySlug, productSlug) {
     if (!product) return null;
 
     const apiSchema = product.meta_data?.schema_json;
+    const activeWeights = Array.isArray(product.weight_options)
+      ? product.weight_options.filter((option) => option?.is_active !== false && Number(option?.price) > 0)
+      : [];
+    const prices = activeWeights.map((option) => Number(option.price)).sort((a, b) => a - b);
+    if (prices.length === 0) {
+      const minimum = Number(product.min_price || product.base_price);
+      const maximum = Number(product.max_price || minimum);
+      if (minimum > 0 && maximum > minimum) prices.push(minimum, maximum);
+      else if (minimum > 0) prices.push(minimum);
+    }
+    const offers = prices.length > 1
+      ? {
+          '@type': 'AggregateOffer',
+          lowPrice: prices[0].toFixed(2),
+          highPrice: prices[prices.length - 1].toFixed(2),
+          offerCount: prices.length,
+          priceCurrency: 'INR',
+          availability: 'https://schema.org/InStock',
+        }
+      : prices.length === 1
+        ? {
+            '@type': 'Offer',
+            price: prices[0].toFixed(2),
+            priceCurrency: 'INR',
+            availability: 'https://schema.org/InStock',
+          }
+        : null;
     const base =
       apiSchema && typeof apiSchema === 'object' && Object.keys(apiSchema).length > 0
         ? apiSchema
@@ -174,9 +201,11 @@ function buildProductSchema(product, categorySlug, productSlug) {
         '@id': `${pageUrl}#product`,
         url: pageUrl,
         // Anchor the offer to this URL so Google knows where the product is sold.
-        ...(base.offers
-          ? { offers: { ...base.offers, url: pageUrl, seller: { '@id': `${SITE}/#business` } } }
-          : {}),
+        ...(offers
+          ? { offers: { ...offers, url: pageUrl, seller: { '@id': `${SITE}/#business` } } }
+          : base.offers && !Array.isArray(base.offers)
+            ? { offers: { ...base.offers, url: pageUrl, seller: { '@id': `${SITE}/#business` } } }
+            : {}),
       },
       breadcrumb,
     ];
