@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FaWhatsapp } from "react-icons/fa";
 import styles from './Menu.module.css';
 import { trackStoreEvent } from '../../utils/analytics';
+import { fetchCatalogJson, catalogList } from '../../utils/catalog';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -34,17 +35,16 @@ function getCategoryKeyFromProduct(product) {
   return "";
 }
 
-export default function Menu({ initialProducts = [], initialCategories = [] }) {
+export default function Menu({ initialProducts = [], initialCategories = [], initialCatalogLoaded = false }) {
   const [activeCategory, setActiveCategory] = useState("all");
   const [products, setProducts] = useState(initialProducts);
   const [categories, setCategories] = useState(initialCategories);
-  const hasInitialData = initialProducts.length > 0 || initialCategories.length > 0;
-  const [loading, setLoading] = useState(!hasInitialData);
+  const [loading, setLoading] = useState(!initialCatalogLoaded);
   const [apiError, setApiError] = useState(null);
   const [displayLimit, setDisplayLimit] = useState(6); // Show only 6 products initially
 
   useEffect(() => {
-    if (hasInitialData) return;
+    if (initialCatalogLoaded) return;
     const fetchData = async () => {
       setLoading(true);
       setApiError(null);
@@ -52,13 +52,13 @@ export default function Menu({ initialProducts = [], initialCategories = [] }) {
       try {
         // Fetch both products and categories in parallel
         const [productsData, categoriesData] = await Promise.all([
-          apiCache.fetchWithCache(getProductsUrl()),
-          apiCache.fetchWithCache(getCategoriesUrl())
+          fetchCatalogJson(getProductsUrl()),
+          fetchCatalogJson(getCategoriesUrl())
         ]);
         
         // Handle the API response structure
-        const productsItems = Array.isArray(productsData.results) ? productsData.results : productsData;
-        const categoriesItems = Array.isArray(categoriesData.results) ? categoriesData.results : categoriesData;
+        const productsItems = catalogList(productsData);
+        const categoriesItems = catalogList(categoriesData);
         
         // Fetch detailed product data with weight options
         const detailedProducts = await Promise.all(
@@ -86,7 +86,7 @@ export default function Menu({ initialProducts = [], initialCategories = [] }) {
     };
 
     fetchData();
-  }, [hasInitialData]);
+  }, [initialCatalogLoaded]);
 
   // Generate category tabs from API data
   const generateCategoryTabs = () => {
@@ -562,7 +562,7 @@ export default function Menu({ initialProducts = [], initialCategories = [] }) {
                     fontWeight: "700",
                     boxShadow: "0 5px 20px rgba(40, 167, 69, 0.3)"
                   }}>
-                    Just ₹50!
+                    ₹50 for the first 5 km; ₹10 per extra km
                   </div>
                   
                   <p style={{

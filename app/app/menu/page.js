@@ -3,20 +3,18 @@ import Breadcrumb from "@/app/components/Breadcrumb";
 import Cta from "@/app/components/home/cta";
 import { getProductsUrl, getCategoriesUrl, getProductDetailUrl } from "@/app/config/api";
 import apiCache from "@/app/utils/cache";
+import { fetchCatalogJson, catalogList } from "@/app/utils/catalog";
 
 export const revalidate = 60;
-
-const asList = (payload) =>
-  Array.isArray(payload?.results) ? payload.results : Array.isArray(payload) ? payload : [];
 
 async function getMenuData() {
   try {
     const [productsPayload, categoriesPayload] = await Promise.all([
-      apiCache.fetchWithCache(getProductsUrl(1, 100)),
-      apiCache.fetchWithCache(getCategoriesUrl()),
+      fetchCatalogJson(getProductsUrl(1, 100)),
+      fetchCatalogJson(getCategoriesUrl()),
     ]);
-    const products = asList(productsPayload);
-    const categories = asList(categoriesPayload);
+    const products = catalogList(productsPayload);
+    const categories = catalogList(categoriesPayload);
     const details = await Promise.all(products.map(async (product) => {
       try {
         return await apiCache.fetchWithCache(getProductDetailUrl(product.id));
@@ -24,10 +22,10 @@ async function getMenuData() {
         return product;
       }
     }));
-    return { products: details, categories };
+    return { products: details, categories, catalogLoaded: true };
   } catch (error) {
     console.error("Unable to server-render menu catalog:", error);
-    return { products: [], categories: [] };
+    return { products: [], categories: [], catalogLoaded: false };
   }
 }
 
@@ -65,11 +63,11 @@ export const metadata = {
 };
 
 export default async function MenuPage() {
-  const { products, categories } = await getMenuData();
+  const { products, categories, catalogLoaded } = await getMenuData();
   return (
     <>
       <Breadcrumb title="Menu & Pricing" />
-      <AllProductsMenu initialProducts={products} initialCategories={categories} />
+      <AllProductsMenu initialProducts={products} initialCategories={categories} initialCatalogLoaded={catalogLoaded} />
       <Cta />
     </>
   );

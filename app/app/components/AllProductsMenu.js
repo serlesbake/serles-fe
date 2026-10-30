@@ -6,20 +6,20 @@ import Link from "next/link";
 import { FaWhatsapp } from "react-icons/fa";
 import styles from './home/Menu.module.css';
 import { trackStoreEvent } from '../utils/analytics';
+import { fetchCatalogJson, catalogList } from '../utils/catalog';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function AllProductsMenu({ initialProducts = [], initialCategories = [] }) {
+export default function AllProductsMenu({ initialProducts = [], initialCategories = [], initialCatalogLoaded = false }) {
   const [activeCategory, setActiveCategory] = useState("all");
   const [products, setProducts] = useState(initialProducts);
   const [categories, setCategories] = useState(initialCategories);
-  const hasInitialData = initialProducts.length > 0 || initialCategories.length > 0;
-  const [loading, setLoading] = useState(!hasInitialData);
+  const [loading, setLoading] = useState(!initialCatalogLoaded);
   const [apiError, setApiError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [hasMorePages, setHasMorePages] = useState(true);
+  const [hasMorePages, setHasMorePages] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [totalProducts, setTotalProducts] = useState(0);
   const pageSize = 12; // Number of products per page
@@ -27,10 +27,10 @@ export default function AllProductsMenu({ initialProducts = [], initialCategorie
   // Fetch products for a specific page
   const fetchProducts = async (page = 1, append = false) => {
     try {
-      const productsData = await apiCache.fetchWithCache(getProductsUrl(page, pageSize));
+      const productsData = await fetchCatalogJson(getProductsUrl(page, pageSize));
       
       // Handle the API response structure
-      const productsItems = Array.isArray(productsData.results) ? productsData.results : productsData;
+      const productsItems = catalogList(productsData);
       
       // Update total products count
       if (productsData.count !== undefined) {
@@ -39,7 +39,9 @@ export default function AllProductsMenu({ initialProducts = [], initialCategorie
       
       // Check if there are more pages
       const totalPages = Math.ceil((productsData.count || productsItems.length) / pageSize);
-      setHasMorePages(page < totalPages);
+      setHasMorePages(
+        Array.isArray(productsData.results) && page < totalPages
+      );
       
       // Fetch detailed product data with weight options
       const detailedProducts = await Promise.all(
@@ -72,8 +74,8 @@ export default function AllProductsMenu({ initialProducts = [], initialCategorie
   // Fetch categories
   const fetchCategories = async () => {
     try {
-      const categoriesData = await apiCache.fetchWithCache(getCategoriesUrl());
-      const categoriesItems = Array.isArray(categoriesData.results) ? categoriesData.results : categoriesData;
+      const categoriesData = await fetchCatalogJson(getCategoriesUrl());
+      const categoriesItems = catalogList(categoriesData);
       setCategories(categoriesItems);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -82,7 +84,7 @@ export default function AllProductsMenu({ initialProducts = [], initialCategorie
 
   // Initial data fetch
   useEffect(() => {
-    if (hasInitialData) return;
+    if (initialCatalogLoaded) return;
     const fetchInitialData = async () => {
       setLoading(true);
       setApiError(null);
@@ -101,7 +103,7 @@ export default function AllProductsMenu({ initialProducts = [], initialCategorie
     };
 
     fetchInitialData();
-  }, [hasInitialData]);
+  }, [initialCatalogLoaded]);
 
   // Generate category tabs from API data
   const generateCategoryTabs = () => {
@@ -142,7 +144,7 @@ export default function AllProductsMenu({ initialProducts = [], initialCategorie
     setActiveCategory(categoryKey);
     setCurrentPage(1);
     setProducts([]); // Clear current products
-    setHasMorePages(true);
+    setHasMorePages(false);
     
     // Fetch products for the new category
     fetchProducts(1, false);

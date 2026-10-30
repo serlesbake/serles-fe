@@ -11,28 +11,26 @@ import Social from './components/home/Social';
 import FeaturedCakeCTA from './components/home/cta';
 import { getProductsUrl, getCategoriesUrl, getProductDetailUrl } from './config/api';
 import apiCache from './utils/cache';
+import { fetchCatalogJson, catalogList } from './utils/catalog';
 
 export const revalidate = 60;
-
-const asList = (payload) =>
-  Array.isArray(payload?.results) ? payload.results : Array.isArray(payload) ? payload : [];
 
 async function getHomeMenuData() {
   try {
     const [productsPayload, categoriesPayload] = await Promise.all([
-      apiCache.fetchWithCache(getProductsUrl()),
-      apiCache.fetchWithCache(getCategoriesUrl()),
+      fetchCatalogJson(getProductsUrl()),
+      fetchCatalogJson(getCategoriesUrl()),
     ]);
-    const products = asList(productsPayload);
-    const categories = asList(categoriesPayload);
+    const products = catalogList(productsPayload);
+    const categories = catalogList(categoriesPayload);
     const detailed = await Promise.all(products.map(async (product) => {
       try { return await apiCache.fetchWithCache(getProductDetailUrl(product.id)); }
       catch { return product; }
     }));
-    return { products: detailed, categories };
+    return { products: detailed, categories, catalogLoaded: true };
   } catch (error) {
     console.error('Unable to server-render homepage menu:', error);
-    return { products: [], categories: [] };
+    return { products: [], categories: [], catalogLoaded: false };
   }
 }
 export const metadata = {
@@ -51,7 +49,7 @@ export const metadata = {
   keywords: "bakery near me, cake shop near me, bakery Tenkasi, cake shop Tenkasi, bakery shop near me, homemade cakes, birthday cakes, eggless cakes Tenkasi",
 };
   export default async function Home() {
-  const { products, categories } = await getHomeMenuData();
+  const { products, categories, catalogLoaded } = await getHomeMenuData();
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -59,7 +57,7 @@ export const metadata = {
         <Banner />
         <About />
         <MilestoneBar />
-        <Menu initialProducts={products} initialCategories={categories} />
+        <Menu initialProducts={products} initialCategories={categories} initialCatalogLoaded={catalogLoaded} />
         <BestsellingWrapper /> 
         <Team />
         <FeaturedCakeCTA />

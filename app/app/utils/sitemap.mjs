@@ -1,5 +1,5 @@
 import { getProductsUrl, getCategoriesUrl, getTagsUrl } from '../config/api.js';
-import apiCache from './cache.js';
+import { fetchCatalogJson, catalogList } from './catalog.js';
 import { getPostsForSitemap, getCategories as getBlogCategories, getTags as getBlogTags } from './blogData.js';
 
 // Base URL for the website
@@ -35,23 +35,22 @@ const STATIC_PAGES = [
  * then cached for an hour is worse than one that fails loudly.
  */
 export async function fetchSitemapData() {
+  // Do not use APICache here: it turns transport failures into empty arrays,
+  // which made an incomplete sitemap look like a successful response.
   const [productsData, categoriesData, tagsData] = await Promise.all([
-    apiCache.fetchWithRetry(getProductsUrl()),
-    apiCache.fetchWithRetry(getCategoriesUrl()),
-    apiCache.fetchWithRetry(getTagsUrl()),
+    fetchCatalogJson(getProductsUrl()),
+    fetchCatalogJson(getCategoriesUrl()),
+    fetchCatalogJson(getTagsUrl()),
   ]);
 
-  const asList = (payload) =>
-    Array.isArray(payload?.results) ? payload.results : Array.isArray(payload) ? payload : [];
-
-  const products = asList(productsData);
-  const categories = asList(categoriesData);
-  const tags = asList(tagsData);
+  const products = catalogList(productsData);
+  const categories = catalogList(categoriesData);
+  const tags = catalogList(tagsData);
 
   // Tags can legitimately be empty; products and categories cannot. If both are
   // empty the catalog did not load, whatever the individual responses said.
-  if (products.length === 0 && categories.length === 0) {
-    throw new Error('Sitemap: catalog fetch returned no products and no categories');
+  if (products.length === 0 || categories.length === 0) {
+    throw new Error('Sitemap: catalog fetch returned an incomplete product/category catalog');
   }
 
   return { products, categories, tags };
@@ -238,4 +237,4 @@ const sitemapUtils = {
   formatDate
 };
 
-export default sitemapUtils; 
+export default sitemapUtils;

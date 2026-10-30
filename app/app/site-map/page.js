@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Breadcrumb from "../components/Breadcrumb";
 import { getProductsUrl, getCategoriesUrl } from "../config/api";
-import apiCache from "../utils/cache";
+import { fetchCatalogJson, catalogList } from "../utils/catalog";
 
 export const revalidate = 3600;
 
@@ -11,17 +11,14 @@ const staticPages = [
   ["Blog", "/blog"], ["Privacy Policy", "/privacy-policy"],
   ["Terms & Conditions", "/terms-conditions"],
 ];
-const asList = (payload) =>
-  Array.isArray(payload?.results) ? payload.results : Array.isArray(payload) ? payload : [];
-
 async function getCatalogLinks() {
   try {
     const [productsPayload, categoriesPayload] = await Promise.all([
-      apiCache.fetchWithCache(getProductsUrl()),
-      apiCache.fetchWithCache(getCategoriesUrl()),
+      fetchCatalogJson(getProductsUrl()),
+      fetchCatalogJson(getCategoriesUrl()),
     ]);
-    const products = asList(productsPayload);
-    const categories = asList(categoriesPayload);
+    const products = catalogList(productsPayload);
+    const categories = catalogList(categoriesPayload);
     return { products, categories };
   } catch (error) {
     console.error("Unable to load sitemap catalog:", error);

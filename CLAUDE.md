@@ -63,6 +63,12 @@ server-rendered data; menu counters avoid false zeroes while loading. Product pa
 select their first available weight on initial render, and photo-cake ordering now
 explains how to attach a sharp image in WhatsApp.*
 
+The catalog fetches used by `/`, `/menu`, `/site-map` and `/sitemap.xml` now preserve
+HTTP/parse failures instead of converting them to an empty product list. The menu
+client retries when server data did not load and only shows a genuine empty state
+after a successful catalog response. Delivery FAQs repeat the published first-5-km
+and per-kilometre rate so they no longer contradict the homepage banner.
+
 The six problems audited on the live site have been addressed. The **root cause of most
 of them was the same**, and it is the thing to watch for when adding a page:
 
