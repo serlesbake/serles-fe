@@ -1,8 +1,8 @@
 // Blog helpers: fetching, URL mapping, HTML hardening and SEO metadata.
 //
 // The blog API is public + read-only (see BLOG_API_GUIDE.md). Everything here is
-// deliberately fail-soft: if the blog module is not deployed on the backend yet,
-// list pages render an empty state and detail pages 404 instead of throwing.
+// Optional lists can degrade gracefully. Detail and sitemap callers require
+// successful responses so outages cannot masquerade as missing articles.
 
 /**
  * The site's canonical host is **www**: `sitemap.xml`, the root layout's
@@ -45,7 +45,7 @@ export const BLOG_DETAIL_REVALIDATE = 600;
  * Fetch JSON from the blog API using Next's data cache (ISR).
  * Returns `null` on any failure so callers can degrade gracefully.
  */
-export async function fetchBlog(url, { revalidate = BLOG_LIST_REVALIDATE, tags = ['blog'] } = {}) {
+export async function fetchBlog(url, { revalidate = BLOG_LIST_REVALIDATE, tags = ['blog'], required = false, allowNotFound = true } = {}) {
   try {
     const response = await fetch(url, {
       headers: { Accept: 'application/json' },
@@ -53,14 +53,13 @@ export async function fetchBlog(url, { revalidate = BLOG_LIST_REVALIDATE, tags =
     });
 
     if (!response.ok) {
-      if (response.status !== 404) {
-        console.error(`Blog API ${response.status} for ${url}`);
-      }
-      return null;
+      if (response.status === 404 && allowNotFound) return null;
+      throw new Error(`Blog API ${response.status} for ${url}`);
     }
 
     return await response.json();
   } catch (error) {
+    if (required) throw error;
     console.error(`Blog API request failed for ${url}:`, error?.message || error);
     return null;
   }

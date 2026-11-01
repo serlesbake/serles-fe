@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { getProductsUrl, getCategoriesUrl, getProductDetailUrl } from "../../../config/api";
 import ProductDetailPageClient from "./ProductDetailPageClient";
 import JsonLd from "../../../components/blog/JsonLd";
-import apiCache from "../../../utils/cache";
+import { fetchCatalogJson, catalogList } from '../../../utils/catalog';
+import { buildProductMetadata } from "../../../utils/productMetadata";
 
 const SITE = "https://www.serlesbake.in";
 
@@ -10,117 +11,27 @@ const SITE = "https://www.serlesbake.in";
 // price or description edits. 60s matches the public API's own CDN cache window.
 export const revalidate = 60;
 
-/**
- * Product titles ran 61-75 chars because of the
- * "- Serle's Bake | From Our Oven to Your Heart" suffix, past the ~60 Google
- * shows — so the tagline was the part being truncated away. "in Tenkasi" is
- * shorter and carries the geo keyword instead. Long product names fall back to a
- * bare "<name> | Serle's Bake" so the title still fits.
- */
-function productTitle(name) {
-  const withGeo = `${name} in Tenkasi | Serle's Bake`;
-  return withGeo.length <= 60 ? withGeo : `${name} | Serle's Bake`;
-}
-
-const asList = (payload) =>
-  Array.isArray(payload?.results) ? payload.results : Array.isArray(payload) ? payload : [];
-
-// Generate metadata for the product detail page
+// Keep canonical, search and social metadata in the server HTML.
 export async function generateMetadata({ params }) {
-  // Await params in Next.js 15
   const resolvedParams = await params;
-  const categorySlug = resolvedParams["category-slug"];
-  const productSlug = resolvedParams["product-slug"];
-  
+  const categorySlug = resolvedParams['category-slug'];
+  const productSlug = resolvedParams['product-slug'];
   try {
-    // Fetch data for metadata
-    const [productsData, categoriesData] = await Promise.all([
-      apiCache.fetchWithCache(getProductsUrl()),
-      apiCache.fetchWithCache(getCategoriesUrl())
-    ]);
-
-    const allProducts = Array.isArray(productsData?.results) ? productsData.results : Array.isArray(productsData) ? productsData : [];
-    const allCategories = Array.isArray(categoriesData?.results) ? categoriesData.results : Array.isArray(categoriesData) ? categoriesData : [];
-
-    // Find the specific product from the list
-    const foundProductFromList = allProducts.find(p => 
-      p.slug === productSlug && p.category?.slug === categorySlug
+    const products = catalogList(await fetchCatalogJson(getProductsUrl()));
+    const listedProduct = products.find(product =>
+      product.slug === productSlug && product.category?.slug === categorySlug
     );
+    if (!listedProduct) return buildProductMetadata({}, categorySlug, productSlug);
 
-    if (!foundProductFromList) {
-      return {
-        title: productTitle(productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cake'),
-        description: `Discover our delicious ${productSlug?.replace(/-/g, ' ')} cake at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-        keywords: `homemade cakes, ${productSlug?.replace(/-/g, ' ')}, Serle's Bake, Tenkasi cakes, birthday cakes, wedding cakes, custom cakes, Tamil Nadu bakery, fresh cakes delivery`,
-        openGraph: {
-          title: productTitle(productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cake'),
-          description: `Discover our delicious ${productSlug?.replace(/-/g, ' ')} cake at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-          type: 'website',
-          url: `https://www.serlesbake.in/cakes/${categorySlug}/${productSlug}`,
-          images: ['https://www.serlesbake.in/img/logo.png'],
-        },
-        twitter: {
-          card: 'summary_large_image',
-          title: productTitle(productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cake'),
-          description: `Discover our delicious ${productSlug?.replace(/-/g, ' ')} cake at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-          images: ['https://www.serlesbake.in/img/logo.png'],
-        },
-        alternates: {
-          canonical: `https://www.serlesbake.in/cakes/${categorySlug}/${productSlug}`,
-        },
-      };
-    }
-
-    // Fetch individual product data to get complete information using proper API URL
-    const individualProductData = await apiCache.fetchWithCache(getProductDetailUrl(foundProductFromList.id));
-
-    return {
-      title: productTitle(individualProductData.name),
-      description: individualProductData.description || individualProductData.short_description || `Discover our delicious ${individualProductData.name} at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-      keywords: `homemade cakes, ${individualProductData.name.toLowerCase()}, Serle's Bake, Tenkasi cakes, ${individualProductData.category?.name?.toLowerCase() || 'cake'}, birthday cakes, wedding cakes, custom cakes, Tamil Nadu bakery, fresh cakes delivery${individualProductData.tags ? `, ${individualProductData.tags.map(tag => tag.name).join(', ')}` : ''}`,
-      openGraph: {
-        title: productTitle(individualProductData.name),
-        description: individualProductData.description || individualProductData.short_description || `Discover our delicious ${individualProductData.name} at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-        type: 'website',
-        url: `https://www.serlesbake.in/cakes/${categorySlug}/${productSlug}`,
-        images: [individualProductData.featured_image?.url || individualProductData.images?.[0]?.url || 'https://www.serlesbake.in/img/logo.png'],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: productTitle(individualProductData.name),
-        description: individualProductData.description || individualProductData.short_description || `Discover our delicious ${individualProductData.name} at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-        images: [individualProductData.featured_image?.url || individualProductData.images?.[0]?.url || 'https://www.serlesbake.in/img/logo.png'],
-      },
-      alternates: {
-        canonical: `https://www.serlesbake.in/cakes/${categorySlug}/${productSlug}`,
-      },
-    };
+    const detail = await fetchCatalogJson(getProductDetailUrl(listedProduct.id));
+    // A list-shaped fallback from the legacy cache is not a product detail.
+    const product = detail?.name ? detail : listedProduct;
+    return buildProductMetadata(product, categorySlug, productSlug);
   } catch (error) {
-    console.error("Error generating metadata:", error);
-    return {
-      title: productTitle(productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cake'),
-      description: `Discover our delicious ${productSlug?.replace(/-/g, ' ')} cake at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-      keywords: `homemade cakes, ${productSlug?.replace(/-/g, ' ')}, Serle's Bake, Tenkasi cakes, birthday cakes, wedding cakes, custom cakes, Tamil Nadu bakery, fresh cakes delivery`,
-      openGraph: {
-        title: productTitle(productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cake'),
-        description: `Discover our delicious ${productSlug?.replace(/-/g, ' ')} cake at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-        type: 'website',
-        url: `https://www.serlesbake.in/cakes/${categorySlug}/${productSlug}`,
-        images: ['https://www.serlesbake.in/img/logo.png'],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: productTitle(productSlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cake'),
-        description: `Discover our delicious ${productSlug?.replace(/-/g, ' ')} cake at Serle's Bake. Fresh homemade cake crafted with care and passion. Perfect for birthdays, weddings, and special celebrations. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-        images: ['https://www.serlesbake.in/img/logo.png'],
-      },
-      alternates: {
-        canonical: `https://www.serlesbake.in/cakes/${categorySlug}/${productSlug}`,
-      },
-    };
+    console.error('Error generating product metadata:', error);
+    return buildProductMetadata({}, categorySlug, productSlug);
   }
 }
-
 /**
  * Product structured data.
  *
@@ -228,19 +139,20 @@ async function getProductData(categorySlug, productSlug) {
 
   try {
     const [productsData, categoriesData] = await Promise.all([
-      apiCache.fetchWithCache(getProductsUrl()),
-      apiCache.fetchWithCache(getCategoriesUrl()),
+      fetchCatalogJson(getProductsUrl()),
+      fetchCatalogJson(getCategoriesUrl()),
     ]);
 
-    const allProducts = asList(productsData);
-    const categories = asList(categoriesData);
+    const allProducts = catalogList(productsData);
+    const categories = catalogList(categoriesData);
 
     const listProduct = allProducts.find(
       (p) => p.slug === productSlug && p.category?.slug === categorySlug
     );
-    if (!listProduct) return { ...empty, categories, catalogLoaded: allProducts.length > 0 };
+    if (!listProduct) return { ...empty, categories, catalogLoaded: true };
 
-    const detail = await apiCache.fetchWithCache(getProductDetailUrl(listProduct.id));
+    const detail = await fetchCatalogJson(getProductDetailUrl(listProduct.id));
+    if (!detail?.id || detail.slug !== productSlug) throw new Error('Incomplete product detail response');
 
     const sameCategory = allProducts.filter(
       (p) => p.category?.slug === categorySlug && p.id !== listProduct.id
@@ -261,7 +173,7 @@ async function getProductData(categorySlug, productSlug) {
     };
   } catch (error) {
     console.error('Error loading product page:', error);
-    return empty;
+    throw error;
   }
 }
 

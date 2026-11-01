@@ -583,7 +583,7 @@ export default function Menu({ initialProducts = [], initialCategories = [], ini
                     }}>
                       Order now
                     </Link>{" "}
-                    and enjoy same-day delivery!
+                    to check your address within 20 km by road from Ilanji and confirm availability.
                   </p>
                 </div>
 

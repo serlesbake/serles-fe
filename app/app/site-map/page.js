@@ -1,12 +1,26 @@
 import Link from "next/link";
 import Breadcrumb from "../components/Breadcrumb";
+import { DELIVERY_AREA_PAGES, deliveryAreaPath } from '../utils/deliveryAreas';
 import { getProductsUrl, getCategoriesUrl } from "../config/api";
 import { fetchCatalogJson, catalogList } from "../utils/catalog";
 
 export const revalidate = 3600;
 
+const TITLE = "Site Map - Serle's Bake | Complete Navigation Guide";
+const DESCRIPTION = "Browse Serle's Bake pages, cake categories and products. Find our menu, homemade cakes, ordering information and bakery contact details in Tenkasi.";
+
+export const metadata = {
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "https://www.serlesbake.in/site-map" },
+  openGraph: { title: TITLE, description: DESCRIPTION, url: "https://www.serlesbake.in/site-map", type: "website", images: ["/img/logo.png"] },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: ["/img/logo.png"] },
+};
+
 const staticPages = [
   ["Home", "/"], ["Cakes", "/cakes"], ["Menu & Pricing", "/menu"],
+  ["Cake Delivery", "/cake-delivery"],
+  ...DELIVERY_AREA_PAGES.map(area => [`Cake delivery: ${area.name}`, deliveryAreaPath(area)]),
   ["About", "/about"], ["Contact", "/contact"], ["Testimonials", "/testimonial"],
   ["Blog", "/blog"], ["Privacy Policy", "/privacy-policy"],
   ["Terms & Conditions", "/terms-conditions"],
@@ -52,8 +66,8 @@ export default async function SiteMapPage() {
     .filter((product) => product.slug && product.category?.slug)
     .map((product) => [product.name, `/cakes/${product.category.slug}/${product.slug}`]);
   const content = [
-    <Breadcrumb key="breadcrumb" title="Site Map" />,
-    <main key="content" style={{ background: "linear-gradient(135deg, #fef7f8 0%, #fff5f6 100%)", padding: "60px 0", minHeight: "70vh" }}>
+    <Breadcrumb key="breadcrumb" title="Site Map" headingLevel="h2" />,
+    <div key="content" style={{ background: "linear-gradient(135deg, #fef7f8 0%, #fff5f6 100%)", padding: "60px 0", minHeight: "70vh" }}>
       <div className="container">
         <h1 className="text-center mb-3" style={{ color: "#e4718a", fontWeight: 700 }}>Site Map</h1>
         <p className="text-center text-muted mb-5">Browse the pages, cake categories and products available at Serle&apos;s Bake.</p>
@@ -64,7 +78,7 @@ export default async function SiteMapPage() {
           <LinkList title="Shop" items={[["Complete Menu & Pricing", "/menu"], ["All Cakes", "/cakes"], ["Cake Tags", "/cakes/tags"]]} />
         </div>
       </div>
-    </main>,
+    </div>,
   ];
   return content;
 }

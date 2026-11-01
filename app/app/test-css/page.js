@@ -1,3 +1,9 @@
+export const metadata = {
+  title: "CSS Diagnostic | Serle's Bake",
+  alternates: { canonical: "https://www.serlesbake.in/test-css" },
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
+};
+
 export default function TestCSSPage() {
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
@@ -100,4 +106,4 @@ export default function TestCSSPage() {
       }} />
     </div>
   );
-} 
+}

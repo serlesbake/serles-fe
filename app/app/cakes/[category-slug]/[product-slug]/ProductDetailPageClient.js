@@ -8,6 +8,7 @@ import { getProductsUrl, getCategoriesUrl, getProductDetailUrl } from "../../../
 import Breadcrumb from "../../../components/Breadcrumb";
 import ProductCard from "../../../components/ProductCard";
 import ProductFAQ from "../../../components/ProductFAQ";
+import ProductOrderingDetails from '../../../components/ProductOrderingDetails';
 import apiCache from "../../../utils/cache";
 import { getAnalyticsReference, trackStoreEvent } from "../../../utils/analytics";
 
@@ -569,13 +570,20 @@ Please contact me for more details. Thank you!${getAnalyticsReference()}`;
         }
 
         @media (max-width: 767px) {
+          /* Let the fixed CTA sit above related products instead of trapping
+             it inside the product section's lower stacking context. */
+          .product-details-container,
+          .product-details-row {
+            z-index: auto;
+          }
+
           .mobile-sticky-whatsapp {
             display: block;
             position: fixed;
             z-index: 1000;
             left: 16px;
             right: 16px;
-            bottom: max(72px, calc(60px + env(safe-area-inset-bottom)));
+            bottom: calc(16px + env(safe-area-inset-bottom));
             width: calc(100% - 32px);
             border: 0;
             border-radius: 999px;
@@ -882,6 +890,7 @@ Please contact me for more details. Thank you!${getAnalyticsReference()}`;
       <section className="container">
         <div className="row">
           <div className="col-lg-12">
+            <ProductOrderingDetails product={product} />
             <ProductFAQ product={product} phone="916383070725" whatsappNumber="916383070725" />
           </div>
         </div>

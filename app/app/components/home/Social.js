@@ -59,7 +59,7 @@ export default function Social() {
                                 marginBottom: "25px"
                             }}>
                                 {[1, 2, 3, 4, 5, 6].map((item) => (
-                                    <a href="https://www.instagram.com/serles_bake/" 
+                                    <a key={item} href="https://www.instagram.com/serles_bake/"
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     >

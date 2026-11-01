@@ -6,12 +6,13 @@ import Footer from './components/Footer';
 import DebugInfo from './components/DebugInfo';
 import MicrosoftClarity from './components/MicrosoftClarity';
 import LocalBusinessJsonLd from './components/LocalBusinessJsonLd';
+import ContactClickTracking from './components/ContactClickTracking';
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Cakes Near Me in Tenkasi | Homemade Cakes – Serle’s Bake",
-  description: "Order cakes near me with Serle’s Bake – Tenkasi’s homemade cake shop for birthdays, brownies, custom designs & same-day delivery.",
+  description: "Explore homemade birthday cakes, brownies and custom designs from Serle’s Bake in Ilanji, Tenkasi. Ask us to check delivery availability for your address.",
   keywords: "homemade cakes, Serle's Bake, Tenkasi cakes, birthday cakes, wedding cakes, custom cakes, brownies, Tamil Nadu bakery, fresh cakes, premium cakes, flavored cakes",
   authors: [{ name: "Serle's Bake" }],
   creator: "Serle's Bake",
@@ -27,7 +28,7 @@ export const metadata = {
   },
   openGraph: {
     title: "Cakes Near Me in Tenkasi | Homemade Cakes – Serle’s Bake",
-    description: "Order cakes near me with Serle’s Bake – Tenkasi’s homemade cake shop for birthdays, brownies, custom designs & same-day delivery.",
+    description: "Explore homemade birthday cakes, brownies and custom designs from Serle’s Bake in Ilanji, Tenkasi. Ask us to check delivery availability for your address.",
     url: 'https://www.serlesbake.in',
     siteName: "Serle's Bake",
     images: [
@@ -44,7 +45,7 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: "Cakes Near Me in Tenkasi | Homemade Cakes – Serle’s Bake",
-    description: "Order cakes near me with Serle’s Bake – Tenkasi’s homemade cake shop for birthdays, brownies, custom designs & same-day delivery.",
+    description: "Explore homemade birthday cakes, brownies and custom designs from Serle’s Bake in Ilanji, Tenkasi. Ask us to check delivery availability for your address.",
     images: ['/img/logo.png'],
   },
   robots: {
@@ -103,6 +104,7 @@ export default function RootLayout({ children }) {
             so it costs nothing at runtime and is present for crawlers on every
             route. */}
         <LocalBusinessJsonLd />
+        <ContactClickTracking />
 
         {/* Microsoft Clarity Analytics */}
         <MicrosoftClarity />
@@ -175,71 +177,6 @@ export default function RootLayout({ children }) {
           src="https://www.noupe.com/embed/019947270aa97316ae2fc391b37f8cc91986.js"
           strategy="lazyOnload"
         />
-
-        {/* Noupe Chatbot Position Override */}
-        <Script id="noupe-position" strategy="lazyOnload">
-          {`
-            // Function to position Noupe chatbot to left
-            function positionNoupeChatbot() {
-              const chatbotContainer = document.getElementById('JotformAgent-019947270aa97316ae2fc391b37f8cc91986');
-              const embeddedContainer = document.querySelector('#JotformAgent-019947270aa97316ae2fc391b37f8cc91986 .embedded-agent-container');
-              const isMobile = window.innerWidth <= 768;
-              
-              if (chatbotContainer) {
-                chatbotContainer.style.setProperty('left', isMobile ? '10px' : '20px', 'important');
-                chatbotContainer.style.setProperty('right', 'auto', 'important');
-                chatbotContainer.style.setProperty('bottom', isMobile ? '10px' : '20px', 'important');
-                chatbotContainer.style.setProperty('justify-content', 'flex-start', 'important');
-                chatbotContainer.style.setProperty('align-items', 'flex-start', 'important');
-                chatbotContainer.style.setProperty('display', 'flex', 'important');
-              }
-              
-              if (embeddedContainer) {
-                embeddedContainer.style.setProperty('left', isMobile ? '10px' : '20px', 'important');
-                embeddedContainer.style.setProperty('right', 'auto', 'important');
-                embeddedContainer.style.setProperty('bottom', isMobile ? '10px' : '20px', 'important');
-                embeddedContainer.style.setProperty('justify-content', 'flex-start', 'important');
-                embeddedContainer.style.setProperty('align-items', 'flex-start', 'important');
-                embeddedContainer.style.setProperty('display', 'flex', 'important');
-              }
-            }
-            
-            // Try to position immediately
-            positionNoupeChatbot();
-            
-            // Also try after DOM is loaded
-            document.addEventListener('DOMContentLoaded', positionNoupeChatbot);
-            
-            // And try after window is fully loaded
-            window.addEventListener('load', function() {
-              setTimeout(positionNoupeChatbot, 1000);
-              setTimeout(positionNoupeChatbot, 3000);
-            });
-            
-            // Reposition on window resize (for mobile orientation change)
-            window.addEventListener('resize', function() {
-              setTimeout(positionNoupeChatbot, 100);
-            });
-            
-            // Watch for when the chatbot element is added to DOM
-            const observer = new MutationObserver(function(mutations) {
-              mutations.forEach(function(mutation) {
-                if (mutation.type === 'childList') {
-                  mutation.addedNodes.forEach(function(node) {
-                    if (node.nodeType === 1 && (
-                        node.id === 'JotformAgent-019947270aa97316ae2fc391b37f8cc91986' ||
-                        node.querySelector && node.querySelector('#JotformAgent-019947270aa97316ae2fc391b37f8cc91986')
-                    )) {
-                      setTimeout(positionNoupeChatbot, 100);
-                    }
-                  });
-                }
-              });
-            });
-            
-            observer.observe(document.body, { childList: true, subtree: true });
-          `}
-        </Script>
 
         {/* Debug Info - Only in development */}
         <DebugInfo />

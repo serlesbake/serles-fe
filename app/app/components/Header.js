@@ -14,9 +14,9 @@ export default function Header() {
       <div className={`offcanvas-menu-overlay ${isMenuOpen ? 'active' : ''}`} onClick={() => setIsMenuOpen(false)}></div>
       <div className={`offcanvas-menu-wrapper ${isMenuOpen ? 'active' : ''}`}>
         {/* Close Button */}
-        <div className="offcanvas__close" onClick={() => setIsMenuOpen(false)}>
-          <i className="fa fa-times"></i>
-        </div>
+        <button type="button" className="offcanvas__close" aria-label="Close navigation" onClick={() => setIsMenuOpen(false)}>
+          <i className="fa fa-times" aria-hidden="true"></i>
+        </button>
         
         {/* Logo Section */}
         <div className='d-flex align-items-center justify-content-start gap-3 p-3'>
@@ -32,6 +32,7 @@ export default function Header() {
               <li><Link href="/about" onClick={() => setIsMenuOpen(false)}>About</Link></li>
               <li><Link href="/cakes" onClick={() => setIsMenuOpen(false)}>Shop</Link></li>
               <li><Link href="/menu" onClick={() => setIsMenuOpen(false)}>Menu & Pricing</Link></li>
+              <li><Link href="/cake-delivery" onClick={() => setIsMenuOpen(false)}>Cake Delivery</Link></li>
               <li><Link href="/blog" onClick={() => setIsMenuOpen(false)}>Blog</Link></li>
               <li><Link href="/testimonial" onClick={() => setIsMenuOpen(false)}>Testimonials</Link></li>
               <li><Link href="/contact" onClick={() => setIsMenuOpen(false)}>Contact</Link></li>
@@ -59,7 +60,7 @@ export default function Header() {
       <header className="header">
         <div className="header__top">
           <div className="container p-0">
-            <div className="row p-0">
+            <div className="row m-0 p-0">
               <div className="col-lg-12 m-0 p-0">
                 <div className="header-new ">
                   <div className="inner-header d-flex align-items-center justify-content-between gap-3">
@@ -87,9 +88,9 @@ export default function Header() {
                 
               </div>
             </div>
-            <div className="canvas__open" onClick={() => setIsMenuOpen(true)}>
-              <i className="fa fa-bars"></i>
-            </div>
+            <button type="button" className="canvas__open" aria-label="Open navigation" aria-expanded={isMenuOpen} onClick={() => setIsMenuOpen(true)}>
+              <i className="fa fa-bars" aria-hidden="true"></i>
+            </button>
           </div>
         </div>
         <div className="container">
@@ -111,6 +112,7 @@ export default function Header() {
                     </ul> */}
                   </li>
                   <li><Link href="/menu">Menu&Pricing</Link></li>
+                  <li><Link href="/cake-delivery">Cake Delivery</Link></li>
                   <li><Link href="/blog">Blog</Link></li>
                   <li><Link href="/testimonial">Testimonials</Link></li>
 
@@ -125,4 +127,4 @@ export default function Header() {
       {/* Header Section End */}
     </>
   );
-} 
+}

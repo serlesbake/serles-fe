@@ -44,12 +44,13 @@ const socialLinks = [
 // Updated working hours: single line for all days, and home delivery mention
 const workingHours = [
   { day: "Monday - Sunday", time: "7:00 am – 11:00 pm" },
-  { day: "Home Delivery", time: "Available" },
+  { day: "Home Delivery", time: "Within 20 km by road; address and availability confirmed before ordering" },
 ];
 
 const quickLinks = [
   { label: "Cakes", href: "/cakes" },
   { label: "Menu & Pricing", href: "/menu" },
+  { label: "Cake Delivery", href: "/cake-delivery" },
   // { label: "Cake Categories", href: "/cakes/category" },
   { label: "WhatsApp Enquiry", href: "https://wa.me/916383070725?text=Hi!%20I'm%20interested%20in%20ordering%20the%20cakes", external: true, icon: <FaWhatsapp style={{ marginRight: 6, color: "#25d366" }} /> },
   { label: "Google Reviews", href: "https://plus.codes/6JWVX77J+CH", external: true, icon: <FaGoogle style={{ marginRight: 6, color: "#ea4335" }} /> },
@@ -375,7 +376,7 @@ export default function Footer() {
               </div>
               <div className="col-lg-5">
                 <div className="copyright__widget">
-                  <ul style={{ display: "flex", gap: 16, listStyle: "none", padding: 0, margin: 0 }}>
+                  <ul style={{ display: "flex", flexWrap: "wrap", gap: 16, listStyle: "none", padding: 0, margin: 0 }}>
                     <li><Link href="/blog" style={{ color: "#ffb6c1" }}>Blog</Link></li>
                     <li><Link href="/privacy-policy" style={{ color: "#ffb6c1" }}>Privacy Policy</Link></li>
                     <li><Link href="/terms-conditions" style={{ color: "#ffb6c1" }}>Terms &amp; Conditions</Link></li>

@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { getProductsUrl, getCategoriesUrl, getTagsUrl } from "../../config/api";
 import CategoryPageClient from "./CategoryPageClient";
 import JsonLd from "../../components/blog/JsonLd";
-import apiCache from "../../utils/cache";
+import { fetchCatalogJson, catalogList } from '../../utils/catalog';
+import { buildMetadata } from '../../utils/blog';
 import { copyForCategory } from "../categoryCopy";
 
 /**
@@ -25,94 +26,13 @@ export const revalidate = 60;
 
 // Generate metadata for the category page
 export async function generateMetadata({ params }) {
-  // Await params in Next.js 15
-  const resolvedParams = await params;
-  const categorySlug = resolvedParams["category-slug"];
-  
-  try {
-    // Fetch data for metadata
-    const [categoriesData, productsData, tagsData] = await Promise.all([
-      apiCache.fetchWithCache(getCategoriesUrl()),
-      apiCache.fetchWithCache(getProductsUrl()),
-      apiCache.fetchWithCache(getTagsUrl())
-    ]);
-
-    const allCategories = Array.isArray(categoriesData?.results) ? categoriesData.results : Array.isArray(categoriesData) ? categoriesData : [];
-    const allProducts = Array.isArray(productsData?.results) ? productsData.results : Array.isArray(productsData) ? productsData : [];
-    const allTags = Array.isArray(tagsData?.results) ? tagsData.results : Array.isArray(tagsData) ? tagsData : [];
-
-    // Find current category
-    const currentCategory = allCategories.find(c => c.slug === categorySlug);
-    
-    if (!currentCategory) {
-      return {
-        title: categoryTitle(categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cakes'),
-        description: `Discover our collection of ${categorySlug?.replace(/-/g, ' ')} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-        keywords: `homemade cakes, ${categorySlug?.replace(/-/g, ' ')} cakes, Serle's Bake, Tenkasi cakes, birthday cakes, wedding cakes, custom cakes, Tamil Nadu bakery, fresh cakes delivery`,
-        openGraph: {
-          title: categoryTitle(categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cakes'),
-          description: `Discover our collection of ${categorySlug?.replace(/-/g, ' ')} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-          type: 'website',
-          url: `https://www.serlesbake.in/cakes/${categorySlug}`,
-          images: ['https://www.serlesbake.in/img/logo.png'],
-        },
-        twitter: {
-          card: 'summary_large_image',
-          title: categoryTitle(categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cakes'),
-          description: `Discover our collection of ${categorySlug?.replace(/-/g, ' ')} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-          images: ['https://www.serlesbake.in/img/logo.png'],
-        },
-        alternates: {
-          canonical: `https://www.serlesbake.in/cakes/${categorySlug}`,
-        },
-      };
-    }
-
-    return {
-      title: categoryTitle(currentCategory.name),
-      description: currentCategory.description || `Discover our collection of ${currentCategory.name} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect ${currentCategory.name.toLowerCase()} cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-      keywords: `homemade cakes, ${currentCategory.name.toLowerCase()} cakes, Serle's Bake, Tenkasi cakes, ${currentCategory.name.toLowerCase()}, birthday cakes, wedding cakes, custom cakes, Tamil Nadu bakery, fresh cakes delivery${currentCategory.tags ? `, ${currentCategory.tags.join(', ')}` : ''}`,
-      openGraph: {
-        title: categoryTitle(currentCategory.name),
-        description: currentCategory.description || `Discover our collection of ${currentCategory.name} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect ${currentCategory.name.toLowerCase()} cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-        type: 'website',
-        url: `https://www.serlesbake.in/cakes/${categorySlug}`,
-        images: [currentCategory.image?.url || 'https://www.serlesbake.in/img/logo.png'],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: categoryTitle(currentCategory.name),
-        description: currentCategory.description || `Discover our collection of ${currentCategory.name} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect ${currentCategory.name.toLowerCase()} cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-        images: [currentCategory.image?.url || 'https://www.serlesbake.in/img/logo.png'],
-      },
-      alternates: {
-        canonical: `https://www.serlesbake.in/cakes/${categorySlug}`,
-      },
-    };
-  } catch (error) {
-    console.error("Error generating metadata:", error);
-    return {
-      title: categoryTitle(categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cakes'),
-      description: `Discover our collection of ${categorySlug?.replace(/-/g, ' ')} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-      keywords: `homemade cakes, ${categorySlug?.replace(/-/g, ' ')} cakes, Serle's Bake, Tenkasi cakes, birthday cakes, wedding cakes, custom cakes, Tamil Nadu bakery, fresh cakes delivery`,
-      openGraph: {
-        title: categoryTitle(categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cakes'),
-        description: `Discover our collection of ${categorySlug?.replace(/-/g, ' ')} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-        type: 'website',
-        url: `https://www.serlesbake.in/cakes/${categorySlug}`,
-        images: ['https://www.serlesbake.in/img/logo.png'],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: categoryTitle(categorySlug?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Cakes'),
-        description: `Discover our collection of ${categorySlug?.replace(/-/g, ' ')} cakes at Serle's Bake. From Black Forest to Red Velvet, Choco Truffle to Custom Cakes, find the perfect cake for your celebration. Fresh cakes delivered in Tenkasi, Tamil Nadu.`,
-        images: ['https://www.serlesbake.in/img/logo.png'],
-      },
-      alternates: {
-        canonical: `https://www.serlesbake.in/cakes/${categorySlug}`,
-      },
-    };
-  }
+  const categorySlug = (await params)['category-slug'];
+  const categories = catalogList(await fetchCatalogJson(getCategoriesUrl()));
+  const category = categories.find(item => item.slug === categorySlug);
+  if (!category) return { title: 'Category not found', robots: { index: false, follow: false } };
+  return buildMetadata({ meta: category.meta_data || {}, title: categoryTitle(category.name),
+    description: copyForCategory(categorySlug, category.name).paragraphs[0],
+    path: `/cakes/${categorySlug}`, image: typeof category.image === 'string' ? category.image : category.image?.url });
 }
 
 const SITE = "https://www.serlesbake.in";
@@ -136,7 +56,7 @@ function buildCategorySchema(category, products, categorySlug) {
     name: `${category.name} Cakes`,
     description:
       category.description ||
-      `${category.name} cakes from Serle's Bake, baked to order in Tenkasi with delivery across the district.`,
+      `${category.name} cakes from Serle's Bake, baked to order in Tenkasi with address-level delivery checks within 20 km by road from Ilanji.`,
     isPartOf: { "@id": `${SITE}/#website` },
     provider: { "@id": `${SITE}/#business` },
     breadcrumb: {
@@ -174,22 +94,23 @@ export default async function CategoryPage({ params }) {
 
   try {
     const [categoriesData, productsData, tagsData] = await Promise.all([
-      apiCache.fetchWithCache(getCategoriesUrl()),
-      apiCache.fetchWithCache(getProductsUrl()),
-      apiCache.fetchWithCache(getTagsUrl()),
+      fetchCatalogJson(getCategoriesUrl()),
+      fetchCatalogJson(getProductsUrl()),
+      fetchCatalogJson(getTagsUrl()),
     ]);
-    categories = asList(categoriesData);
-    products = asList(productsData);
-    tags = asList(tagsData);
+    categories = catalogList(categoriesData);
+    products = catalogList(productsData);
+    tags = catalogList(tagsData);
   } catch (error) {
     console.error("Error loading category page:", error);
+    throw error;
   }
 
   const category = categories.find((c) => c.slug === categorySlug);
 
   // Only 404 when the catalog actually loaded and has no such category — a failed
   // fetch would otherwise turn a live category into a 404.
-  if (categories.length > 0 && !category) {
+  if (!category) {
     notFound();
   }
 

@@ -1,6 +1,7 @@
 import { getProductsUrl, getCategoriesUrl, getTagsUrl } from '../config/api.js';
 import { fetchCatalogJson, catalogList } from './catalog.js';
 import { getPostsForSitemap, getCategories as getBlogCategories, getTags as getBlogTags } from './blogData.js';
+import { DELIVERY_AREA_PAGES, deliveryAreaPath } from './deliveryAreas.js';
 
 // Base URL for the website
 const BASE_URL = 'https://www.serlesbake.in';
@@ -11,6 +12,8 @@ const STATIC_PAGES = [
   { path: '/about', priority: '0.8', changefreq: 'monthly' },
   { path: '/contact', priority: '0.8', changefreq: 'monthly' },
   { path: '/menu', priority: '0.9', changefreq: 'weekly' },
+  { path: '/cake-delivery', priority: '0.8', changefreq: 'monthly' },
+  ...DELIVERY_AREA_PAGES.map(area => ({ path: deliveryAreaPath(area), priority: '0.7', changefreq: 'monthly' })),
   { path: '/testimonial', priority: '0.7', changefreq: 'monthly' },
   { path: '/blog', priority: '0.8', changefreq: 'weekly' },
   { path: '/privacy-policy', priority: '0.3', changefreq: 'yearly' },
@@ -59,7 +62,6 @@ export async function fetchSitemapData() {
 // Generate XML sitemap
 export async function generateXMLSitemap() {
   const { products, categories, tags } = await fetchSitemapData();
-  const currentDate = new Date().toISOString();
   const activeProducts = products.filter((product) => product?.slug && product?.category?.slug);
   const populatedCategories = categories.filter((category) =>
     activeProducts.some((product) => product.category.slug === category.slug)
@@ -79,7 +81,6 @@ export async function generateXMLSitemap() {
     sitemap += `
   <url>
     <loc>${canonicalPath}</loc>
-    <lastmod>${currentDate}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`;
@@ -89,7 +90,6 @@ export async function generateXMLSitemap() {
   sitemap += `
   <url>
     <loc>${BASE_URL}/cakes</loc>
-    <lastmod>${currentDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>`;
@@ -100,7 +100,6 @@ export async function generateXMLSitemap() {
       sitemap += `
   <url>
     <loc>${BASE_URL}/cakes/${category.slug}</loc>
-    <lastmod>${currentDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`;
@@ -113,7 +112,6 @@ export async function generateXMLSitemap() {
       sitemap += `
   <url>
     <loc>${BASE_URL}/cakes/${product.category.slug}/${product.slug}</loc>
-    <lastmod>${currentDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>`;
@@ -124,7 +122,6 @@ export async function generateXMLSitemap() {
   sitemap += `
   <url>
     <loc>${BASE_URL}/cakes/tags</loc>
-    <lastmod>${currentDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>`;
@@ -135,7 +132,6 @@ export async function generateXMLSitemap() {
       sitemap += `
   <url>
     <loc>${BASE_URL}/cakes/tags/${tag.slug}</loc>
-    <lastmod>${currentDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>`;
@@ -146,8 +142,8 @@ export async function generateXMLSitemap() {
   // rather than the build timestamp used above.
   const [blogPosts, blogCategories, blogTags] = await Promise.all([
     getPostsForSitemap(),
-    getBlogCategories(),
-    getBlogTags(),
+    getBlogCategories({ required: true, allowNotFound: false }),
+    getBlogTags({ required: true, allowNotFound: false }),
   ]);
 
   blogPosts.forEach(post => {
@@ -160,7 +156,7 @@ export async function generateXMLSitemap() {
       sitemap += `
   <url>
     <loc>${BASE_URL}/blog/${post.slug}</loc>
-    <lastmod>${post.lastmod || currentDate}</lastmod>
+    ${post.lastmod && !Number.isNaN(Date.parse(post.lastmod)) ? `<lastmod>${new Date(post.lastmod).toISOString()}</lastmod>` : ""}
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>`;
@@ -172,7 +168,6 @@ export async function generateXMLSitemap() {
       sitemap += `
   <url>
     <loc>${BASE_URL}/blog/categories/${category.slug}</loc>
-    <lastmod>${currentDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>`;
@@ -184,7 +179,6 @@ export async function generateXMLSitemap() {
       sitemap += `
   <url>
     <loc>${BASE_URL}/blog/tags/${tag.slug}</loc>
-    <lastmod>${currentDate}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>`;

@@ -1,9 +1,10 @@
 import Breadcrumb from "../components/Breadcrumb";
+import { DELIVERY_COVERAGE } from '../utils/deliveryPolicy';
 
 export const metadata = {
   alternates: { canonical: 'https://www.serlesbake.in/terms-conditions' },
   title: "Terms & Conditions | Serle’s Bake, Tenkasi",
-  description: "Read our terms and conditions for ordering cakes with Serle’s Bake – Tenkasi’s trusted cake shop for birthday cakes, brownies & custom creations with same-day delivery.",
+  description: "Read the ordering, payment and delivery terms for cakes from Serle’s Bake in Ilanji, Tenkasi. Confirm your address and order details on WhatsApp.",
   keywords: "cake shop terms tenkasi, serles bake terms, order terms, best cake shop tenkasi",
 };
 
@@ -62,12 +63,12 @@ export default function TermsConditionsPage() {
 
                   <h2 style={{ color: "#e4718a", marginTop: "2rem", marginBottom: "1rem" }}>3. Ordering & Payment</h2>
                   <p>
-                    All orders are subject to acceptance and availability. Prices are subject to change without notice. Payment must be made in full at the time of ordering. We accept cash on delivery and online payments through secure payment gateways.
+                    All orders are subject to acceptance and availability. Prices are subject to change without notice. We accept Google Pay and online payments. Contact us on WhatsApp to confirm your cake details, delivery arrangements, final total and payment instructions. Please check your order confirmation with us in the chat.
                   </p>
 
                   <h2 style={{ color: "#e4718a", marginTop: "2rem", marginBottom: "1rem" }}>4. Delivery Terms</h2>
                   <p>
-                    Delivery is available within Tenkasi and surrounding areas. Delivery times are estimates and may vary based on location and order volume. We are not responsible for delays due to circumstances beyond our control.
+                    {DELIVERY_COVERAGE} Delivery times are estimates and may vary based on location and order volume. We are not responsible for delays due to circumstances beyond our control.
                   </p>
 
                   <h2 style={{ color: "#e4718a", marginTop: "2rem", marginBottom: "1rem" }}>5. Cancellation Policy</h2>

@@ -1,6 +1,5 @@
-// Server-side data access for the blog. Every function is fail-soft: a missing
-// or not-yet-deployed blog API yields empty lists / null rather than an error,
-// so the rest of the site keeps rendering.
+// Server-side blog access. Optional lists are fail-soft; article details and
+// sitemap data distinguish real 404s from failures that should preserve ISR data.
 
 import {
   getBlogPostsUrl,
@@ -29,7 +28,7 @@ export async function getPosts(filters = {}) {
 
 export async function getPost(slug) {
   if (!slug) return null;
-  return fetchBlog(getBlogPostUrl(slug), { revalidate: BLOG_DETAIL_REVALIDATE });
+  return fetchBlog(getBlogPostUrl(slug), { revalidate: BLOG_DETAIL_REVALIDATE, required: true });
 }
 
 export async function getRelatedPosts(slug) {
@@ -49,8 +48,8 @@ export async function getPopularPosts(limit = 5) {
   return toList(await fetchBlog(getBlogPopularPostsUrl(limit)));
 }
 
-export async function getCategories() {
-  return toList(await fetchBlog(getBlogCategoriesUrl()));
+export async function getCategories(options = {}) {
+  return toList(await fetchBlog(getBlogCategoriesUrl(), options));
 }
 
 export async function getCategory(slug) {
@@ -63,8 +62,8 @@ export async function getCategoryPosts(slug) {
   return toList(await fetchBlog(getBlogCategoryPostsUrl(slug)));
 }
 
-export async function getTags() {
-  return toList(await fetchBlog(getBlogTagsUrl()));
+export async function getTags(options = {}) {
+  return toList(await fetchBlog(getBlogTagsUrl(), options));
 }
 
 export async function getTag(slug) {
@@ -79,7 +78,9 @@ export async function getTagPosts(slug) {
 
 /** Slugs + lastmod, used by sitemap.xml and generateStaticParams. */
 export async function getPostsForSitemap() {
-  return toList(await fetchBlog(getBlogSitemapUrl()));
+  const payload = await fetchBlog(getBlogSitemapUrl(), { required: true, allowNotFound: false });
+  if (!Array.isArray(payload) && !Array.isArray(payload?.results)) throw new Error('Invalid blog sitemap response');
+  return toList(payload);
 }
 
 /** Sidebar data in one round trip — shared by every blog route. */

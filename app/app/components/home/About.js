@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from 'next/link';
 import { FaAward, FaBakery, FaHeart } from "react-icons/fa";
 
 export default function About() {
@@ -29,10 +30,10 @@ export default function About() {
                                 </h2>
                             </div>
                             <p style={{ fontWeight: 600, fontSize: "1.05rem", marginBottom: 10 }}>
-                                At Serle's Bake, we bring you the warmth and love of homemade cakes crafted with care and passion
+                                Serle&apos;s Bake is a homemade cake bakery on Tenkasi–Shencottai Main Road in Ilanji, Tenkasi.
                             </p>
                             <p style={{ color: "#555", fontSize: "1rem", marginBottom: 30 }}>
-                                Our mission is to make every celebration special with our handcrafted cakes that combine fresh ingredients, beautiful designs, and the unmatched taste of home. Whether it's a birthday, a wedding, or a custom request, Serle's Bake promises to make your moments sweeter.
+                                Browse our birthday cakes, photo and custom designs, tiered cakes and brownies. Share your occasion, preferred size and date on WhatsApp so we can check availability, design details and the final amount. <Link href="/cake-delivery">Delivery is checked by road distance from our Ilanji bakery</Link>, within 20 km. <Link href="/contact">Find our location and contact details</Link>.
                             </p>
                             <div className="row">
                                 <div className="col-lg-6 col-12 mb-3">

@@ -23,7 +23,7 @@ const staticBanners = [
     "id": 1,
     "variant": "delivery",
     "title": "Home Delivery ₹50",
-    "description": "Delivery is ₹50 within 5 km of our bakery in Ilanji, Tenkasi; add ₹10 per extra kilometre beyond 5 km.",
+    "description": "Cake delivery within 20 km by road from Ilanji, subject to address and availability checks. ₹50 for the first 5 km, then ₹10 per extra kilometre.",
     "is_active": true,
     "order": 0
   },
@@ -53,7 +53,7 @@ export default function Banner() {
   }, []);
 
   return (
-    <section className="container pt-0">
+    <section className="container pt-0" data-contact-source="home_banner">
       <div className="banner-container">
         <div className="banner-slider">
           {staticBanners.map((banner, index) => (
@@ -72,6 +72,7 @@ export default function Banner() {
                     <span className="delivery-within">within 5 km of our bakery</span>
                   </p>
                   <p className="delivery-extra">then &#8377;10 per extra km</p>
+                  <p className="delivery-note">Up to 20 km by road · confirm your address</p>
                   <span className="delivery-cta">Order on WhatsApp</span>
                 </div>
               )}

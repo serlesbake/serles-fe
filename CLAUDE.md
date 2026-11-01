@@ -57,6 +57,61 @@ Consequences when editing:
 
 ## SEO: what was wrong, and what is fixed
 
+### November expansion release continuation — 2 November 2026
+
+- Complete source batch: delivery hub plus five route-evidenced area pages
+  (Panpoli, Pudur near Sengottai, Puliyarai, Melagaram and Mekkarai), homepage
+  celebration links, ordering details on all fourteen products and reviewed copy
+  for all six categories. Roads are routing estimates to public points, never
+  blanket address coverage or delivery-time promises. Kattalai is a local section.
+- CMS release applied with a scoped backup: thirteen existing guides, two new
+  guides, six category metadata sets and relevant existing catalog photos. Earlier
+  notes below describing seven staged-only drafts are superseded by this release.
+- Blog detail/sitemap errors now propagate while real article 404s remain missing;
+  sitemap no longer invents generation-time lastmod values. Product/category
+  required fetches no longer turn outages into empty pages. Category metadata
+  honors CMS fields. Ordinary contact tracking preserves product-button events.
+- Normal ESLint works through `.eslintrc.json` with modern JS environments and
+  undefined-variable checks. Production build, normal lint (warnings only), seven
+  focused tests, strict read-only content fact-check and final local browser checks
+  pass. All fourteen product metadata outputs match CMS. Preserve deferred template
+  script order. Release status and live evidence belong in the root audit documents.
+
+### 2 November implementation — local, not deployed
+
+- Expansion continuation: `/cake-delivery` is a server-rendered hub with page metadata,
+  Service/WebPage/Breadcrumb schema, ordinary WhatsApp/call links and native details.
+  `utils/deliveryPolicy.js` holds the confirmed **20 km by ROAD from Ilanji** boundary.
+  Product FAQ, Terms, footer, home banner and Bakery schema use this limit; older
+  district-wide/distant-town Bakery claims were removed. No new village is verified
+  merely by appearing in the research register. Navigation and both sitemaps link the hub.
+- `ContactClickTracking` observes ordinary contact anchors through `trackStoreEvent`;
+  it sends source/pathname only, handles client navigation once, and leaves existing
+  product/menu button tracking in place. The `data-contact-tracking="manual"` escape
+  hatch avoids duplicates if a contact anchor later gets its own explicit event.
+- First expansion build, five tests, strict read-only fact-check, scoped lint (zero
+  errors, eleven template warnings) and responsive/event browser checks pass. Seven
+  delivery article revisions exist under the root audit's `content/` directory, but
+  have NOT been applied to the CMS. The frontend still consumes the current CMS copy.
+  See `../serlesbake.in-audit/EXPANSION-IMPLEMENTATION.md`; deployment remains pending.
+
+- Product metadata now uses `utils/productMetadata.js` and actual CMS SEO/social
+  fields. Blank fields use plain-text fallbacks; all 14 product outputs verified.
+  Metadata regression tests: `node --test tests/productMetadata.test.mjs` from `app/`.
+- Header row no longer overflows on mobile; footer links wrap. Noupe placement is
+  CSS-driven, shown on desktop and hidden below 768px. Mobile product pages suppress
+  generic floating WhatsApp in favor of the product CTA. Its mobile ancestors no
+  longer trap it below related products; menu overlay remains above the CTA.
+- `/site-map` explicitly preserves live title/canonical, uses one H1 and no nested
+  main landmark. `/test-css` serves noindex for general crawlers and Googlebot.
+- Owner confirmed Google Pay/online payments and that the published daily
+  07:00–23:00 schedule matches GBP. FAQ/schema/Terms payment copy and Bakery hours
+  updated; no advance-payment or automatic order-confirmation rule was invented.
+- Build, metadata tests, strict content fact-check and local browser checks pass.
+  Normal lint has a pre-existing ESLint configuration problem; scoped Next-rule
+  lint reports zero errors, existing warnings. Details/evidence are in
+  `../serlesbake.in-audit/IMPLEMENTATION-VERIFICATION.md`.
+
 *Re-tested against the 30 Oct 2026 live SEO checklist; see the latest entry in the
 root SEO actions log. Homepage/menu catalogs and the human sitemap now receive
 server-rendered data; menu counters avoid false zeroes while loading. Product pages

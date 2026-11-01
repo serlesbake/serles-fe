@@ -48,3 +48,23 @@
     color: #707070;
     font-size: 13px;
   }
+
+  @media (max-width: 767px) {
+    .floating_btn {
+      right: 16px;
+      bottom: max(16px, env(safe-area-inset-bottom));
+      width: 56px;
+      height: 56px;
+    }
+
+    .floating_btn .contact_icon {
+      width: 56px;
+      height: 56px;
+    }
+
+    .floating_btn .text_icon,
+    .floating_btn--product,
+    .floating_btn--delivery {
+      display: none;
+    }
+  }

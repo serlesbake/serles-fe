@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import styles from './page.module.css';
 import Banner from './components/home/Banner';
+import CelebrationPlanning from './components/CelebrationPlanning';
 import Category from './components/home/category';
 import BestsellingWrapper from './components/home/BestsellingWrapper';
 import About from './components/home/About';
@@ -55,6 +56,7 @@ export const metadata = {
       <main className={styles.main}>
         <Category />
         <Banner />
+        <CelebrationPlanning />
         <About />
         <MilestoneBar />
         <Menu initialProducts={products} initialCategories={categories} initialCatalogLoaded={catalogLoaded} />

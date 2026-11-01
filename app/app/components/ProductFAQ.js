@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import { DELIVERY_COVERAGE, DELIVERY_CHARGES } from '../utils/deliveryPolicy';
 
 function formatPrice(value) {
   if (value == null) return '';
@@ -54,7 +55,7 @@ export default function ProductFAQ({ product = {}, phone = "916383070725", whats
     // Delivery
     items.push({
       question: 'What are the delivery options and charges?',
-      answer: 'Delivery is ₹50 within 5 km of our bakery in Ilanji, Tenkasi. Beyond 5 km, add ₹10 per additional kilometre. Share your delivery locality with us on WhatsApp before confirming so we can check coverage and confirm the exact charge.'
+      answer: `${DELIVERY_COVERAGE} ${DELIVERY_CHARGES}`
     });
 
     // WhatsApp
@@ -77,7 +78,7 @@ export default function ProductFAQ({ product = {}, phone = "916383070725", whats
     // Payment / Amount
     items.push({
       question: 'How is the amount calculated and how do I pay?',
-      answer: 'The amount shown is for the selected weight and quantity. Delivery charges (if any) are added at checkout. We accept cash on delivery and online payments — confirm available payment methods during checkout or by contacting us.'
+      answer: 'The amount shown is for the selected weight and quantity. We accept Google Pay and online payments. Message us on WhatsApp to confirm the final total, including delivery and any customization charges, and receive payment instructions. Please check your order confirmation with us in the chat.'
     });
 
     // Cake customizations

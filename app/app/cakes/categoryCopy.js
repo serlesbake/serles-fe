@@ -1,84 +1,59 @@
-/**
- * Server-rendered copy for each category page.
- *
- * Category pages were ~200 words, against ~1,200 for a blog post — thin for URLs
- * that have to rank for commercial keywords. This is written per category rather
- * than generated from a template on purpose: the same paragraphs with the name
- * swapped in would be duplicate content across six URLs, which is worse than
- * having none.
- *
- * Keyed by the category slug the API returns. Anything not listed falls back to
- * `genericCopy()`, which is deliberately short — a new category is better served
- * by real copy added here than by filler.
- */
-
+// Reviewed commercial-intent copy; catalog remains the source for weights and prices.
 export const CATEGORY_COPY = {
-  brownie: {
-    heading: 'Fudgy Brownies, Baked Fresh in Tenkasi',
-    paragraphs: [
-      "Our brownies are baked dense and fudgy rather than cakey — a proper chew in the middle, a thin crackled top, and enough dark chocolate that they do not need frosting to carry them. They are cut to order from a fresh tray, so what reaches you has not been sitting in a display case.",
-      "Brownies travel better than cream cakes, which makes them the practical choice when a cake is not. They hold up in Tenkasi's heat, survive a scooter ride without losing their shape, and portion neatly — which is why they are what most people order for office celebrations, classroom treats, and anything that has to be handed round a room.",
-      "A brownie tray also works as a gift when you do not know the person's flavour preference, and as a dessert when a whole cake is too much. If you want them warm, tell us your delivery window and we will time the bake.",
-    ],
+  "flavoured-cakes": {
+    "heading": "Birthday cake flavours from Ilanji, Tenkasi",
+    "paragraphs": [
+      "Compare the current butterscotch, blackcurrant, chocolate and choco truffle options in this collection. Each product page shows its own available weights and prices; a design or price from another cake does not automatically apply to the one you choose.",
+      "For a birthday, tell us your preferred flavour, guest count, cake message and cake-cutting time. If you need an ingredient change or an eggless option, ask us to check the specific cake before ordering. An eggless request does not establish that a cake is safe for an allergy.",
+      "Send your address or map pin so we can check delivery within 20 km by road from Ilanji. We confirm availability, final price and payment instructions on WhatsApp. Same-day requests are subject to confirmation, rather than guaranteed by choosing a standard flavour."
+    ]
   },
-
-  'tier-cake': {
-    heading: 'Tiered Cakes for Weddings and Big Occasions',
-    paragraphs: [
-      "A tiered cake is structural work as much as baking. Each tier is baked separately, levelled, filled and chilled, then stacked on internal supports so the weight of the upper tiers does not compress the lower ones. That is what keeps a cake standing through a long reception rather than slumping an hour in.",
-      "Tell us the guest count and we will tell you the tier count honestly — a cake that looks impressive but does not feed the room is a bad trade, and so is one you pay for and cannot finish. Two tiers suit most engagements and anniversaries; three or more make sense for a wedding reception.",
-      "These need the most notice of anything we bake: at least a day for two tiers, and more for anything sculpted or with sugar flowers. Send us a reference picture along with your date and venue, and we will tell you what is achievable at what weight before you commit.",
-    ],
+  "brownie": {
+    "heading": "Brownies for birthdays, sharing and gifts",
+    "paragraphs": [
+      "This collection includes the current Birthday Brownie and Classic Fudgy Brownie listings. Compare their individual weights, prices and photos before choosing the one that suits your celebration.",
+      "Tell us whether you are planning a birthday presentation, a gift or portions for a group. Ask about portioning and any message or presentation change you need; the listing price does not confirm every possible customization.",
+      "For an office, hall or another venue, agree who will receive the order and when it will be served. Ask us for the handling and storage advice appropriate to your order. Delivery is checked against the actual address within 20 km by road from our Ilanji bakery."
+    ]
   },
-
-  'flavoured-cakes': {
-    heading: 'Flavoured Cakes — Pick What You Actually Like',
-    paragraphs: [
-      "This is the everyday range: butterscotch, blackcurrant, chocolate, choco truffle and the rest, baked to order rather than pulled from a fridge. Each one is a full sponge layered with its own filling, not a plain base with flavouring brushed over the top.",
-      "Flavour choice matters more than it looks. Fruit and blackcurrant cakes cut cleanly and feel lighter after a heavy meal. Chocolate and truffle are richer and read as more of an occasion, but a room that has just eaten will leave them unfinished. Butterscotch sits between the two and is the safest choice when you are feeding a mixed group.",
-      "If you are ordering for a crowd and cannot canvass everyone, ask us — we would rather recommend the cake that suits your gathering than sell you the most expensive one on the list.",
-    ],
+  "custom-cake": {
+    "heading": "Custom and photo cakes: prepare your design brief",
+    "paragraphs": [
+      "Start with the current photo or cartoon-theme listings, then send the date, preferred size, cake message and a design reference. Identify the colours or details that matter most so we can check what is feasible for the chosen cake.",
+      "For a photo cake, have a clear original image ready to attach in WhatsApp after the design check. Cropped screenshots and small compressed images can lose detail; discuss the image and print layout with us before confirming.",
+      "We confirm design feasibility, preparation, available arrangements and any additional charge in the order conversation. Check the final cake details and payment instructions there. Delivery destinations are checked individually within the 20 km road limit from Ilanji."
+    ]
   },
-
-  'premium-cake': {
-    heading: 'Premium Cakes: Black Forest, Red Velvet and More',
-    paragraphs: [
-      "The premium range is where the ingredients and the labour both step up. Black Forest is built the way it should be — cherries and real dark chocolate shavings, not cocoa dust. Red Velvet gets a proper cream cheese frosting rather than sweetened whipped cream, which is the difference between a cake that tastes like something and one that just tastes sweet.",
-      "These take longer to make and use costlier ingredients, so they cost more than the everyday flavours. What you are paying for is mostly in the filling and the finish: more layers, better chocolate, and frosting that holds its edge instead of sliding.",
-      "They are the usual choice for milestone birthdays, anniversaries and anything where the cake is the centre of the table rather than an afterthought. Cream-heavy cakes are the least heat-tolerant thing we bake, so for an outdoor event in summer, tell us and we will advise on timing.",
-    ],
+  "tier-cake": {
+    "heading": "Tiered cakes for weddings, engagements and anniversaries",
+    "paragraphs": [
+      "Compare the current two-tier and three-tier cakes, then discuss your guest count and design reference with us. A tier count alone does not establish how many servings your chosen cake will provide.",
+      "Send the venue, cake-cutting time and preferred presentation alongside your requested size. Ask us to check the structure, design and handover arrangements together, especially if the cake must wait before serving or needs setup at the venue.",
+      "Tiered and detailed designs require an individual availability and preparation check. Do not assume a fixed lead time or automatic same-day slot. We confirm the design, total, payment instructions and address-level delivery arrangements before the order is accepted."
+    ]
   },
-
-  'custom-cake': {
-    heading: 'Custom and Photo Cakes, Made to Your Brief',
-    paragraphs: [
-      "Custom cakes are built to a brief rather than picked from a list. Send a reference picture — a screenshot, a photo of a cake you liked, even a rough sketch — and we will tell you plainly what is achievable at what weight and price before you commit to anything.",
-      "Photo cakes carry an edible print of your own image on the surface. They are the most popular thing we make for first birthdays, retirements and farewells, where the picture is the point. Send the highest-resolution image you have: a sharp, well-lit photo prints cleanly, and a small blurry one will look worse on a cake than it does on a phone.",
-      "Sculpted and theme cakes take the most hands-on work, so they need the most notice. Some designs are genuinely harder than they look, and a few do not survive the trip in Tenkasi's heat. We will tell you when that is the case rather than take the order and disappoint you.",
-    ],
+  "premium-cake": {
+    "heading": "Black Forest, White Forest and Red Velvet cakes",
+    "paragraphs": [
+      "Browse the current premium collection and compare the actual cake photos, available weights and prices. Choose the flavour you prefer, then discuss your event date, cake message and any design change with us.",
+      "For cream cakes, plan where the cake will be kept before serving. Tell us the cake-cutting time and ask for handling advice for the cake you choose. Confirm any ingredient or dietary request before ordering.",
+      "The bakery is in Ilanji, Tenkasi. Share your destination so we can check the road route, the 20 km coverage limit and availability. The order conversation confirms the final amount and arrangements."
+    ]
   },
-
-  'themed-cake': {
-    heading: 'Theme Cakes for Parties and Celebrations',
-    paragraphs: [
-      "Theme cakes are decorated around an idea — a cartoon character, a hobby, a colour scheme, a festival — rather than a flavour. The sponge underneath is still your choice, so you are not stuck with a cake that looks right and tastes like an afterthought.",
-      "Children's parties are the most common reason people order these, and the usual mistake is choosing a design that photographs well but does not slice sensibly for twenty children. We will suggest the shape and weight that serves your guest count while keeping the design you want.",
-      "Festival and seasonal cakes book out quickly around the dates they are made for, so order early for those. For everything else, a day's notice is usually enough — send your theme, your date and a rough guest count and we will confirm what we can do.",
-    ],
-  },
+  "themed-cake": {
+    "heading": "Themed cake designs: check your occasion and date",
+    "paragraphs": [
+      "Use the current catalog photos as starting points for a design conversation. A seasonal or event-themed listing does not establish availability for every date; ask us to check the cake and decoration you want.",
+      "Send a reference, preferred colours, message, guest count and event time. We will confirm feasible changes and the final amount. For a detailed design, allow time for that discussion before settling your event arrangements.",
+      "Check your delivery address within 20 km by road from our Ilanji bakery. A website enquiry begins the conversation; review the cake details, payment instructions and order confirmation in WhatsApp."
+    ]
+  }
 };
 
-/** Fallback for a category with no bespoke copy yet. */
 export function genericCopy(name) {
-  return {
-    heading: `${name} from Serle's Bake`,
-    paragraphs: [
-      `Our ${name.toLowerCase()} are baked to order in our own kitchen in Tenkasi — never pulled from a display fridge. Choose a weight, tell us the occasion and your date, and we bake it fresh for you.`,
-      "We deliver across Tenkasi and the surrounding area, with same-day delivery usually possible on standard cakes ordered in the morning. Custom designs need at least a day's notice so the bake and the decoration are not rushed.",
-    ],
-  };
+  return { heading: `${name} from Serle's Bake`, paragraphs: [
+    'Browse the current cake listings and ask us to check the size, design and date you need. Prices and weights are shown on the relevant product page.',
+    'Delivery is checked for your address within 20 km by road from Ilanji. Confirm availability, the final amount and your order details on WhatsApp.'
+  ] };
 }
-
-export function copyForCategory(slug, name) {
-  return CATEGORY_COPY[slug] || genericCopy(name || slug);
-}
+export function copyForCategory(slug, name) { return CATEGORY_COPY[slug] || genericCopy(name || slug); }

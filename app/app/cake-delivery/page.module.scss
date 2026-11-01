@@ -1,0 +1,31 @@
+.delivery {
+  max-width: 1080px; padding-top: 40px; padding-bottom: 64px; color: #352b30;
+  p, li { line-height: 1.85; font-size: 1rem; }
+  h2 { font-size: clamp(1.45rem, 3vw, 2rem); line-height: 1.3; margin-bottom: 18px; }
+  a { text-underline-offset: 3px; }
+  a:focus-visible, summary:focus-visible { outline: 3px solid #8d2547; outline-offset: 4px; }
+}
+.intro, .closing { background: #fff3f5; border-radius: 18px; padding: clamp(22px, 5vw, 48px); }
+.eyebrow { font-weight: 700; color: #85213c; }
+.actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 24px; }
+.primary, .secondary {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 48px;
+  padding: 12px 20px; border-radius: 8px; font-weight: 700; text-decoration: none;
+  text-align: center; max-width: 100%; overflow-wrap: anywhere;
+}
+.delivery .primary { background: #8d2547; color: #fff; }
+.delivery .secondary { border: 1px solid #8d2547; color: #70213b; background: #fff; }
+.section { margin: 42px 0; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.card { background: #faf8f8; border: 1px solid #eadfe3; border-radius: 14px; padding: 26px; }
+.steps { padding-left: 24px; li { padding-left: 5px; margin-bottom: 16px; } }
+.question {
+  border-bottom: 1px solid #e6d9df; padding: 18px 0;
+  summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; }
+  p { margin: 14px 0 0; }
+}
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+  .actions > a { width: 100%; }
+  .delivery { padding-bottom: 96px; }
+}

@@ -304,6 +304,24 @@ body {
 .hidden{
   display: none !important;
 }
+
+// Keep the desktop assistant on the left. On phones, WhatsApp is the primary
+// contact path; the full-width assistant otherwise covers the enquiry CTA.
+#JotformAgent-019947270aa97316ae2fc391b37f8cc91986 .embedded-agent-container {
+  left: 20px !important;
+  right: auto !important;
+  bottom: 20px !important;
+}
+
+@media (max-width: 767px) {
+  .offcanvas-menu-overlay.active {
+    z-index: 1001;
+  }
+
+  #JotformAgent-019947270aa97316ae2fc391b37f8cc91986 {
+    display: none !important;
+  }
+}
 @media (min-width: 768px) {
   .d-lg-block{
     display: block !important;
