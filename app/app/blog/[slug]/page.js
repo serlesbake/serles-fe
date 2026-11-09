@@ -143,7 +143,10 @@ export default async function BlogPostPage({ params }) {
                     <Image
                       src={safeImageUrl(post.cover_image.url)}
                       alt={post.cover_image.alt_text || post.title}
-                      fill
+                      title={post.cover_image.alt_text || post.title}
+                      width={1200}
+                      height={800}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       sizes="(max-width: 991px) 100vw, 66vw"
                       priority
                     />

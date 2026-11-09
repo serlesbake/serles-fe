@@ -15,6 +15,7 @@ export default function ProductCard({ product, priority = false, headingLevel = 
             <Image
               src={product.featured_image?.url || "/img/placeholder.jpg"}
               alt={product.featured_image?.alt_text || product.name}
+              title={product.featured_image?.alt_text || product.name}
               width={300}
               height={300}
               priority={priority}

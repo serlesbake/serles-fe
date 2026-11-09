@@ -5,6 +5,7 @@ import React from "react";
 import Breadcrumb from "../../../components/Breadcrumb";
 import ProductFilters from "../../../components/ProductFilters";
 import ProductCard from "../../../components/ProductCard";
+import TagCollectionIntro from '../../../components/TagCollectionIntro';
 import ProductTags from "../../../components/ProductTags";
 import useProductFilters from "../../../hooks/useProductFilters";
 import apiCache from "../../../utils/cache";
@@ -181,6 +182,7 @@ export default function TagPageClient({
           title={currentTag ? `${currentTag.name} Cakes` : "Tagged Cakes"}
           items={breadcrumbItems}
         />
+        <TagCollectionIntro name={currentTag?.name || titleFromSlug(tagSlug)} products={products} />
 
         <div className="row">
           <div className="col-lg-12">

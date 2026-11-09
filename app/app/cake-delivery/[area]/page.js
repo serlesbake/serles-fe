@@ -12,7 +12,9 @@ export function generateStaticParams() { return DELIVERY_AREA_PAGES.map(area => 
 export async function generateMetadata({ params }) {
   const area = findDeliveryArea((await params).area);
   if (!area) return { title: 'Delivery area not found', robots: { index: false, follow: false } };
-  const title = `Cake Delivery to ${area.name} from Ilanji | Serle's Bake`;
+  const title = area.slug === 'pudur-sengottai'
+    ? "Cake Delivery to Pudur, Sengottai | Serle's Bake"
+    : `Cake Delivery to ${area.name} from Ilanji | Serle's Bake`;
   const description = `Planning a cake for ${area.name}? Check the route from our Ilanji bakery, delivery charges, your address and available arrangements on WhatsApp.`;
   const url = `${SITE_URL}${deliveryAreaPath(area)}`;
   return { title, description, alternates: { canonical: url },

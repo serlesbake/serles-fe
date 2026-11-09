@@ -129,7 +129,9 @@ export default function TagsPageClient({ initialTags, initialProducts }) {
           <div className="col-lg-12">
             <div className="section-title">
               <h2>Browse by Tags</h2>
-              <p>Discover our cakes organized by tags and categories</p>
+              <p>Use a tag to explore products grouped under the same catalog label. Open a collection, then compare the individual cake photos, sizes and prices.</p>
+              <p>Tags help you browse; they do not confirm a cake recipe, dietary option or design change. Ask us about the product you choose and the date you need.</p>
+              <p>For the full range, <Link href="/cakes">browse cakes by category</Link>. For a quick price comparison, <Link href="/menu">open the cake menu</Link>. Send your preferred cake, size, message and date on WhatsApp before confirming an order.</p>
             </div>
           </div>
         </div>

@@ -21,7 +21,8 @@ export default function Header() {
         
         {/* Logo Section */}
         <div className='d-flex align-items-center justify-content-start gap-3 p-3'>
-          <Image src="/img/serlesbakelogo.webp" alt="Serle's Bake — homemade cakes in Tenkasi" width={60} height={60} />
+          <Image src="/img/serlesbakelogo.webp" alt="Serle's Bake — homemade cakes in Tenkasi"
+          title="Serle's Bake — homemade cakes in Tenkasi" width={60} height={60} />
           <p className='text-black h6 mb-0'>Serles Bake</p>
         </div>
         
@@ -64,7 +65,8 @@ export default function Header() {
                   <div className="inner-header d-flex align-items-center justify-content-between gap-3">
                   <EmailLink className="text-primary-light text-decoration-none d-none d-lg-block" desktop />
                   <Link href="/" className='text-decoration-none d-flex align-items-center gap-3 justify-content-center col-lg-6 logo-new'>
-                      <Image src="/img/serlesbakelogo.webp" alt="Serle's Bake — homemade cakes in Tenkasi" width={70} height={70} />
+                      <Image src="/img/serlesbakelogo.webp" alt="Serle's Bake — homemade cakes in Tenkasi"
+          title="Serle's Bake — homemade cakes in Tenkasi" width={70} height={70} />
                       {/* This was an <h1>. It sits in the shared header, so every one
                           of the site's ~62 URLs had "Serles Bake" as its strongest
                           on-page heading, and pages with a real heading of their own

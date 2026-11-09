@@ -24,7 +24,10 @@ export default function BlogCard({ post, priority = false }) {
         <Image
           src={cover}
           alt={post.cover_image?.alt_text || post.title || 'Serles Bake blog post'}
-          fill
+          title={post.cover_image?.alt_text || post.title || 'Serles Bake blog post'}
+          width={640}
+          height={420}
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, 33vw"
           priority={priority}
         />
@@ -53,8 +56,9 @@ export default function BlogCard({ post, priority = false }) {
 
         {post.excerpt && <p className={styles.cardExcerpt}>{post.excerpt}</p>}
 
-        <Link href={href} className={styles.cardLink}>
+        <Link href={href} className={styles.cardLink} aria-label={`Read ${post.title}`}>
           Read More
+          <span className="visually-hidden">: {post.title}</span>
         </Link>
       </div>
     </article>

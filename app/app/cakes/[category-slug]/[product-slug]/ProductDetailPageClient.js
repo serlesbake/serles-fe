@@ -633,6 +633,7 @@ Please contact me for more details. Thank you!${getAnalyticsReference()}`;
                   <Image
                     src={productImages[selectedImage]?.url || "/img/placeholder.jpg"}
                     alt={productImages[selectedImage]?.alt || product.name}
+                    title={productImages[selectedImage]?.alt || product.name}
                     width={500}
                     height={500}
                     priority
@@ -655,6 +656,7 @@ Please contact me for more details. Thank you!${getAnalyticsReference()}`;
                       <Image
                         src={image.url}
                         alt={image.alt || `${product.name} - Photo ${index + 1}`}
+                        title={image.alt || `${product.name} - Photo ${index + 1}`}
                         width={100}
                         height={100}
                         loading="lazy"

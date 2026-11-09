@@ -39,7 +39,7 @@ export default async function BlogTagPage({ params }) {
   return (
     <BlogArchive
       eyebrow="Tag"
-      title={tag.name}
+      title={`${tag.name} Articles`}
       description={tag.description}
       posts={posts}
       sidebar={sidebar}

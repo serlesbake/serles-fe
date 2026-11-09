@@ -59,6 +59,7 @@ export default function Bestselling({ initialProducts = [] }) {
               <Image
                 src={product.featured_image?.url || getFallbackImage('product')}
                 alt={product.name || 'Cake'}
+                title={product.name || 'Cake'}
                 width={300}
                 height={300}
                 className={styles.productImage}

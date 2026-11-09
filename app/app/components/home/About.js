@@ -13,6 +13,7 @@ export default function About() {
                             <Image
                                 src="/img/home/cakeinhand.jpg"
                                 alt="Homemade Cake"
+                                title="Homemade Cake"
                                 width={400}
                                 height={300}
                                 style={{ borderRadius: "12px", objectFit: "cover", width: "100%", height: "auto" }}

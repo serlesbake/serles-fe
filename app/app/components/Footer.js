@@ -288,6 +288,7 @@ export default function Footer() {
                   <Image
                     src="/img/serlesbakelogo.webp"
                     alt="Serle's Bake Logo"
+                    title="Serle's Bake Logo"
                     width={100}
                     height={100}
                   />

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getProductsUrl, getCategoriesUrl, getProductDetailUrl } from '../config/api';
 import apiCache from '../utils/cache';
 import Link from "next/link";
+import Image from 'next/image';
 import { FaWhatsapp } from "react-icons/fa";
 import styles from './home/Menu.module.css';
 import { getAnalyticsReference, trackStoreEvent } from '../utils/analytics';
@@ -338,9 +339,13 @@ export default function AllProductsMenu({ initialProducts = [], initialCategorie
                   {/* Product Image */}
                   <div className={styles.menuItemImage}>
                     {items[0]?.featured_image && items[0]?.featured_image.url ? (
-                      <img
+                      <Image
                         src={items[0].featured_image.url}
                         alt={items[0].featured_image.alt_text || name}
+                        title={items[0].featured_image.alt_text || name}
+                        width={160}
+                        height={160}
+                        sizes="(max-width: 575px) 90px, 120px"
                         loading={idx === 0 ? "eager" : "lazy"}
                         fetchPriority={idx === 0 ? "high" : "auto"}
                         style={{

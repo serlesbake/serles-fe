@@ -31,6 +31,7 @@ export default async function Category() {
               <Image
                 src={category.image || '/img/shop/product-1.jpg'}
                 alt={category.name}
+                title={category.name}
                 width={100}
                 height={100}
                 priority={index === 0}

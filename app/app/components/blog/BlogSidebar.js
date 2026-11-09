@@ -40,6 +40,7 @@ export default function BlogSidebar({ categories = [], tags = [], recentPosts = 
               <Image
                 src={safeImageUrl(post.cover_image?.url)}
                 alt={post.cover_image?.alt_text || post.title || 'Blog post'}
+                title={post.cover_image?.alt_text || post.title || 'Blog post'}
                 width={72}
                 height={72}
               />

@@ -23,6 +23,7 @@ export default function PostInternalLinks({ products = [], categories = [] }) {
                 <Image
                   src={safeImageUrl(product.image_url)}
                   alt={product.name || 'Cake'}
+                  title={product.name || 'Cake'}
                   width={64}
                   height={64}
                 />

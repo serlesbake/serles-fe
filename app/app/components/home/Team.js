@@ -59,6 +59,7 @@ export default function Team() {
                     <Image
                         src={image}
                         alt={name}
+                        title={name}
                         width={300}
                         height={400}
                         className={styles.teamMemberImage}

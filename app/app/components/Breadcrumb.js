@@ -29,9 +29,9 @@ export default function Breadcrumb({ title, items = [], headingLevel = "h1" }) {
               {items.map((item, index) => (
                 <span key={index}>
                   {item.href ? (
-                    <Link href={item.href}>{item.label}</Link>
+                    <Link href={item.href}>{item.label || item.name}</Link>
                   ) : (
-                    item.label
+                    item.label || item.name
                   )}
                 </span>
               ))}

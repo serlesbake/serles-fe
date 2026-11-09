@@ -35,7 +35,7 @@ async function getMenuData() {
 
 export const metadata = buildMetadata({
   title: "Cake Menu & Prices | Homemade Cakes in Tenkasi",
-  description: "Compare cake flavours, available sizes and current prices from Serle's Bake in Ilanji, Tenkasi. Confirm your cake design and delivery address before ordering.",
+  description: "Compare cake flavours, sizes and prices at Serle's Bake in Ilanji, Tenkasi. Check your design, date and delivery address before ordering.",
   path: '/menu',
 });
 

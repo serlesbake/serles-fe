@@ -34,10 +34,8 @@ async function getCatalog() {
   };
 }
 
-function buildDescription(categories) {
-  const names = categories.slice(0, 3).map((c) => c.name).join(", ");
-  const flavours = names || "Black Forest, Red Velvet and Choco Truffle";
-  return `Order homemade cakes in Tenkasi from Serle's Bake — ${flavours} and more. Fresh-baked birthday, photo and custom cakes with same-day delivery.`;
+function buildDescription() {
+  return "Browse birthday cakes, brownies and custom cakes from Serle's Bake in Ilanji, Tenkasi. Compare sizes and prices, then check availability.";
 }
 
 export async function generateMetadata() {
