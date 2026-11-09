@@ -92,6 +92,11 @@
   ],
   "redirects": [
     {
+      "source": "/category/:legacyPath*",
+      "destination": "/cakes/:legacyPath*",
+      "permanent": true
+    },
+    {
       "source": "/home",
       "destination": "/",
       "permanent": true

@@ -86,6 +86,9 @@ const nextConfig = {
   generateEtags: false,
   reactStrictMode: true,
   trailingSlash: false,
+  // Run legacy URL redirects before the equivalent slash-normalization rule
+  // below, so old /category/.../ links reach /cakes/... in one permanent hop.
+  skipTrailingSlashRedirect: true,
   
   // NOTE: a webpack rule used to live here routing png/jpg/gif/svg/webp imports
   // through url-loader with a file-loader fallback. Neither package is installed,
@@ -214,6 +217,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/category/:legacyPath*',
+        destination: '/cakes/:legacyPath*',
+        permanent: true,
+      },
+      {
         source: '/home',
         destination: '/',
         permanent: true,
@@ -258,6 +266,13 @@ const nextConfig = {
       {
         source: '/cakes/tags/themed-cake',
         destination: '/cakes/themed-cake',
+        permanent: true,
+      },
+      // Preserve Next's ordinary trailingSlash:false normalization, after
+      // redirects for moved URLs have had a chance to choose the final target.
+      {
+        source: '/:path+/',
+        destination: '/:path+',
         permanent: true,
       },
     ];

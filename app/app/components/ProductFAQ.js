@@ -62,7 +62,7 @@ export default function ProductFAQ({ product = {}, phone = "916383070725", whats
     const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I am interested in the ${product.name || 'cake'}.`)}`;
     items.push({
       question: 'How can I order via WhatsApp?',
-      answer: `Start a WhatsApp chat with us: ${waLink} (or tap the button).`,
+      answer: 'Tap the WhatsApp button to ask about this cake. Share your preferred weight, cake message, event date and delivery address so we can confirm the details.',
       type: 'whatsapp',
       waLink
     });
@@ -195,8 +195,8 @@ export default function ProductFAQ({ product = {}, phone = "916383070725", whats
                     className="btn btn-success"
                     style={{ marginTop: 8, color: 'white' }}
                   >
-                    <i className="fab fa-whatsapp me-2"></i>
-                    WhatsApp Us
+                    <i className="fa fa-whatsapp me-2" aria-hidden="true"></i>
+                    Ask about this cake on WhatsApp
                   </a>
                 </>
               ) : f.type === 'call' ? (
