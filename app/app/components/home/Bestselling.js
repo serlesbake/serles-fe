@@ -92,7 +92,7 @@ export default function Bestselling({ initialProducts = [] }) {
       <div className="container">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="h1 text-left">Bestselling Cakes</h2>
-          <Link href={`/cakes?is_best_seller=true`} className="btn bg-primary-light">View All</Link>
+          <Link href="/cakes" className="btn bg-primary-light">View All</Link>
         </div>
         <div className="row">
           {products.slice(0, 4).map((product) => (
