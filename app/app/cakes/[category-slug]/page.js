@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getProductsUrl, getCategoriesUrl, getTagsUrl } from "../../config/api";
 import CategoryPageClient from "./CategoryPageClient";
@@ -119,7 +118,6 @@ export default async function CategoryPage({ params }) {
   return (
     <>
       {category ? <JsonLd data={buildCategorySchema(category, categoryProducts, categorySlug)} /> : null}
-      <Suspense fallback={<div className="text-center py-5">Loading...</div>}>
         <CategoryPageClient
           params={resolvedParams}
           initialProducts={categoryProducts}
@@ -127,7 +125,6 @@ export default async function CategoryPage({ params }) {
           initialTags={tags}
           initialCategory={category ?? null}
         />
-      </Suspense>
 
       {/* Category pages were ~200 words. This copy is written per category in
           categoryCopy.js rather than templated, because the same paragraphs with

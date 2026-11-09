@@ -1,6 +1,7 @@
 'use client'
 import { FaMapMarkerAlt, FaEnvelope, FaPhone, FaInstagram, FaFacebook, FaWhatsapp, FaUsers } from "react-icons/fa";
 import Breadcrumb from "../components/Breadcrumb";
+import EmailLink from '../components/EmailLink';
 
 // Reusable ContactCard component with modern design
 function ContactCard({ icon, title, children, link, gradient, iconBg }) {
@@ -74,7 +75,11 @@ function ContactCard({ icon, title, children, link, gradient, iconBg }) {
           position: "relative",
           zIndex: 2
         }}>{title}</h3>
-        {link ? (
+        {link?.startsWith('mailto:') ? (
+          <div style={{ color: '#fff', position: 'relative', zIndex: 2, fontSize: '0.95rem' }}>
+            <EmailLink className="text-white text-decoration-none" />
+          </div>
+        ) : link ? (
           <a
             href={link}
             className="text-decoration-none"

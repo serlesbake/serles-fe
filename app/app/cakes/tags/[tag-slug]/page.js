@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getProductsUrl, getCategoriesUrl, getTagsUrl } from "../../../config/api";
 import apiCache from "../../../utils/cache";
@@ -141,14 +140,12 @@ export default async function TagPage({ params }) {
   return (
     <>
       <JsonLd data={schema} />
-      <Suspense fallback={<div className="text-center py-5">Loading...</div>}>
         <TagPageClient
           params={resolvedParams}
           initialProducts={products}
           initialCategories={categories}
           initialTags={tags}
         />
-      </Suspense>
     </>
   );
 }

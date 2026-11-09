@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { getProductsUrl, getTagsUrl } from "../../config/api";
 import apiCache from "../../utils/cache";
 import JsonLd from "../../components/blog/JsonLd";
@@ -114,9 +113,7 @@ export default async function TagsPage() {
   return (
     <>
       <JsonLd data={schema} />
-      <Suspense fallback={<div className="text-center py-5">Loading...</div>}>
         <TagsPageClient initialTags={tags} initialProducts={products} />
-      </Suspense>
     </>
   );
 }

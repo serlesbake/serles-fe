@@ -1,3 +1,4 @@
+import EmailLink from '../components/EmailLink';
 import Breadcrumb from "../components/Breadcrumb";
 import { buildMetadata } from '../utils/blog';
 
@@ -176,7 +177,7 @@ export default function PrivacyPolicyPage() {
                       <strong>Serles Bake</strong><br />
                       Tenkasi - Shencottai Main Road, Ilanji, Tenkasi, Tamil Nadu<br />
                       Phone: +91 63830 70725<br />
-                      Email: serlesbake@gmail.com<br />
+                      Email: <EmailLink /><br />
                       Website: serlesbake.in
                     </p>
                   </div>
