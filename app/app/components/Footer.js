@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import EmailLink from './EmailLink';
 import { FaFacebook, FaInstagram, FaWhatsapp, FaGoogle } from 'react-icons/fa';
 
 const contactInfo = [
@@ -64,7 +65,7 @@ function ContactList({ info }) {
           <span style={{ marginRight: 10, color: "#ffb6c1" }}>
             <i className={`fa ${item.icon}`}></i>
           </span>
-          {item.href ? (
+          {item.href?.startsWith('mailto:') ? <EmailLink className="text-white text-decoration-underline" /> : item.href ? (
             <a
               href={item.href}
               style={{
@@ -145,14 +146,14 @@ function WorkingHours({ hours }) {
       flexDirection: "column",
       alignItems: "flex-start"
     }}>
-      <h4 style={{
+      <h2 className="h4" style={{
         color: "#ffb6c1",
         fontWeight: 700,
         marginBottom: "18px",
         letterSpacing: "1px",
       }}>
         WORKING HOURS
-      </h4>
+      </h2>
       <ul style={{ listStyle: "none", padding: 0, margin: 0, fontSize: "1.05rem" }}>
         {hours.map((item, idx) => (
           <li key={idx} style={{ marginBottom: 10 }}>
@@ -182,7 +183,7 @@ function QuickLinks({ links }) {
         alignItems: "flex-start"
       }}
     >
-      <h4
+      <h2 className="h4"
         style={{
           color: "#ffb6c1",
           fontWeight: 700,
@@ -191,7 +192,7 @@ function QuickLinks({ links }) {
         }}
       >
         QUICK LINKS
-      </h4>
+      </h2>
       <ul style={{ listStyle: "none", padding: 0, margin: 0, fontSize: "1.05rem", width: "100%" }}>
         {links.map((item, idx) => (
           <li key={idx} style={{ marginBottom: 12 }}>
@@ -349,7 +350,7 @@ export default function Footer() {
                   flexDirection: "column",
                 }}
               >
-                <h4
+                <h2 className="h4"
                   style={{
                     color: "#ffb6c1",
                     fontWeight: 700,
@@ -358,7 +359,7 @@ export default function Footer() {
                   }}
                 >
                   GET IN TOUCH
-                </h4>
+                </h2>
                 <ContactList info={contactInfo} />
                 <SocialIcons links={socialLinks} />
               </div>

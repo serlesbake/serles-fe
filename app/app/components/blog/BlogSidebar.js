@@ -18,7 +18,7 @@ export default function BlogSidebar({ categories = [], tags = [], recentPosts = 
 
       {categories.length > 0 && (
         <div className={styles.sidebarBlock}>
-          <h5 className={styles.sidebarHeading}>Categories</h5>
+          <h2 className={styles.sidebarHeading}>Categories</h2>
           <ul className={styles.linkList}>
             {categories.map((category) => (
               <li key={category.id ?? category.slug}>
@@ -34,7 +34,7 @@ export default function BlogSidebar({ categories = [], tags = [], recentPosts = 
 
       {recentPosts.length > 0 && (
         <div className={styles.sidebarBlock}>
-          <h5 className={styles.sidebarHeading}>Recent Posts</h5>
+          <h2 className={styles.sidebarHeading}>Recent Posts</h2>
           {recentPosts.map((post) => (
             <Link key={post.id ?? post.slug} href={blogPostPath(post.slug)} className={styles.recentItem}>
               <Image
@@ -44,7 +44,7 @@ export default function BlogSidebar({ categories = [], tags = [], recentPosts = 
                 height={72}
               />
               <div>
-                <h4>{post.title}</h4>
+                <h3 className="h4">{post.title}</h3>
                 {post.published_at && (
                   <span>
                     <time dateTime={post.published_at}>{formatPostDate(post.published_at)}</time>
@@ -58,7 +58,7 @@ export default function BlogSidebar({ categories = [], tags = [], recentPosts = 
 
       {tags.length > 0 && (
         <div className={styles.sidebarBlock}>
-          <h5 className={styles.sidebarHeading}>Tags</h5>
+          <h2 className={styles.sidebarHeading}>Tags</h2>
           <div className={styles.tagCloud}>
             {tags.map((tag) => (
               <Link key={tag.id ?? tag.slug} href={blogTagPath(tag.slug)} className={styles.tagPill}>
@@ -71,7 +71,7 @@ export default function BlogSidebar({ categories = [], tags = [], recentPosts = 
 
       <div className={styles.sidebarBlock}>
         <div className={styles.sidebarCta}>
-          <h5>Craving something sweet?</h5>
+          <h2>Craving something sweet?</h2>
           <p>Fresh, homemade cakes baked to order in Tenkasi — birthdays, weddings and everything between.</p>
           <Link href="/cakes">Browse Our Cakes</Link>
         </div>

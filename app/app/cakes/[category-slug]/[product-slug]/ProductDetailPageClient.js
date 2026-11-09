@@ -16,6 +16,11 @@ import { getAnalyticsReference, trackStoreEvent } from "../../../utils/analytics
 const titleFromSlug = (slug = "") =>
   slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
+function onlyAvailableWeights(product) {
+  if (!product) return product;
+  return { ...product, weight_options: (product.weight_options || []).filter(option => option.is_active !== false && option.weight?.is_active !== false) };
+}
+
 export default function ProductDetailPageClient({
   params,
   initialProduct,
@@ -32,7 +37,8 @@ export default function ProductDetailPageClient({
   // caller that renders this component without them.
   const hasServerData = Boolean(initialProduct);
 
-  const [product, setProduct] = useState(initialProduct ?? null);
+  const availableProduct = onlyAvailableWeights(initialProduct);
+  const [product, setProduct] = useState(availableProduct ?? null);
   const [categories, setCategories] = useState(initialCategories ?? []);
   const [relatedProducts, setRelatedProducts] = useState(initialRelatedProducts ?? []);
   const [loading, setLoading] = useState(!hasServerData);
@@ -41,7 +47,7 @@ export default function ProductDetailPageClient({
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedWeight, setSelectedWeight] = useState(
-    initialProduct?.weight_options?.[0] ?? null
+    availableProduct?.weight_options?.[0] ?? null
   );
   const [activeAccordion, setActiveAccordion] = useState('description');
   const [customMessage, setCustomMessage] = useState("Happy Birthday ❤️");
@@ -97,7 +103,7 @@ export default function ProductDetailPageClient({
         }
 
         // Fetch individual product data to get weight_options (with caching)
-        const individualProductData = await apiCache.fetchWithCache(getProductDetailUrl(foundProductFromList.id));
+        const individualProductData = onlyAvailableWeights(await apiCache.fetchWithCache(getProductDetailUrl(foundProductFromList.id)));
 
         // Get related products (same category, different products)
         const related = allProducts.filter(p => 
@@ -904,7 +910,7 @@ Please contact me for more details. Thank you!${getAnalyticsReference()}`;
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <h3 style={{ 
+              <h2 className="h3" style={{
                 color: '#333', 
                 fontWeight: '700', 
                 marginBottom: '30px',
@@ -928,13 +934,13 @@ Please contact me for more details. Thank you!${getAnalyticsReference()}`;
                   background: 'linear-gradient(90deg, transparent, #ff91a4, transparent)',
                   zIndex: '0'
                 }}></div>
-              </h3>
+              </h2>
             </div>
           </div>
           <div className="row">
             {relatedProducts.length > 0 ? (
               relatedProducts.map((relatedProduct) => (
-                <ProductCard key={relatedProduct.id} product={relatedProduct} />
+                <ProductCard key={relatedProduct.id} product={relatedProduct} headingLevel="h3" />
               ))
             ) : (
               <div className="col-12 text-center py-5">

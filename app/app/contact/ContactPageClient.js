@@ -68,12 +68,12 @@ function ContactCard({ icon, title, children, link, gradient, iconBg }) {
             {icon}
           </div>
         </div>
-        <h5 className="fw-bold mb-3" style={{ 
+        <h3 className="fw-bold mb-3" style={{
           color: "#fff", 
           fontSize: "1.1rem",
           position: "relative",
           zIndex: 2
-        }}>{title}</h5>
+        }}>{title}</h3>
         {link ? (
           <a
             href={link}

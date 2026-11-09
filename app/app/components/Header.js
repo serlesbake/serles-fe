@@ -2,7 +2,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { FaEnvelope, FaPhone } from 'react-icons/fa';
+import { FaPhone } from 'react-icons/fa';
+import EmailLink from './EmailLink';
 import Wabtn from './ui/wabtn';
 
 export default function Header() {
@@ -43,10 +44,7 @@ export default function Header() {
         {/* Contact Info in Mobile Menu */}
         <div className="offcanvas__contact-info p-3">
           <div className="d-flex flex-column gap-3">
-            <Link href="mailto:serlesbake@gmail.com" className="text-decoration-none d-flex align-items-center gap-2">
-              <FaEnvelope size={20} className="text-primary" />
-              <span className="text-dark">serlesbake@gmail.com</span>
-            </Link>
+            <EmailLink className="text-decoration-none d-flex align-items-center gap-2 text-dark" showIcon />
             <Link href="tel:+916383070725" className="text-decoration-none d-flex align-items-center gap-2">
               <FaPhone size={20} className="text-primary" />
               <span className="text-dark">+91 63830 70725</span>
@@ -64,11 +62,7 @@ export default function Header() {
               <div className="col-lg-12 m-0 p-0">
                 <div className="header-new ">
                   <div className="inner-header d-flex align-items-center justify-content-between gap-3">
-                  <Link href="mailto:serlesbake@gmail.com" className="text-primary-light text-decoration-none d-none d-lg-block">
-                    <i className="bi bi-envelope text-primary-light d-inline-flex align-items-center justify-content-center gap-3 h-100 ">
-                      <FaEnvelope size={36} /> <p className='d-flex flex-column mb-0 h6 '>Email Us <span className="text-color">serlesbake@gmail.com</span></p>
-                    </i>
-                  </Link>
+                  <EmailLink className="text-primary-light text-decoration-none d-none d-lg-block" desktop />
                   <Link href="/" className='text-decoration-none d-flex align-items-center gap-3 justify-content-center col-lg-6 logo-new'>
                       <Image src="/img/serlesbakelogo.webp" alt="Serle's Bake — homemade cakes in Tenkasi" width={70} height={70} />
                       {/* This was an <h1>. It sits in the shared header, so every one

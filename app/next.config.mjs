@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Keep canonical, robots, titles and social tags in the initial HTML head for
+  // every user agent, including raw-HTML SEO crawlers. Next 15 otherwise streams
+  // async metadata into the body for agents outside its built-in bot list.
+  htmlLimitedBots: /.*/,
   // Image optimization
   images: {
     domains: [
@@ -111,7 +115,17 @@ const nextConfig = {
           },
           {
             key: 'Referrer-Policy',
-            value: isDev ? 'no-referrer-when-downgrade' : 'origin-when-cross-origin',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000',
+          },
+          {
+            key: 'Content-Security-Policy',
+            // The template and Next bootstrap require inline scripts/styles.
+            // HTTPS sources preserve the existing analytics/chat integrations.
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' https:" + (isDev ? " 'unsafe-eval'" : '') + "; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; connect-src 'self' https: wss:" + (isDev ? ' ws:' : '') + "; frame-src https:; media-src 'self' blob: https:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
           },
           {
             key: 'Permissions-Policy',

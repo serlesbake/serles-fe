@@ -1,12 +1,13 @@
 import Breadcrumb from "../components/Breadcrumb";
+import { buildMetadata } from '../utils/blog';
 import { DELIVERY_COVERAGE } from '../utils/deliveryPolicy';
 
-export const metadata = {
-  alternates: { canonical: 'https://www.serlesbake.in/terms-conditions' },
+export const metadata = buildMetadata({
+  path: '/terms-conditions',
   title: "Terms & Conditions | Serle’s Bake, Tenkasi",
   description: "Read the ordering, payment and delivery terms for cakes from Serle’s Bake in Ilanji, Tenkasi. Confirm your address and order details on WhatsApp.",
   keywords: "cake shop terms tenkasi, serles bake terms, order terms, best cake shop tenkasi",
-};
+});
 
 export default function TermsConditionsPage() {
   return (

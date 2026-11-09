@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 
-export default function ProductCard({ product, priority = false }) {
+export default function ProductCard({ product, priority = false, headingLevel = 'h2' }) {
+  const Heading = headingLevel === 'h3' ? 'h3' : 'h2';
   return (
     <div className="col-lg-3 col-md-6 col-sm-6">
       <Link 
@@ -28,9 +29,9 @@ export default function ProductCard({ product, priority = false }) {
             )}
           </div>
           <div className="product__item__text">
-            <h6>
+            <Heading className="h6">
               {product.name}
-            </h6>
+            </Heading>
             <div className="product__item__price">
               {product.price_range?.replace(/\$/g, '₹') || "Price not available"}
             </div>

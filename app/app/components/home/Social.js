@@ -33,14 +33,14 @@ export default function Social() {
                                     }} />
                                 </div>
                                 <div>
-                                    <h3 style={{ 
+                                    <h2 style={{
                                         margin: "0", 
                                         fontSize: "1.4rem", 
                                         fontWeight: "700",
                                         color: "#333"
                                     }}>
                                         Follow Us on Instagram
-                                    </h3>
+                                    </h2>
                                     <p style={{ 
                                         margin: "5px 0 0 0", 
                                         fontSize: "1rem", 
@@ -172,14 +172,14 @@ export default function Social() {
                                     }} />
                                 </div>
                                 <div>
-                                    <h3 style={{ 
+                                    <h2 style={{
                                         margin: "0", 
                                         fontSize: "1.4rem", 
                                         fontWeight: "700",
                                         color: "#333"
                                     }}>
                                         Watch Our Videos
-                                    </h3>
+                                    </h2>
                                     <p style={{ 
                                         margin: "5px 0 0 0", 
                                         fontSize: "1rem", 
@@ -229,14 +229,14 @@ export default function Social() {
                                         <i className="fas fa-play" style={{ color: "#ff0000", fontSize: "1.2rem" }}></i>
                                     </div>
                                 </div>
-                                <h4 style={{ 
+                                <h3 style={{
                                     margin: "0 0 10px 0", 
                                     fontSize: "1.1rem", 
                                     fontWeight: "600",
                                     color: "#333"
                                 }}>
                                     Cake Making Tutorials
-                                </h4>
+                                </h3>
                                 <p style={{ 
                                     fontSize: "0.9rem", 
                                     color: "#666",
@@ -313,14 +313,14 @@ export default function Social() {
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     >   
-                                    <h3 style={{ 
+                                    <h2 style={{
                                         margin: "0", 
                                         fontSize: "1.4rem", 
                                         fontWeight: "700",
                                         color: "#333"
                                     }}>
                                         Google Reviews
-                                    </h3>
+                                    </h2>
                                     <p style={{ 
                                         margin: "5px 0 0 0", 
                                         fontSize: "1rem", 
@@ -361,14 +361,14 @@ export default function Social() {
                             
                             {/* Recent Reviews */}
                             <div style={{ marginBottom: "25px" }}>
-                                <h4 style={{ 
+                                <h3 style={{
                                     margin: "0 0 15px 0", 
                                     fontSize: "1.1rem", 
                                     fontWeight: "600",
                                     color: "#333"
                                 }}>
                                     Recent Reviews
-                                </h4>
+                                </h3>
                                 
                                 {/* Review 1 */}
                                 <div style={{ 

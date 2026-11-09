@@ -37,7 +37,7 @@ export default async function Category() {
                 fetchPriority={index === 0 ? 'high' : 'auto'}
                 loading={index === 0 ? 'eager' : 'lazy'}
               />
-              <h6 className='h6'>{category.name}</h6>
+              <h2 className='h6'>{category.name}</h2>
             </Link>
           </div>
         ))}

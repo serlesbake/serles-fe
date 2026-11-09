@@ -8,11 +8,11 @@ import Link from "next/link";
  * heading said "Serles Bake" instead of what the page is about.
  *
  * Pages that already render their own `<h1>` in the body (blog index and posts,
- * contact, the legal pages) pass `headingLevel="h2"` so we don't create a second
- * one. The `h2` class is kept either way — this is semantics, not styling.
+ * contact, the legal pages) pass `headingLevel="h2"`; that visual breadcrumb
+ * label is a paragraph so it doesn't precede the actual H1 in the outline.
  */
 export default function Breadcrumb({ title, items = [], headingLevel = "h1" }) {
-  const Heading = headingLevel === "h1" ? "h1" : "h2";
+  const Heading = headingLevel === "h1" ? "h1" : "p";
 
   return (
     <div className="breadcrumb-option">

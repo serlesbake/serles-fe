@@ -96,7 +96,7 @@ export default function Bestselling({ initialProducts = [] }) {
         </div>
         <div className="row">
           {products.slice(0, 4).map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} headingLevel="h3" />
           ))}
         </div>
       </div>

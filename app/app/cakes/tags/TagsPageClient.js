@@ -166,9 +166,9 @@ export default function TagsPageClient({ initialTags, initialProducts }) {
                           e.target.style.borderColor = '#e0e0e0';
                         }}
                       >
-                        <h5 className="mb-2" style={{ color: '#b61123', fontWeight: '600' }}>
+                        <h2 className="mb-2" style={{ color: '#b61123', fontWeight: '600' }}>
                           {tag.name}
-                        </h5>
+                        </h2>
                         <p className="mb-0 text-muted">
                           {tag.productCount} {tag.productCount === 1 ? 'product' : 'products'}
                         </p>

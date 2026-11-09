@@ -47,9 +47,9 @@ export default function BlogCard({ post, priority = false }) {
           )}
         </div>
 
-        <h3 className={styles.cardTitle}>
+        <h2 className={styles.cardTitle}>
           <Link href={href}>{post.title}</Link>
-        </h3>
+        </h2>
 
         {post.excerpt && <p className={styles.cardExcerpt}>{post.excerpt}</p>}
 

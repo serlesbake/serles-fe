@@ -66,7 +66,7 @@ export default function Team() {
                         priority={true}
                     />
                     <div className={`team__item__text ${styles.teamItemText}`}>
-                        <h6>{name}</h6>
+                        <h3 className="h6">{name}</h3>
                         <span>{role}</span>
                         <div className="team__item__social">
                             {socials.facebook && (

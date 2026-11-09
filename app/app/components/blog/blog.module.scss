@@ -357,7 +357,7 @@ $line: #ececec;
     flex-shrink: 0;
   }
 
-  h4 {
+  h3 {
     font-family: 'Playfair Display', serif;
     font-style: italic;
     font-size: 15px;
@@ -371,7 +371,7 @@ $line: #ececec;
     color: $muted;
   }
 
-  &:hover h4 {
+  &:hover h3 {
     color: $primary;
   }
 }

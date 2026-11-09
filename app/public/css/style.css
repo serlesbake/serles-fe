@@ -830,7 +830,7 @@ ol {
   -o-transition: all, 0.5s;
   transition: all, 0.5s;
 }
-.team__item__text h6 {
+.team__item__text .h6 {
   color: #111111;
   font-weight: 600;
   text-transform: uppercase;
@@ -1091,10 +1091,10 @@ ol {
   text-align: center;
   position: relative;
 }
-.product__item__text h6 {
+.product__item__text .h6 {
   margin-bottom: 16px;
 }
-.product__item__text h6 a {
+.product__item__text .h6 a {
   color: #111111;
   font-weight: 600;
   text-transform: uppercase;

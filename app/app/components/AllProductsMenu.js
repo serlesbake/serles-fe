@@ -367,7 +367,7 @@ export default function AllProductsMenu({ initialProducts = [], initialCategorie
                   {/* Product Info */}
                   <div className={styles.menuItemContent}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>
-                      <h5 style={{
+                      <h3 style={{
                         fontWeight: "700",
                         fontSize: "1rem",
                         color: "#231f20",
@@ -375,7 +375,7 @@ export default function AllProductsMenu({ initialProducts = [], initialCategorie
                         flex: "1"
                       }}>
                         {name}
-                      </h5>
+                      </h3>
                       {items[0]?.is_best_seller && (
                         <span style={{
                           background: "#e4718a",

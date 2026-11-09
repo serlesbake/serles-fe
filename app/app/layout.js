@@ -75,16 +75,6 @@ export default function RootLayout({ children }) {
             by any stylesheet - dropping it removes a whole family from the request. */}
         <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Pacifico&display=swap" rel="stylesheet" />
 
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=1270870504177513&ev=PageView&noscript=1"
-            alt=""
-          />
-        </noscript>
-
         {/* Template CSS Files */}
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/bootstrap.min.css" />
@@ -100,6 +90,12 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="/css/slicknav.min.css" />
       </head>
       <body className={inter.className}>
+        {/* An image inside head/noscript prematurely closes the HTML head when
+            scripting is disabled. Keep the tracking fallback in the body. */}
+        <noscript>
+          <img height="1" width="1" style={{ display: 'none' }}
+            src="https://www.facebook.com/tr?id=1270870504177513&ev=PageView&noscript=1" alt="" />
+        </noscript>
         {/* Sitewide Bakery/LocalBusiness + WebSite structured data. Static markup,
             so it costs nothing at runtime and is present for crawlers on every
             route. */}

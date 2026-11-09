@@ -264,7 +264,7 @@ export default function Menu({ initialProducts = [], initialCategories = [], ini
                   {/* Product Info */}
                   <div className={styles.menuItemContent}>
                     <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "5px" }}>
-                      <h5 style={{
+                      <h3 style={{
                         fontWeight: "700",
                         fontSize: "1rem",
                         color: "#231f20",
@@ -272,7 +272,7 @@ export default function Menu({ initialProducts = [], initialCategories = [], ini
                         flex: "1"
                       }}>
                         {product.name}
-                      </h5>
+                      </h3>
                       {product?.is_best_seller && (
                         <span style={{
                           background: "#e4718a",

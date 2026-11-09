@@ -69,7 +69,7 @@ export async function generateMetadata({ params }) {
     console.error("Error generating tag metadata:", error);
   }
 
-  const title = `${tagHeading(name)} in Tenkasi | Serle's Bake`;
+  const title = `${name} Tagged Cakes in Tenkasi | Serle's Bake`;
   const description = `${tagHeading(name)} from Serle's Bake — homemade, baked to order in Tenkasi with delivery across the district. Browse the range and order today.`;
 
   return {
