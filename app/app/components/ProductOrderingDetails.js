@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import { FaClipboardList, FaBirthdayCake, FaMapMarkerAlt, FaWallet, FaTruck, FaRuler, FaBookOpen } from 'react-icons/fa';
 import { DELIVERY_COVERAGE } from '../utils/deliveryPolicy';
+import styles from './ShopPlanning.module.scss';
 
 export default function ProductOrderingDetails({ product }) {
   if (!product?.name) return null;
@@ -14,11 +16,40 @@ export default function ProductOrderingDetails({ product }) {
         : ['custom-cake', 'themed-cake'].includes(category)
           ? 'Send a design reference and identify the details that matter most. We check feasibility, available colours, size and any additional design charge before confirming.'
           : 'Confirm the flavour, selected weight, cake message and event time. Ask us about any design changes before assuming they are included in the selected price.';
-  return <section className="mt-4 p-4" style={{ background: '#fff3f5', borderRadius: 12 }} aria-label={`Planning your ${product.name} order`}>
-    <h2 className="h4">Before we confirm your {product.name} order</h2>
-    <p>{advice}</p>
-    <p>{DELIVERY_COVERAGE}</p>
-    <p>We accept Google Pay and online payments. Check the selected cake, weight, quantity, event date and final total with us in the chat, then review your order confirmation.</p>
-    <p className="mb-0"><Link href="/cake-delivery">Delivery and ordering steps</Link> · <Link href="/blog/what-size-cake-for-how-many-guests-tenkasi">Help choosing a cake size</Link> · <Link href="/blog/how-to-store-carry-and-serve-a-cream-cake">Handling and serving guide</Link></p>
-  </section>;
+  const servingGuide = category === 'brownie'
+    ? { path: '/blog/fudgy-brownies-in-tenkasi-gifting-parties-office-treats', label: 'Brownie serving & gifting' }
+    : { path: '/blog/how-to-store-carry-and-serve-a-cream-cake', label: 'Handling & serving guide' };
+  return (
+    <section className={styles.orderPanel} aria-label={`Planning your ${product.name} order`}>
+      <div className={styles.orderHeader}>
+        <span className={styles.orderHeaderIcon}><FaClipboardList aria-hidden="true" /></span>
+        <div>
+          <h2 className={styles.orderTitle}>Before we confirm your {product.name} order</h2>
+          <p className={styles.orderIntro}>A few details to check together on WhatsApp.</p>
+        </div>
+      </div>
+      <div className={styles.orderChecks}>
+        <div className={styles.orderCheck}>
+          <h3 className={styles.checkHeading}><FaBirthdayCake aria-hidden="true" /> Your cake &amp; occasion</h3>
+          <p className={styles.checkText}>{advice}</p>
+        </div>
+        <div className={styles.orderCheck}>
+          <h3 className={styles.checkHeading}><FaMapMarkerAlt aria-hidden="true" /> Your delivery address</h3>
+          <p className={styles.checkText}>{DELIVERY_COVERAGE}</p>
+        </div>
+        <div className={styles.orderCheck}>
+          <h3 className={styles.checkHeading}><FaWallet aria-hidden="true" /> Payment &amp; confirmation</h3>
+          <p className={styles.checkText}>Review your cake, weight, quantity, date and final total in the chat. We accept Google Pay and online payments. Ask us for payment instructions and review your order confirmation.</p>
+        </div>
+      </div>
+      <div className={styles.guideBar}>
+        <p className={styles.guideLabel}>Helpful before you order</p>
+        <nav className={styles.guideLinks} aria-label="Cake ordering guides">
+          <Link href="/cake-delivery" className={styles.guideLink}><FaTruck aria-hidden="true" /> Delivery &amp; ordering</Link>
+          <Link href="/blog/what-size-cake-for-how-many-guests-tenkasi" className={styles.guideLink}><FaRuler aria-hidden="true" /> Choosing a cake size</Link>
+          <Link href={servingGuide.path} className={styles.guideLink}><FaBookOpen aria-hidden="true" /> {servingGuide.label}</Link>
+        </nav>
+      </div>
+    </section>
+  );
 }
